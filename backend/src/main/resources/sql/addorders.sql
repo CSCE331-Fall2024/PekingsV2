@@ -1,0 +1,3 @@
+\copy orders FROM 'd:/CSCE 331/PeKingsPOS/src\main/resources/ordercsvs/orders.csv' DELIMITER ',' CSV HEADER;
+\copy order_items(order_id, menu_item_id) FROM 'd:/CSCE 331/PeKingsPOS/src\main/resources/ordercsvs/order_items.csv' DELIMITER ',' CSV HEADER;
+\copy order_inventory(order_id, inventory_id) FROM 'd:/CSCE 331/PeKingsPOS/src\main/resources/ordercsvs/order_inventory.csv' DELIMITER ',' CSV HEADER;
