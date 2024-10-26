@@ -9,7 +9,6 @@ public class Ingredient {
     private float price;
     private int amount;
     private float batchPrice;
-
     public Ingredient(long id, String name, float price, int amount, float batchPrice) {
         this.id = id;
         this.name = name;

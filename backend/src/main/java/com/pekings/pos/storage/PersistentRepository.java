@@ -3,6 +3,10 @@ package com.pekings.pos.storage;
 import com.pekings.pos.object.*;
 import com.pekings.pos.util.SaleHistoryItem;
 import com.pekings.pos.util.ThrowingConsumer;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,6 +14,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
+@RestController
 public class PersistentRepository implements Repository {
 
     private Connection conn;
@@ -47,7 +52,8 @@ public class PersistentRepository implements Repository {
     }
 
     @Override
-    public void addMenuItem(MenuItem menuItem) {
+    @PostMapping("/add-menu-item")
+    public void addMenuItem(@RequestBody MenuItem menuItem) {
         String addItemQuery = queryLoader.getQuery("add_menu_item")
                 .formatted(menuItem.getName(), menuItem.getPrice());
 
