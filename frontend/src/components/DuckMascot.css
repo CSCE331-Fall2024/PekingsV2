@@ -1,0 +1,26 @@
+.duck-mascot-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.duck-mascot {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.duck-mascot:hover {
+    transform: scale(1.1);
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+    .duck-mascot {
+        width: 120px;
+        height: 120px;
+    }
+}
