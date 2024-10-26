@@ -1,0 +1,16 @@
+.hero-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Add any other styles you need */
+    
+}
+
+.hero-container img {
+    
+    width: 100%;
+  
+    
+    
+}
