@@ -1,0 +1,14 @@
+.rightRect{
+    position: relative;
+    background-color: #748D92;
+    height: 100%;
+    width: 21%
+}
+
+.orderNumber{
+    position: relative;
+    padding: 10%;
+    font-size: 400%;
+    text-align: center;
+    color: white;
+}
