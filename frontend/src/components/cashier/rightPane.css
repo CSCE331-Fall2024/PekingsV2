@@ -78,14 +78,13 @@
 
 .orderItemsContainer{
     height: 50%;
-    /*background-color: black;*/
-    /*display: flex;*/
     overflow-y: auto;
 }
 
 .priceContainer{
-    padding: 5%;
+    padding: 5% 5% 0;
     color: white;
+    height:
 }
 
 .subtotal{
@@ -99,6 +98,15 @@
 }
 
 .total{
-    padding-top: 5%;
     font-size: 225%;
+}
+
+.pay{
+    margin-top: 1%;
+    width: 100%;
+    text-align: center;
+    background-color:#212A31;
+    color: white;
+    height: 4.5%;
+    border: 2px solid black;
 }

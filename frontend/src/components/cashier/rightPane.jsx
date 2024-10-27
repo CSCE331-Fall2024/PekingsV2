@@ -46,6 +46,8 @@ function RightPane() {
                 <div className="tax">Tax: ${tax}</div>
                 <div className="total">Total: ${total}</div>
             </div>
+
+            <button className="pay">Pay</button>
         </div>
     );
 }
