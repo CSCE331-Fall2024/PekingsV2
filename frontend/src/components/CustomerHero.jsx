@@ -1,21 +1,130 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import '../App.css';
-import { Button } from './Button';
 import './CustomerHero.css';
 import DuckMascot from './DuckMascot';
+import MenuGrid from './MenuGrid';
+
+// Pre-API menuItems
+const menuItems = [
+    {
+      name: "Teriyaki Chicken",
+      image: "/images/teriyaki.png",
+      price: 10.00
+    },
+    {
+      name: "Broccoli Beef",
+      image: "/images/brocbeef.png",
+      price: 10.00
+    },
+    {
+      name: "Chicken Fried Rice",
+      image: "/images/CFR.png",
+      price: 10.00
+    },
+    {
+        name: "Beef Fried Rice",
+        image: "/images/BFR.png",
+        price: 10.00
+    },
+    {
+        name: "Orange Chicken",
+
+        price: 10.00
+    },
+    {
+        name: "Beijing Beef",
+
+        price: 10.00
+    },
+    {
+        name: "Crab Rangoon",
+
+        price: 10.00
+    },
+    {
+        name: "Fortune Cookies",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+    {
+        name: "Egg Rolls",
+
+        price: 10.00
+    },
+
+];
 
 function CustomerHero() {
+    const duckMascotRef = useRef();
+    
+    //also handles adding order to orderItems in relation to menuItems list
+    const handleAddToOrder = (item) => {
+        if (duckMascotRef.current) {
+            duckMascotRef.current.addItem(item);
+        }
+    };
+
     return (
         <div className='hero-container'>
             <div className='content-wrapper'>
                 <div className='video-section'>
                     <div className='video-container'>
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            className='background-video'
-                        >
+                        <video autoPlay loop muted className='background-video'>
                             <source src="/videos/asiancooking.mp4" type="video/mp4" />
                         </video>
                         <div className='video-overlay'></div>
@@ -27,10 +136,11 @@ function CustomerHero() {
                         </div>
                     </div>
                 </div>
-                <div className='marble-section'></div>
-                
+                <div className='marble-section'>
+                    <MenuGrid items={menuItems} onAddToOrder={handleAddToOrder} />
+                </div>
             </div>
-            <DuckMascot />
+            <DuckMascot ref={duckMascotRef} />
         </div>
     );
 }

@@ -3,7 +3,6 @@
     bottom: 20px;
     left: 20px;
     z-index: 1000;
-    cursor: pointer;
 }
 
 .duck-mascot {
@@ -11,16 +10,149 @@
     height: 140px;
     border-radius: 50%;
     transition: transform 0.3s ease;
+    cursor: pointer;
 }
 
 .duck-mascot:hover {
     transform: scale(1.1);
 }
 
-/* Media query for mobile devices */
+.speech-box {
+    position: absolute;
+    bottom: 160px;
+    width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.speech-box::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 30px;
+    border: 15px solid transparent;
+    border-top-color: white;
+}
+
+.speech-box-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.speech-box-header h3 {
+    margin: 0;
+    color: #212A31;
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+}
+
+.speech-box-content {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.empty-message {
+    text-align: center;
+    color: #212A31;
+    margin: 20px 0;
+}
+.order-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-item span:first-child {
+    text-align: left;
+}
+
+.order-item span:nth-child(2) {
+    text-align: right;
+    margin-right: 5px;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #ff4444;
+    cursor: pointer;
+    padding: 0 5px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.speech-box-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.price-breakdown {
+    margin-bottom: 15px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.price-row.total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-weight: bold;
+    color: #333;
+}
+
+.order-button {
+    width: 100%;
+    padding: 12px;
+    background: #124E66;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.order-button:hover {
+    background: #5298a7;
+}
+
+.order-button:disabled {
+    background: #cccccc;
+    /* This is goated: */
+    cursor: not-allowed;
+}
+
 @media screen and (max-width: 768px) {
     .duck-mascot {
         width: 120px;
         height: 120px;
+    }
+    
+    .speech-box {
+        width: 280px;
+        bottom: 140px;
     }
 }

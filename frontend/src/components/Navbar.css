@@ -99,23 +99,18 @@
     }
   
     .nav-links {
-      /* margin-left: 0;  */
-
       text-align: center;
       padding: 0rem;
       width: 100%;
       display: table;
       line-height: 5rem; /* adjust line-height to center text */
-      /* margin-left: -2.5vw; adjust this value if needed to cover left side */
     }
   
     .nav-links:hover {
       background-color: #D3D9D4;
       color: #212A31;
       border-radius: 100;
-      width: 100%; /* Extends hover area slightly to the left and right */
-    
-      /* padding: 0.5rem; */
+      width: 100%; 
     }
   
     .navbar-logo {
@@ -162,7 +157,6 @@
       padding: 14px 20px;
       border: 1px solid #D3D9D4;
       transition: all 0.3s ease-out;
-      /* margin-left: 4.4vw; adjust this value if needed to cover left side */
     }
   
     .nav-links-mobile:hover {
