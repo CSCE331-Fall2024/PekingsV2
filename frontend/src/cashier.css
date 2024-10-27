@@ -1,0 +1,11 @@
+.cashierScreen {
+    display: flex;
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw;
+}
+
+.leftRectangle {
+    width: 19%;
+    height: 100%;
+    background-color: #748D92;
+}
