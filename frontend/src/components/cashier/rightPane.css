@@ -12,3 +12,93 @@
     text-align: center;
     color: white;
 }
+
+.separator {
+    border: none; /* Remove default border */
+    height: 0.3%; /* Height of the line */
+    width: 85%;
+    background-color: #5E5E5E; /* Color of the line */
+    opacity: 48%;
+    margin: 2% auto; /* Space above and below the line */
+}
+
+.orderItemRow{
+    background-color: transparent;
+    position:relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding: 1.5% 3%;
+}
+
+.orderItemRowText{
+    background-color: transparent;
+    border: none;
+    position:relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding: 1.5% 3%;
+    color: white;
+    max-width: 80%;
+}
+
+.orderItemsText {
+    width: 65%; /* Set maximum width for text */
+    white-space: normal; /* Allow wrapping */
+    overflow-wrap: break-word; /* Break long words if necessary */
+    text-align: left; /* Align text to the left */
+    display: flex; /* Use flexbox to align text and price */
+    flex-direction: column; /* Stack text vertically */
+    color: white;
+}
+
+.orderItemsPrice {
+    display: flex; /* Use flexbox for the price */
+    align-self: center; /* Align price to the start of the container */
+    margin-left: 5%; /* Space between text and price */
+    width: 10%;
+}
+
+.editBtn{
+    background-color: transparent;
+    border: none;
+    color: black;
+    display: flex;
+    align-self: center;
+    margin-left: 10px;
+}
+
+.orderItemX{
+    background-color: transparent;
+    border: none;
+    color: red;
+    margin-left: 5%;
+}
+
+.orderItemsContainer{
+    height: 50%;
+    /*background-color: black;*/
+    /*display: flex;*/
+    overflow-y: auto;
+}
+
+.priceContainer{
+    padding: 5%;
+    color: white;
+}
+
+.subtotal{
+    padding-bottom: 5%;
+    font-size: 125%;
+}
+
+.tax{
+    padding-bottom: 5%;
+    font-size: 125%;
+}
+
+.total{
+    padding-top: 5%;
+    font-size: 225%;
+}
