@@ -1,13 +1,13 @@
 import React from 'react';
 import './topPane.css'
 
-function TopPane(){
+function TopPane({screenChange}){
     return (
         <div className="topPane">
-            <button className="memoBtn">Memo</button>
-            <button className="drinksBtn">Drinks</button>
-            <button className="mainMenuBtn">Main Menu</button>
-            <button className="seasonalBtn">Seasonal</button>
+            <button className="memoBtn" onClick={() => screenChange('memo')}>Memo</button>
+            <button className="drinksBtn" onClick={() => screenChange('drinks')}>Drinks</button>
+            <button className="mainMenuBtn" onClick={() => screenChange('main')}>Main Menu</button>
+            <button className="seasonalBtn" onClick={() => screenChange('seasonal')}>Seasonal</button>
         </div>
     );
 }

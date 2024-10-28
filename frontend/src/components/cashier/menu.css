@@ -6,15 +6,6 @@
     border-right: 2px solid #000;
 }
 
-.menuBox{
-    display: flex;
-    flex-wrap: wrap;
-    padding: 3% 5% 5%;
-    /*background-color:black;*/
-    height: 100%;
-    overflow-y: auto;
-}
-
 .action-button{
     background-color: white;
     opacity: 48%;
@@ -27,4 +18,28 @@
 
 .action-button:hover{
     background-color: #5E5E5E;
+}
+
+.seasonal{
+    /*display: flex;*/
+    flex-wrap: wrap;
+    padding: 3% 5% 5%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.menuBox{
+    /*display: flex;*/
+    flex-wrap: wrap;
+    padding: 3% 5% 5%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.drinks{
+    /*display: flex;*/
+    flex-wrap: wrap;
+    padding: 3% 5% 5%;
+    height: 100%;
+    overflow-y: auto;
 }
