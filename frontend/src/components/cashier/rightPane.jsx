@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import './rightPane.css'
+import {getOrderItems} from "../cashier/menu.jsx";
 
 let orderItemsList;
 let orderItemsRows;
@@ -18,12 +19,11 @@ function orderItemDisplay(label, price) {
 };
 
 function handlePayment(){
-    console.log(orderItemsList);
+    console.log(getOrderItems());
 }
 
 // eslint-disable-next-line react/prop-types
-function RightPane({orderItemsListTemp}) {
-    orderItemsList = orderItemsListTemp;
+function RightPane() {
     orderItemsRows = [];
     let subtotal = 59.99;
     let tax = (subtotal*0.0625).toFixed(2);
@@ -34,7 +34,7 @@ function RightPane({orderItemsListTemp}) {
         // orderItemsRows.push(orderItemDisplay(orderItem.name, orderItem.price));
         orderItemsRows.push(orderItemDisplay("Chicken", 9.99));
     }
-    console.log(orderItemsListTemp);
+    console.log("x");
 
 
     return(
