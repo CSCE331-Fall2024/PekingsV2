@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './rightPane.css'
+
+let orderItems;
 
 const orderItemDisplay = (label, price) => {
     return (
@@ -14,21 +16,19 @@ const orderItemDisplay = (label, price) => {
     );
 };
 
-function RightPane() {
-    let orderItems = [];
+function handlePayment(){
+    console.log(orderItems);
+}
+
+function RightPane(orderItemsList) {
+    orderItems = orderItemsList;
     let subtotal = 59.99;
     let tax = (subtotal*0.0625).toFixed(2);
     let total = subtotal + parseFloat(tax);
 
-    for (let i = 0; i < 10; i++){
-        if(i%2 === 0){
-            orderItems.push(orderItemDisplay("Chicken", 9.99));
-        }else{
-            orderItems.push(orderItemDisplay("Beef Beef Beef Beef Beef Beef Beef", 12.99));
-        }
-        if(i%3 === 0){
-            orderItems.push(orderItemDisplay("AWESOME SAUCE", 199.99));
-        }
+    for (let i = 0; i < orderItemsList.length; i++){
+        let orderItem = orderItemsList[i];
+        orderItems.push(orderItemDisplay(orderItem.name, orderItem.price));
     }
 
     return(
@@ -47,7 +47,7 @@ function RightPane() {
                 <div className="total">Total: ${total}</div>
             </div>
 
-            <button className="pay">Pay</button>
+            <button className="pay" onClick={handlePayment}>Pay</button>
         </div>
     );
 }

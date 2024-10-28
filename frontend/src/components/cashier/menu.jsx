@@ -1,20 +1,32 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './menu.css'
 
-const ButtonComponent = (label) => {
+let menuItemList = [];
+const handleButtonClick = (menuItem) => () =>{
+    menuItemList.push(menuItem);
+    console.log(menuItemList.length); // Action to perform
+    console.log(menuItem.name);
+};
+
+
+const ButtonComponent = (menuItem) => {
     return (
-        <button className="action-button">
-            {label}
+        <button onClick = {handleButtonClick(menuItem)} className="action-button">
+            {menuItem.name}
         </button>
     );
 };
 
-function Menu(){
+export let getOrderItems = () => {
+    return menuItemList;
+}
+
+function Menu(menuItems) {
 
     const menuItemBtns = [];
 
-    for(let i=0; i<20; i++){
-        menuItemBtns.push(ButtonComponent("Chicken"))
+    for(let i= 0; i < menuItems.length; i++){
+        menuItemBtns.push(ButtonComponent(menuItems[i]));
     }
 
     return (
@@ -22,6 +34,7 @@ function Menu(){
           <div className="menuBox">
               {menuItemBtns}
           </div>
+          <div></div>
       </div>
     );
 }
