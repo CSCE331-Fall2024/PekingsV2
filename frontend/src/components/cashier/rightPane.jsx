@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useRef} from 'react';
 import './rightPane.css'
 
-let orderItems;
+let orderItemsList;
+let orderItemsRows = [];
 
-const orderItemDisplay = (label, price) => {
+function orderItemDisplay(label, price) {
     return (
         <div className="orderItemRow">
             <button className="orderItemRowText">
@@ -16,20 +17,32 @@ const orderItemDisplay = (label, price) => {
     );
 };
 
-function handlePayment(){
-    console.log(orderItems);
+function updateItemDisplay(){
+    // console.log(orderItemsList.length);
+    // console.log(orderItemsRows.length);
+    // for (let i = 0; i < orderItemsList.length; i++){
+    //     let orderItem = orderItemsList[i];
+    //     orderItemsRows.push(orderItemDisplay(orderItem.name, orderItem.price));
+    // }
 }
 
-function RightPane(orderItemsList) {
-    orderItems = orderItemsList;
+function handlePayment(){
+    // console.log("x" + orderItemsRows);
+    updateItemDisplay();
+}
+
+// eslint-disable-next-line react/prop-types
+function RightPane({orderItemsListTemp}) {
+    orderItemsList = orderItemsListTemp;
     let subtotal = 59.99;
     let tax = (subtotal*0.0625).toFixed(2);
     let total = subtotal + parseFloat(tax);
 
-    for (let i = 0; i < orderItemsList.length; i++){
-        let orderItem = orderItemsList[i];
-        orderItems.push(orderItemDisplay(orderItem.name, orderItem.price));
-    }
+
+    // for(let i = 0; i < 20; i++){
+    //     orderItemsRows.push(orderItemDisplay("Chicken", 9.99));
+    // }
+
 
     return(
         <div className="rightRect">
@@ -37,7 +50,7 @@ function RightPane(orderItemsList) {
             <hr className="separator"/>
 
             <div className="orderItemsContainer">
-                {orderItems}
+                {orderItemsRows}
             </div>
             <hr className="separator"/>
 
