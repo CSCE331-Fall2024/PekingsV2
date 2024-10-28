@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "menu")
-public class MenuItemEntity {
+public class MenuItem {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

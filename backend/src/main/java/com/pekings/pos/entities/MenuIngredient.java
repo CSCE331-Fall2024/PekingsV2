@@ -21,7 +21,7 @@ public class MenuIngredient {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item")
-    private MenuItemEntity menuItemEntityItem;
+    private MenuItem menuItemEntityItem;
 
     @Column(name = "ingredients_in_item")
     private Integer ingredientsInItem;
@@ -42,11 +42,11 @@ public class MenuIngredient {
         this.ingredient = ingredient;
     }
 
-    public MenuItemEntity getMenuItem() {
+    public MenuItem getMenuItem() {
         return menuItemEntityItem;
     }
 
-    public void setMenuItem(MenuItemEntity menuItemEntityItem) {
+    public void setMenuItem(MenuItem menuItemEntityItem) {
         this.menuItemEntityItem = menuItemEntityItem;
     }
 
