@@ -2,6 +2,10 @@ import React, {useState, useEffect} from 'react';
 import './rightPane.css'
 import {getOrderItems, clearItems, removeItem} from "../cashier/menu.jsx";
 
+let subtotal = 0;
+let tax = parseFloat((subtotal*0.0625).toFixed(2));
+let total = parseFloat((subtotal*1.0625).toFixed(2));
+
 function orderItemDisplay(menuItem) {
     let name = menuItem.name;
     let price = menuItem.price;
@@ -19,7 +23,9 @@ function orderItemDisplay(menuItem) {
 
 function handlePayment(){
     clearItems();
-    // console.log(getOrderItems().length);
+    total = 0;
+    tax = 0;
+    subtotal = 0;
 }
 
 function RightPane() {
@@ -31,17 +37,30 @@ function RightPane() {
         setOrderItemsRows(rows);
     };
 
+    const updateOrderTotal = () => {
+        const items = getOrderItems();
+        subtotal = 0;
+
+        for (let i = 0; i < items.length; i++) {
+            subtotal += items[i].price;
+            tax = parseFloat((subtotal*0.0625).toFixed(2));
+            total = parseFloat((subtotal*1.0625).toFixed(2));
+        }
+        subtotal = parseFloat(subtotal.toFixed(2));
+    }
+
     useEffect(() => {
         updateOrderItems(); // Initial update
+        updateOrderTotal(); // Initial update
 
-        const intervalId = setInterval(updateOrderItems, 1000); // Check every second
+        const intervalId1 = setInterval(updateOrderItems, 1);
+        const intervalId2 = setInterval(updateOrderTotal, 1);// Check every second
 
-        return () => clearInterval(intervalId); // Cleanup on unmount
+        return () => {
+            clearInterval(intervalId1);
+            clearInterval(intervalId2);
+        } // Cleanup on unmount
     }, []); // Empty dependency array means this runs once on mount
-
-    let subtotal = 59.99;
-    let tax = (subtotal*0.0625).toFixed(2);
-    let total = subtotal + parseFloat(tax);
 
 
     return(

@@ -48,7 +48,7 @@ const menuItems1 = [
     {
         name: "Egg Rolls",
 
-        price: 10.00
+        price: 8.99
     }
 ];
 const menuItems2 = [
