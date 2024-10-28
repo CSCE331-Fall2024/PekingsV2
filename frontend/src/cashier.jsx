@@ -12,8 +12,8 @@ const ButtonScreen = () => {
         <div className="cashierScreen">
             <LeftRect />
             <CenterScreen />
-            <RightPane orderItemsList={getOrderItems()}></RightPane>
-            {/*{RightPane(getOrderItems())}*/}
+            {/*<RightPane orderItemsList={getOrderItems()}></RightPane>*/}
+            {RightPane(getOrderItems())}
         </div>
     );
 };

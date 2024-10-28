@@ -51,7 +51,7 @@ const menuItems = [
         price: 10.00
     }
 ];
-// export getOrderItems();
+export {getOrderItems};
 
 
 function CenterScreen(){

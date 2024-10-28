@@ -4,8 +4,6 @@ import './menu.css'
 let menuItemList = [];
 const handleButtonClick = (menuItem) => () =>{
     menuItemList.push(menuItem);
-    console.log(menuItemList.length); // Action to perform
-    console.log(menuItem.name);
 };
 
 
@@ -22,7 +20,6 @@ export let getOrderItems = () => {
 }
 
 function Menu(menuItems) {
-
     const menuItemBtns = [];
 
     for(let i= 0; i < menuItems.length; i++){

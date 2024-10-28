@@ -1,8 +1,8 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import './rightPane.css'
 
 let orderItemsList;
-let orderItemsRows = [];
+let orderItemsRows;
 
 function orderItemDisplay(label, price) {
     return (
@@ -17,31 +17,24 @@ function orderItemDisplay(label, price) {
     );
 };
 
-function updateItemDisplay(){
-    // console.log(orderItemsList.length);
-    // console.log(orderItemsRows.length);
-    // for (let i = 0; i < orderItemsList.length; i++){
-    //     let orderItem = orderItemsList[i];
-    //     orderItemsRows.push(orderItemDisplay(orderItem.name, orderItem.price));
-    // }
-}
-
 function handlePayment(){
-    // console.log("x" + orderItemsRows);
-    updateItemDisplay();
+    console.log(orderItemsList);
 }
 
 // eslint-disable-next-line react/prop-types
 function RightPane({orderItemsListTemp}) {
     orderItemsList = orderItemsListTemp;
+    orderItemsRows = [];
     let subtotal = 59.99;
     let tax = (subtotal*0.0625).toFixed(2);
     let total = subtotal + parseFloat(tax);
 
-
-    // for(let i = 0; i < 20; i++){
-    //     orderItemsRows.push(orderItemDisplay("Chicken", 9.99));
-    // }
+    for(let i = 0; i < 5; i++){
+        // let orderItem = orderItemsListTemp[i];
+        // orderItemsRows.push(orderItemDisplay(orderItem.name, orderItem.price));
+        orderItemsRows.push(orderItemDisplay("Chicken", 9.99));
+    }
+    console.log(orderItemsListTemp);
 
 
     return(
