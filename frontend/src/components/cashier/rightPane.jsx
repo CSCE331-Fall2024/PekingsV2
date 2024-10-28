@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './rightPane.css'
 import {getOrderItems} from "../cashier/menu.jsx";
 
-let orderItemsRows;
+// let orderItemsRows;
 
 function orderItemDisplay(label, price) {
     return (
@@ -22,17 +22,25 @@ function handlePayment(){
 }
 
 function RightPane() {
-    orderItemsRows = [];
+    const [orderItemsRows, setOrderItemsRows] = useState([]);
+
+    const updateOrderItems = () => {
+        const items = getOrderItems();
+        const rows = items.map(item => orderItemDisplay(item.name, item.price));
+        setOrderItemsRows(rows);
+    };
+
+    useEffect(() => {
+        updateOrderItems(); // Initial update
+
+        const intervalId = setInterval(updateOrderItems, 1000); // Check every second
+
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, []); // Empty dependency array means this runs once on mount
+
     let subtotal = 59.99;
     let tax = (subtotal*0.0625).toFixed(2);
     let total = subtotal + parseFloat(tax);
-
-    for(let i = 0; i < getOrderItems().length; i++){
-        // let orderItem = orderItemsListTemp[i];
-        // orderItemsRows.push(orderItemDisplay(orderItem.name, orderItem.price));
-        orderItemsRows.push(orderItemDisplay("Chicken", 9.99));
-    }
-    console.log("x");
 
 
     return(

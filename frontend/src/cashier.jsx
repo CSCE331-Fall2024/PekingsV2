@@ -12,12 +12,11 @@ const ButtonScreen = () => {
         <div className="cashierScreen">
             <LeftRect/>
             <CenterScreen/>
-            {/*<RightPane orderItemsList={getOrderItems()}></RightPane>*/}
-            {RightPane(getOrderItems())}
-            <button className="Test" onClick={() => {
-                console.log(getOrderItems());
-            }}>Btn
-            </button>
+            <RightPane />
+            {/*<button className="Test" onClick={() => {*/}
+            {/*    console.log(getOrderItems());*/}
+            {/*}}>Btn*/}
+            {/*</button>*/}
         </div>
     );
 };
