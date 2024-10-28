@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import './rightPane.css'
 import {getOrderItems} from "../cashier/menu.jsx";
 
-let orderItemsList;
 let orderItemsRows;
 
 function orderItemDisplay(label, price) {
@@ -19,17 +18,16 @@ function orderItemDisplay(label, price) {
 };
 
 function handlePayment(){
-    console.log(getOrderItems());
+    console.log(getOrderItems().length);
 }
 
-// eslint-disable-next-line react/prop-types
 function RightPane() {
     orderItemsRows = [];
     let subtotal = 59.99;
     let tax = (subtotal*0.0625).toFixed(2);
     let total = subtotal + parseFloat(tax);
 
-    for(let i = 0; i < 5; i++){
+    for(let i = 0; i < getOrderItems().length; i++){
         // let orderItem = orderItemsListTemp[i];
         // orderItemsRows.push(orderItemDisplay(orderItem.name, orderItem.price));
         orderItemsRows.push(orderItemDisplay("Chicken", 9.99));
