@@ -1,24 +1,25 @@
 import React, {useState, useEffect} from 'react';
 import './rightPane.css'
-import {getOrderItems} from "../cashier/menu.jsx";
+import {getOrderItems, clearItems, removeItem} from "../cashier/menu.jsx";
 
-// let orderItemsRows;
-
-function orderItemDisplay(label, price) {
+function orderItemDisplay(menuItem) {
+    let name = menuItem.name;
+    let price = menuItem.price;
     return (
         <div className="orderItemRow">
             <button className="orderItemRowText">
-                <div className="orderItemsText">{label}</div>
+                <div className="orderItemsText">{name}</div>
                 <div className="orderItemsPrice">${price}</div>
             </button>
             <button className="editBtn">E</button>
-            <button className="orderItemX">X</button>
+            <button className="orderItemX" onClick={removeItem(menuItem)}>X</button>
         </div>
     );
 };
 
 function handlePayment(){
-    console.log(getOrderItems().length);
+    clearItems();
+    // console.log(getOrderItems().length);
 }
 
 function RightPane() {
@@ -26,7 +27,7 @@ function RightPane() {
 
     const updateOrderItems = () => {
         const items = getOrderItems();
-        const rows = items.map(item => orderItemDisplay(item.name, item.price));
+        const rows = items.map(item => orderItemDisplay(item));
         setOrderItemsRows(rows);
     };
 

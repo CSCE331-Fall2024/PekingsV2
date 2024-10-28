@@ -15,6 +15,18 @@ const ButtonComponent = (menuItem) => {
     );
 };
 
+export let clearItems = () => {
+    menuItemList = [];
+}
+
+// The filter value will likely need to be edited later
+export let removeItem = (menuItem) => () => {
+    const index = menuItemList.findIndex(item => item === menuItem);
+    if (index !== -1) {
+        menuItemList.splice(index, 1);
+    }
+}
+
 export let getOrderItems = () => {
     return menuItemList;
 }
