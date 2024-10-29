@@ -1,5 +1,6 @@
 package com.pekings.pos.controller;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.pekings.pos.entities.MenuIngredient;
 import com.pekings.pos.entities.MenuItem;
 import com.pekings.pos.repository.MenuIngredientRepository;

@@ -1,5 +1,7 @@
 package com.pekings.pos.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pekings.pos.serialization.OrderSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +15,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "orders")
+@JsonSerialize(using = OrderSerializer.class)
 public class Order {
     @Id
     @Column(name = "id", nullable = false)
