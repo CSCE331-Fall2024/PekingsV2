@@ -1,5 +1,7 @@
 package com.pekings.pos.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pekings.pos.serialization.MenuIngredientSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "menu_ingredients")
+@JsonSerialize(using = MenuIngredientSerializer.class)
 public class MenuIngredient {
     @Id
     @Column(name = "id", nullable = false)
@@ -21,7 +24,7 @@ public class MenuIngredient {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item")
-    private MenuItem menuItemEntityItem;
+    private MenuItem menuItem;
 
     @Column(name = "ingredients_in_item")
     private Integer ingredientsInItem;
@@ -43,11 +46,11 @@ public class MenuIngredient {
     }
 
     public MenuItem getMenuItem() {
-        return menuItemEntityItem;
+        return menuItem;
     }
 
-    public void setMenuItem(MenuItem menuItemEntityItem) {
-        this.menuItemEntityItem = menuItemEntityItem;
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
     }
 
     public Integer getIngredientsInItem() {
