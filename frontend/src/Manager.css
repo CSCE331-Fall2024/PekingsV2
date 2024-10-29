@@ -1,0 +1,47 @@
+.managerRoot {
+    display: flex;
+    flex-direction: column;
+    width: 100%;         /* Takes remaining width after sidebar */
+    height: 100%;        /* Full height of fixed container */
+    background: #124e66;
+    color: black;
+}
+
+.main-content {
+    flex: 1;             /* Expands within available space */
+    overflow-y: auto;    /* Enables vertical scrolling if content exceeds height */
+    padding: 20px;
+    box-sizing: border-box;
+    text-color: black;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #748d92;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.data-table th, .data-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 0.9em;
+}
+
+.data-table th {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+.data-table td {
+    background-color: white;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
