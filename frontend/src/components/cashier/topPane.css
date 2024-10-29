@@ -1,0 +1,49 @@
+.topPane{
+    position: relative;
+    width: 100%;
+    height: 7.7%;
+    border: 2px solid black;
+}
+
+.topPane button{
+    font-size: 25px;
+}
+
+.memoBtn{
+    position: relative;
+    width: 17%;
+    height: 100%;
+    background-color:#8BA2F6;
+    border-color: transparent;
+    color: black;
+}
+
+.drinksBtn{
+    position: relative;
+    width: 21%;
+    height: 100%;
+    background-color:#C8E8F5;
+    border-color: transparent;
+    /*border-bottom: 2px solid black;*/
+    color: black;
+}
+
+.mainMenuBtn{
+    position: relative;
+    width: 41%;
+    height: 100%;
+    background-color:#9EDDF7;
+    border-color: transparent;
+    /*border-bottom: 2px solid black;*/
+    color: black;
+}
+
+.seasonalBtn{
+    position: relative;
+    width: 21%;
+    height: 100%;
+    background-color:#C8E8F5;
+    border-color: transparent;
+    /*border-bottom: 2px solid black;*/
+    color: black;
+}
