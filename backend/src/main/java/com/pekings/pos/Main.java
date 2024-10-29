@@ -8,6 +8,5 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Main.class, args);
-        System.out.println("Initialized");
     }
 }
