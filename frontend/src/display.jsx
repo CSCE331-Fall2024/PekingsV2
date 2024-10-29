@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Manager from './Manager';
 import './Display.css';
+/*comment*/
 
 function Display() {
     const [selectedSection, setSelectedSection] = useState('Inventory');

@@ -1,0 +1,12 @@
+.centerScreen{
+    position: relative;
+    width: 60%;
+    height: 100%;
+}
+
+.test{
+    background-color: black;
+    width: 200px;
+    height: 100px;
+    position: absolute;
+}

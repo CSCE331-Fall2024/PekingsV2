@@ -1,6 +1,6 @@
 import React from 'react';
 import './Sidebar.css';
-
+/*added comment*/
 function Sidebar({ onSelect }) {
     return (
         <div className="sidebar">
