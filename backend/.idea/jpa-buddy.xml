@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaBuddyIdeaProjectConfig" ddlActionDbType="postgres" newRepositoryParent="org.springframework.data.jpa.repository.JpaRepository">
+    <option name="defaultUnitInitialized" value="true" />
+    <option name="renamerInitialized" value="true" />
+    <option name="reverseEngineeringLastDbConnectionId" value="7d0ed1ed-e520-40c5-a4b7-c8ac5d0a3401__pekings_public" />
+    <option name="reLastEntityCreationPackage" value="src/main/java/com/pekings/pos/entities" />
+  </component>
+</project>
