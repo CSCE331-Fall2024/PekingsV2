@@ -1,6 +1,7 @@
 package com.pekings.pos.controller;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.pekings.pos.entities.Inventory;
 import com.pekings.pos.entities.MenuIngredient;
 import com.pekings.pos.entities.MenuItem;
 import com.pekings.pos.repository.MenuIngredientRepository;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -23,6 +25,11 @@ public class MenuItemController {
 
     @Autowired
     private MenuIngredientService menuIngredientService;
+
+    @GetMapping("/all")
+    public List<MenuItem> getAllMenuItems() {
+        return menuItemRepository.findAll().stream().sorted(Comparator.comparingInt(MenuItem::getId)).toList();
+    }
 
     @GetMapping("/{id}")
     public MenuItem getMenuItem(@PathVariable("id") int id) {

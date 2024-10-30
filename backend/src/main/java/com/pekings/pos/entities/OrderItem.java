@@ -1,5 +1,8 @@
 package com.pekings.pos.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pekings.pos.serialization.MenuIngredientSerializer;
+import com.pekings.pos.serialization.OrderItemSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_items")
+@JsonSerialize(using = OrderItemSerializer.class)
 public class OrderItem {
     @Id
     @Column(name = "id", nullable = false)
@@ -21,7 +25,7 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id")
-    private MenuIngredient menuItem;
+    private MenuItem menuItem;
 
     public Integer getId() {
         return id;
@@ -39,11 +43,11 @@ public class OrderItem {
         this.order = order;
     }
 
-    public MenuIngredient getMenuItem() {
+    public MenuItem getMenuItem() {
         return menuItem;
     }
 
-    public void setMenuItem(MenuIngredient menuItem) {
+    public void setMenuItem(MenuItem menuItem) {
         this.menuItem = menuItem;
     }
 
