@@ -1,0 +1,61 @@
+Sprint 1:
+
+Meeting Minutes for Scrum Meeting #1: 10/23/2024
+Meeting Agenda:
+- Create team deadlines
+- create 50~ stories and put them into product backlog
+- select which stories we accomplish for the sprint
+In Attendance: 
+- Nathan M, Nathan L, Fabio, Jeremiah 
+Summary: 
+- Completed all tasks in agenda
+- everyone understands and is responsible their own deadlines
+Next Meeting:
+- Held on Oct 25th
+Meeting was adjourned at 4:00 PM
+
+Meeting Minutes for Scrum Meeting #2: 10/25/2024
+Meeting Agenda:
+- Project Workday on frontend and backend
+- Set up environment for coding
+- install necessary software for project
+In Attendance: 
+- Nathan M, Nathan L, Fabio, Jeremiah 
+Summary: 
+- Completed all tasks in agenda
+- everyone has started their work and will be prepared to work over the weekend
+Next Meeting:
+- Held on Oct 28th
+Meeting was adjourned at 11:10 AM
+
+Meeting Minutes for Scrum Meeting #3: 10/28/2024
+Meeting Agenda:
+- Cleanup/debug everything for sprint 1 release
+- update Jira and make sure proper measures are prepared for the upcoming release
+- go over what has been accomplished/what has yet to be done/what will be done in the future
+In Attendance: 
+- Nathan M, Nathan L, Fabio, Jeremiah 
+Summary: 
+- Completed all tasks in agenda
+- Finalized sprint 1 for release
+Next Meeting:
+- Held on Oct 31st
+Meeting was adjourned at 3:40 PM
+
+Sprint 2: 
+
+
+Meeting Minutes for Scrum Meeting #3: 10/30/2024
+Meeting Agenda:
+- select which stories we accomplish for sprint 2
+- sprint 2 workday
+- go over what has been accomplished/what has yet to be done/what will be done in the future
+In Attendance: 
+- Nathan M, Nathan L, Jeremiah 
+Summary: 
+- Completed all tasks in agenda
+- prepared sprint 2 deadlines and agenda
+Next Meeting:
+- Held on Nov 4th
+Meeting was adjourned at 3:40 PM
+
