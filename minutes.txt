@@ -45,7 +45,7 @@ Meeting was adjourned at 3:40 PM
 Sprint 2: 
 
 
-Meeting Minutes for Scrum Meeting #3: 10/30/2024
+Meeting Minutes for Scrum Meeting #4: 10/30/2024
 Meeting Agenda:
 - select which stories we accomplish for sprint 2
 - sprint 2 workday
