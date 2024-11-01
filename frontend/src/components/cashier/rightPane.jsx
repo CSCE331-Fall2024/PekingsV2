@@ -40,6 +40,8 @@ function RightPane() {
     const updateOrderTotal = () => {
         const items = getOrderItems();
         subtotal = 0;
+        tax = 0;
+        total = 0;
 
         for (let i = 0; i < items.length; i++) {
             subtotal += items[i].price;

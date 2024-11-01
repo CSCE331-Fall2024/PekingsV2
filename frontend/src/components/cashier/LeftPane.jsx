@@ -1,5 +1,8 @@
 import React from 'react';
-import './cashierLeftPane.css'
+import './LeftPane.css'
+
+let screen = "menu";
+// export default screen;
 
 function LeftRect (){
     return (

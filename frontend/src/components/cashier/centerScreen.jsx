@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import './centerScreen.css'
 import TopPane from './topPane.jsx';
 import Menu from './menu.jsx';
-import {getOrderItems} from "./menu.jsx";
 
 const menuItems1 = [
     {
@@ -85,7 +84,6 @@ const menuItems3 = [
         price: 10.00
     }
 ];
-export {getOrderItems};
 
 
 function CenterScreen(){
@@ -97,9 +95,14 @@ function CenterScreen(){
 
     return(
         <div className="centerScreen">
-            <TopPane screenChange={handleMenuChange} />
+            <div className="menuContainer">
+                <TopPane screenChange={handleMenuChange} />
+                {Menu(menuItems1, menuItems2, menuItems3, {currentMenu})}
+            </div>
 
-            {Menu(menuItems1, menuItems2, menuItems3, {currentMenu})}
+            <div className="previousContainer" style={{display: 'none'}}>
+                x
+            </div>
         </div>
     );
 }

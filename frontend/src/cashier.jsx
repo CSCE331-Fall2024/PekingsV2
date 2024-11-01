@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './cashier.css'
-import LeftRect from './components/cashier/cashierLeftPane.jsx';
+import LeftRect from './components/cashier/LeftPane.jsx';
 import CenterScreen from './components/cashier/centerScreen.jsx';
 import RightPane from './components/cashier/rightPane.jsx';
 import {getOrderItems} from "./components/cashier/menu.jsx";
