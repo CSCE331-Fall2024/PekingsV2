@@ -5,6 +5,8 @@ import com.pekings.pos.serialization.MenuIngredientSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -14,7 +16,9 @@ import jakarta.persistence.Table;
 @Table(name = "menu_ingredients")
 @JsonSerialize(using = MenuIngredientSerializer.class)
 public class MenuIngredient {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -27,7 +31,7 @@ public class MenuIngredient {
     private MenuItem menuItem;
 
     @Column(name = "ingredients_in_item")
-    private Integer ingredientsInItem;
+    private Integer amount;
 
     public Integer getId() {
         return id;
@@ -53,12 +57,12 @@ public class MenuIngredient {
         this.menuItem = menuItem;
     }
 
-    public Integer getIngredientsInItem() {
-        return ingredientsInItem;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setIngredientsInItem(Integer ingredientsInItem) {
-        this.ingredientsInItem = ingredientsInItem;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
 }
