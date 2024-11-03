@@ -33,6 +33,17 @@ public class Employee {
     @Column(name = "is_clockedin")
     private Boolean isClockedin;
 
+    @Column(name = "pin")
+    private String pin;
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
     public Integer getId() {
         return id;
     }
