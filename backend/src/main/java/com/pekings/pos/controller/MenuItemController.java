@@ -59,4 +59,9 @@ public class MenuItemController {
         return orderItemRepository.getTopMenuItemPeriodic(startDate, endDate);
     }
 
+    @GetMapping("/category/{category}")
+    public List<MenuItem> getMenuItemsCategory(@PathVariable("category") String category) {
+        return menuItemRepository.findByCategory(category);
+    }
+
 }

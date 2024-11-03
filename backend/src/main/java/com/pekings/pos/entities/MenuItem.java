@@ -23,6 +23,17 @@ public class MenuItem {
     @Column(name = "active")
     private Boolean active;
 
+    @Column(name = "category")
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public Integer getId() {
         return id;
     }
