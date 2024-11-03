@@ -4,23 +4,32 @@ import LeftRect from './components/cashier/LeftPane.jsx';
 import CenterScreen from './components/cashier/CenterScreen.jsx';
 import RightPane from './components/cashier/RightPane.jsx';
 
+function createOrder(orderID) {
+    return {
+        id: orderID,
+        currentCenter: 'menu', // Each order has its own center state
+        orderItems: [],
+    };
+}
+
 const ButtonScreen = () => {
-    const [currentCenter, setCurrentCenter] = useState('menu');
     const [orderNum, setOrderNum] = useState(1);
-    const [screens, setScreens] = useState([1]); // Track screens created
+    const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
 
     const addScreen = () => {
         const newOrderNum = orderNum + 1;
         setOrderNum(newOrderNum);
-        // Create a new instance of the screen
-        setScreens(prevScreens => [...prevScreens, newOrderNum]);
-        // Set the active screen to the newly created one
-        setActiveScreenIndex(screens.length); // Show the new screen
+        setScreens(prevScreens => [...prevScreens, createOrder(newOrderNum)]);
+        setActiveScreenIndex(newOrderNum - 1); // Show the new screen
     };
 
     const handleCenterChange = (center) => {
-        setCurrentCenter(center);
+        setScreens(prevScreens => {
+            const updatedScreens = [...prevScreens];
+            updatedScreens[activeScreenIndex].currentCenter = center; // Update only the active screen's center
+            return updatedScreens;
+        });
     };
 
     const goToFirstScreen = () => {
@@ -31,12 +40,11 @@ const ButtonScreen = () => {
         <div>
             <button onClick={goToFirstScreen}>Go to First Order</button>
             <div className="screens-container">
-                {screens.map((screenNum, index) => (
-                    // Only render the currently active screen
+                {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
                         <LeftRect centerChange={handleCenterChange} addScreen={addScreen} />
-                        <CenterScreen center={currentCenter} />
-                        <RightPane orderNumber={screenNum} />
+                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} />
+                        <RightPane orderNumber={order.id} orderItems={order.orderItems} />
                     </div>
                 ))}
             </div>

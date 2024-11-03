@@ -86,7 +86,7 @@ const menuItems3 = [
 ];
 
 
-function CenterScreen({center}){
+function CenterScreen({center, menuItemList}){
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
 
 
@@ -98,7 +98,7 @@ function CenterScreen({center}){
         <div className="centerScreen">
             <div className="menuContainer" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange} />
-                {Menu(menuItems1, menuItems2, menuItems3, {currentMenu})}
+                {Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList})}
             </div>
 
             <div className="previousContainer" style={{display: center === 'previous' ? 'block' : 'none'}}>
