@@ -10,6 +10,7 @@ import com.pekings.pos.util.SaleItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,7 +101,7 @@ public class MenuItemController {
      * @return The menu item with updated contents
      */
     @PatchMapping("/update")
-    public MenuItem updateMenuItemActiveStatus(@RequestBody MenuItem menuItem) {
+    public MenuItem updateMenuItem(@RequestBody MenuItem menuItem) {
 
         if (menuItem.getId() == null)
             return null;
@@ -112,9 +113,9 @@ public class MenuItemController {
         return menuItemRepository.save(menuItem);
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public void deleteMenuItem(@RequestBody int menuItemID) {
-        menuItemRepository.findById(menuItemID).ifPresent(menuItem -> menuItemRepository.delete(menuItem));
+        menuItemRepository.deleteById(menuItemID);
     }
 
 }
