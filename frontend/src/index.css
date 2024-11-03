@@ -1,24 +1,24 @@
-/** {*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*    box-sizing: border-box;*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body {
+    display: flex;
+    flex-direction: column; /* Ensures children stack vertically */
+    height: 100vh; /* Full height of the viewport */
+}
+
+.screen {
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+}
+
+/*.screen:nth-child(1) {*/
+/*    background-color: lightblue; !* Color for Cashier *!*/
 /*}*/
 
-/*.body {*/
-/*    display: flex;*/
-/*    flex-direction: column; !* Ensures children stack vertically *!*/
-/*    height: 100vh; !* Full height of the viewport *!*/
+/*.screen:nth-child(2) {*/
+/*    background-color: lightcoral; !* Color for Display *!*/
 /*}*/
-
-/*.screen {*/
-/*    width: 100vw; !* Full width of the viewport *!*/
-/*    height: 100vh; !* Full height of the viewport *!*/
-/*}*/
-
-/*!*.screen:nth-child(1) {*!*/
-/*!*    background-color: lightblue; !* Color for Cashier *!*!*/
-/*!*}*!*/
-
-/*!*.screen:nth-child(2) {*!*/
-/*!*    background-color: lightcoral; !* Color for Display *!*!*/
-/*!*}*!*/

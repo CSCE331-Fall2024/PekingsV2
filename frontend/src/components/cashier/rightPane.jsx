@@ -28,7 +28,7 @@ function handlePayment(){
     subtotal = 0;
 }
 
-function RightPane() {
+function RightPane({orderNumber}) {
     const [orderItemsRows, setOrderItemsRows] = useState([]);
 
     const updateOrderItems = () => {
@@ -67,7 +67,7 @@ function RightPane() {
 
     return(
         <div className="rightRect">
-            <div className="orderNumber">Order<br/>#5</div>
+            <div className="orderNumber">Order<br/>#{orderNumber}</div>
             <hr className="separator"/>
 
             <div className="orderItemsContainer">
