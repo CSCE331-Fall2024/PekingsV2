@@ -2,10 +2,9 @@ package com.pekings.pos.controller;
 
 import com.pekings.pos.entities.MenuIngredient;
 import com.pekings.pos.entities.MenuItem;
+import com.pekings.pos.repository.MenuIngredientRepository;
 import com.pekings.pos.repository.MenuItemRepository;
 import com.pekings.pos.repository.OrderItemRepository;
-import com.pekings.pos.repository.OrderRepository;
-import com.pekings.pos.service.MenuIngredientService;
 import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.SaleItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +27,9 @@ public class MenuItemController {
     private MenuItemRepository menuItemRepository;
 
     @Autowired
-    private MenuIngredientService menuIngredientService;
-
-    @Autowired
     private OrderItemRepository orderItemRepository;
+    @Autowired
+    private MenuIngredientRepository menuIngredientRepository;
 
     @GetMapping("/all")
     public List<MenuItem> getAllMenuItems() {
@@ -45,7 +43,7 @@ public class MenuItemController {
 
     @GetMapping("/{id}/ingredients")
     public List<MenuIngredient> getIngredients(@PathVariable("id") int id) {
-        return menuIngredientService.getIngredientsByMenuItemId(id);
+        return menuIngredientRepository.findByMenuItemId(id);
     }
 
     @GetMapping("/top")

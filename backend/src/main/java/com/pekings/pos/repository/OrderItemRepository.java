@@ -1,7 +1,6 @@
 package com.pekings.pos.repository;
 
 import com.pekings.pos.entities.OrderItem;
-import com.pekings.pos.util.SaleHistoryItem;
 import com.pekings.pos.util.SaleItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

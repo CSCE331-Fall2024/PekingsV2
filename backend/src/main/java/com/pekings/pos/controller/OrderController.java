@@ -1,6 +1,5 @@
 package com.pekings.pos.controller;
 
-import com.pekings.pos.entities.MenuItem;
 import com.pekings.pos.entities.Order;
 import com.pekings.pos.entities.OrderItem;
 import com.pekings.pos.repository.OrderItemRepository;
