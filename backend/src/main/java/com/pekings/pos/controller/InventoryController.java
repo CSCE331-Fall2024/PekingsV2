@@ -2,6 +2,7 @@ package com.pekings.pos.controller;
 
 import com.pekings.pos.entities.Inventory;
 import com.pekings.pos.repository.InventoryRepository;
+import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.InventoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,8 +43,12 @@ public class InventoryController {
      */
     @GetMapping("/top")
     public List<InventoryItem> getTopIngredientsPeriodic(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {
+
+        if (startDate == null && endDate == null)
+            return inventoryRepository.findTopIngredientsPeriodic(DateUtil.startOfData(), DateUtil.endOfData());
+
         return inventoryRepository.findTopIngredientsPeriodic(startDate, endDate);
     }
 }
