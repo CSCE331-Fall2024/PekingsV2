@@ -5,9 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
@@ -35,6 +37,17 @@ public class Employee {
 
     @Column(name = "pin")
     private String pin;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Order> orders;
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
     public String getPin() {
         return pin;

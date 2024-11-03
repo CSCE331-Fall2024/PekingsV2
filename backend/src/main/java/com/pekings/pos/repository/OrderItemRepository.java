@@ -19,7 +19,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
             "    COUNT(oi.menuItem.id) AS totalOrders, " +
             "    SUM(m.price) AS totalRevenue" +
             "    FROM OrderItem oi JOIN MenuItem m ON oi.menuItem.id = m.id" +
-            "    WHERE oi.order.orderTime BETWEEN :startDate AND :endDate" +
+            "    WHERE oi.order.time BETWEEN :startDate AND :endDate" +
             "    GROUP BY m.id, m.name " +
             "    ORDER BY totalRevenue DESC")
     List<SaleItem> getTopMenuItemPeriodic(@Param("startDate") Instant startDate,

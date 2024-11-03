@@ -2,6 +2,7 @@ package com.pekings.pos.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pekings.pos.serialization.OrderSerializer;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,10 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -40,7 +43,29 @@ public class Order {
     private Employee employee;
 
     @Column(name = "order_time")
-    private Instant orderTime;
+    private Instant time;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderInventory> extras;
+
+    public List<OrderInventory> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<OrderInventory> extras) {
+        this.extras = extras;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 
     public Integer getId() {
         return id;
@@ -82,12 +107,12 @@ public class Order {
         this.employee = employee;
     }
 
-    public Instant getOrderTime() {
-        return orderTime;
+    public Instant getTime() {
+        return time;
     }
 
-    public void setOrderTime(Instant orderTime) {
-        this.orderTime = orderTime;
+    public void setTime(Instant time) {
+        this.time = time;
     }
 
 }

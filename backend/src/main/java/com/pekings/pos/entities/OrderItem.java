@@ -3,6 +3,7 @@ package com.pekings.pos.entities;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pekings.pos.serialization.MenuIngredientSerializer;
 import com.pekings.pos.serialization.OrderItemSerializer;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +24,7 @@ public class OrderItem {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
 

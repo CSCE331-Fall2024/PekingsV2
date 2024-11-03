@@ -18,7 +18,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
             "         JOIN MenuIngredient mi ON oi.menuItem.id = mi.menuItem.id" +
             "         JOIN Inventory i ON mi.ingredient.id = i.id" +
             "         JOIN Order o ON oi.order.id = o.id" +
-            "    WHERE o.orderTime BETWEEN :startDate AND :endDate" +
+            "    WHERE o.time BETWEEN :startDate AND :endDate" +
             "    GROUP BY i.id, i.name" +
             "    ORDER BY totalUsage DESC")
     List<InventoryItem> findTopIngredientsPeriodic(@Param("startDate") Instant startDate,

@@ -5,8 +5,12 @@ import com.pekings.pos.entities.OrderItem;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +39,50 @@ public class OrderController {
     @GetMapping("/customer/{id}")
     public List<Order> getCustomerOrders(@PathVariable("id") int id) {
         return orderRepository.findByCustomerId(id);
+    }
+
+    @PatchMapping("/update")
+    public Order updateOrder(@RequestBody Order order) {
+
+        if (order.getId() == null)
+            return null;
+
+        return orderRepository.save(order);
+    }
+
+    /**
+     * Adds an order. Sample request:
+     * {
+     *     "customer": { "id": 873 },
+     *     "employee": { "id": 4 },
+     *     "time": "2024-01-04T22:57:13Z",
+     *     "price": 34.00,
+     *     "items": [
+     *         {
+     *             "menuItem": { "id": 22 }
+     *         },
+     *         {
+     *             "menuItem": { "id": 8 }
+     *         }
+     *     ]
+     * }
+     *
+     * @param order Order to be added
+     * @return A copy of the order that was added to the DB
+     *
+     */
+    @PostMapping("/add")
+    public Order addOrder(@RequestBody Order order) {
+        if (order.getItems() != null) {
+            order.getItems().forEach(ingredient -> ingredient.setOrder(order));
+        }
+
+        return orderRepository.save(order);
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteOrder(@RequestBody int id) {
+        orderRepository.deleteById(id);
     }
 
 }
