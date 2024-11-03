@@ -1,21 +1,25 @@
 package com.pekings.pos.util;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pekings.pos.serialization.SaleHistItemSerializer;
 
+@JsonSerialize(using = SaleHistItemSerializer.class)
 public class SaleHistoryItem {
 
-    private final Timestamp time;
+    private final int menuItemID;
+    private final String name;
     private final int totalOrders;
     private final double totalRevenue;
 
-    public SaleHistoryItem(Timestamp time, int totalOrders, double totalRevenue) {
-        this.time = time;
+    public SaleHistoryItem(int menuItemID, String name, int totalOrders, double totalRevenue) {
+        this.name = name;
         this.totalOrders = totalOrders;
         this.totalRevenue = totalRevenue;
+        this.menuItemID = menuItemID;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public int getMenuItemID() {
+        return menuItemID;
     }
 
     public int getTotalOrders() {
@@ -24,5 +28,9 @@ public class SaleHistoryItem {
 
     public double getTotalRevenue() {
         return totalRevenue;
+    }
+
+    public String getName() {
+        return name;
     }
 }
