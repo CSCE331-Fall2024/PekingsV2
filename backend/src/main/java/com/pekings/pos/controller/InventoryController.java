@@ -1,13 +1,18 @@
 package com.pekings.pos.controller;
 
+import com.pekings.pos.entities.Employee;
 import com.pekings.pos.entities.Inventory;
 import com.pekings.pos.repository.InventoryRepository;
 import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.InventoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,5 +55,24 @@ public class InventoryController {
             return inventoryRepository.findTopIngredientsPeriodic(DateUtil.startOfData(), DateUtil.endOfData());
 
         return inventoryRepository.findTopIngredientsPeriodic(startDate, endDate);
+    }
+
+    @PatchMapping("/update")
+    public Inventory updateIngredient(@RequestBody Inventory inventory) {
+
+        if (inventory.getId() == null)
+            return null;
+
+        return inventoryRepository.save(inventory);
+    }
+
+    @PostMapping("/add")
+    public Inventory addIngredient(@RequestBody Inventory inventory) {
+        return inventoryRepository.save(inventory);
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteIngredient(@RequestBody int id) {
+        inventoryRepository.deleteById(id);
     }
 }
