@@ -79,22 +79,19 @@ public class MenuItemController {
      * updates a menuItem. Sample body:
      * **You must specify the menu item id when using this method**
      * {
-     *     "customer": { "id": 873 },
-     *     "employee": { "id": 4 },
-     *     "time": "2024-01-04T22:57:13Z",
-     *     "price": 34.00,
-     *     "items": [
+     *     "id": 46,
+     *     "name": "Sushi Platter",
+     *     "price": 20.00,
+     *     "active": true,
+     *     "category": "seasonal",
+     *     "ingredients": [
      *         {
-     *             "menuItem": { "id": 22 }
+     *             "ingredient": { "id": 5 },
+     *             "amount": 3
      *         },
      *         {
-     *             "menuItem": { "id": 8 }
-     *         }
-     *     ],
-     *     "extras": [
-     *         {
-     *             "ingredient": { "id": 10 },
-     *             "amount": -1
+     *             "ingredient": { "id": 6 },
+     *             "amount": 3
      *         }
      *     ]
      * }

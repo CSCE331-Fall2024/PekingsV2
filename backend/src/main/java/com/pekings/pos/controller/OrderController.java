@@ -73,7 +73,12 @@ public class OrderController {
      *             "menuItem": { "id": 8 }
      *         }
      *     ],
-     *     "extras": []
+     *     "extras": [
+     *         {
+     *             "ingredient": { "id": 10 },
+     *             "amount": -1
+     *         }
+     *     ]
      * }
      *
      * @param order Order to be added
