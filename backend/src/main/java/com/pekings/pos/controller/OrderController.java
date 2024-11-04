@@ -64,7 +64,8 @@ public class OrderController {
      *         {
      *             "menuItem": { "id": 8 }
      *         }
-     *     ]
+     *     ],
+     *     "extras": []
      * }
      *
      * @param order Order to be added
