@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Collections;
@@ -31,16 +32,26 @@ public class OAuthController extends DefaultOAuth2UserService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private CustomLogoutSuccessHandler logoutSuccessHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authz) -> authz
+                .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/cashier/**").hasRole("CASHIER")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/", "/login").permitAll()
-                        .anyRequest().authenticated()
-                ).oauth2Login(configurer -> configurer.defaultSuccessUrl("/"))
+                        .anyRequest().authenticated())
+                .oauth2Login(configurer -> configurer
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/"))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler)
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true))
                 .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"));
         return http.build();
     }
@@ -57,7 +68,7 @@ public class OAuthController extends DefaultOAuth2UserService {
         Employee employee = employeeRepository.findByEmail(email);
 
         if (employee != null) {
-            if (employee.getPosition().equalsIgnoreCase("cashier")) {
+            if (employee.getPosition().equalsIgnoreCase("employee")) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
             }
 
@@ -68,11 +79,6 @@ public class OAuthController extends DefaultOAuth2UserService {
         }
 
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "sub");
-    }
-
-    @GetMapping("/user")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        return Collections.singletonMap("name", principal.getAttribute("name"));
     }
 
 }
