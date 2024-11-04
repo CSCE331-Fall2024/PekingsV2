@@ -1,52 +1,86 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './rightPane.css'
-import {getOrderItems, clearItems, removeItem} from "../cashier/menu.jsx";
+// import {getOrderItems, clearItems, removeItem} from "../cashier/menu.jsx";
 
-let subtotal = 0;
-let tax = parseFloat((subtotal*0.0625).toFixed(2));
-let total = parseFloat((subtotal*1.0625).toFixed(2));
 
-function orderItemDisplay(menuItem) {
-    let name = menuItem.name;
-    let price = menuItem.price;
-    return (
-        <div className="orderItemRow">
-            <button className="orderItemRowText">
-                <div className="orderItemsText">{name}</div>
-                <div className="orderItemsPrice">${price}</div>
-            </button>
-            <button className="editBtn">E</button>
-            <button className="orderItemX" onClick={removeItem(menuItem)}>X</button>
-        </div>
-    );
-};
+// function orderItemDisplay(menuItem) {
+//     let name = menuItem.name;
+//     let price = menuItem.price;
+//     return (
+//         <div className="orderItemRow">
+//             <button className="orderItemRowText">
+//                 <div className="orderItemsText">{name}</div>
+//                 <div className="orderItemsPrice">${price}</div>
+//             </button>
+//             <button className="editBtn">E</button>
+//             <button className="orderItemX" onClick={removeItem(menuItem)}>X</button>
+//         </div>
+//     );
+// };
 
-function handlePayment(){
-    clearItems();
-    total = 0;
-    tax = 0;
-    subtotal = 0;
-}
+// function handlePayment(){
+//     clearItems();
+//     total = 0;
+//     tax = 0;
+//     subtotal = 0;
+// }
 
-function RightPane() {
+function RightPane({orderNumber, orderItems}) {
+    const [subtotal, setSubtotal] = useState(0);
+    const [tax, setTax] = useState(0);
+    const [total, setTotal] = useState(0);
+
+    let removeItem = (menuItem) => () => {
+        const index = orderItems.findIndex(item => item === menuItem);
+        if (index !== -1) {
+            orderItems.splice(index, 1);
+        }
+    }
+
+    function orderItemDisplay(menuItem) {
+        let name = menuItem.name;
+        let price = menuItem.price;
+        return (
+            <div className="orderItemRow">
+                <button className="orderItemRowText">
+                    <div className="orderItemsText">{name}</div>
+                    <div className="orderItemsPrice">${price}</div>
+                </button>
+                <button className="editBtn">E</button>
+                <button className="orderItemX" onClick={removeItem(menuItem)}>X</button>
+            </div>
+        );
+    };
+
     const [orderItemsRows, setOrderItemsRows] = useState([]);
 
     const updateOrderItems = () => {
-        const items = getOrderItems();
-        const rows = items.map(item => orderItemDisplay(item));
+        const rows = orderItems.map(item => orderItemDisplay(item));
         setOrderItemsRows(rows);
     };
 
     const updateOrderTotal = () => {
-        const items = getOrderItems();
-        subtotal = 0;
+        let st = 0;
 
-        for (let i = 0; i < items.length; i++) {
-            subtotal += items[i].price;
-            tax = parseFloat((subtotal*0.0625).toFixed(2));
-            total = parseFloat((subtotal*1.0625).toFixed(2));
+        for (let i = 0; i < orderItems.length; i++) {
+            st += orderItems[i].price;
         }
-        subtotal = parseFloat(subtotal.toFixed(2));
+
+        st = parseFloat(st.toFixed(2));
+        let tax = parseFloat((st*0.0625).toFixed(2));
+        let total = parseFloat((st*1.0625).toFixed(2));
+
+        setSubtotal(st);
+        setTax(tax);
+        setTotal(total);
+    }
+
+    function handlePayment(){
+        orderItems.length = 0; // Clear the array, this does trigger the useEffect function
+
+        setSubtotal(0);
+        setTax(0);
+        setTotal(0);
     }
 
     useEffect(() => {
@@ -65,7 +99,7 @@ function RightPane() {
 
     return(
         <div className="rightRect">
-            <div className="orderNumber">Order<br/>#5</div>
+            <div className="orderNumber">Order<br/>#{orderNumber}</div>
             <hr className="separator"/>
 
             <div className="orderItemsContainer">

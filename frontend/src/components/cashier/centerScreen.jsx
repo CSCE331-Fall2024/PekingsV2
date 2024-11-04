@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import './centerScreen.css'
 import TopPane from './topPane.jsx';
 import Menu from './menu.jsx';
-import {getOrderItems} from "./menu.jsx";
 
 const menuItems1 = [
     {
@@ -85,21 +84,36 @@ const menuItems3 = [
         price: 10.00
     }
 ];
-export {getOrderItems};
 
-
-function CenterScreen(){
+// eslint-disable-next-line react/prop-types
+function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnClick}){
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
+
+    let alternateOrderButtons = [];
+    for(let i = 0; i < alternateOrders.length; i++){
+        if(alternateOrders[i].status){
+            alternateOrderButtons.push(
+                <button className="alternateOrderBtn-cash" onClick={() => {handlePreviousBtnClick(alternateOrders[i])}}>{alternateOrders[i].id}</button>
+            );
+        }
+    }
+
 
     const handleMenuChange = (menu) => {
         setCurrentMenu(menu);
     };
 
     return(
-        <div className="centerScreen">
-            <TopPane screenChange={handleMenuChange} />
+        <div className="centerScreen-cash">
+            <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
+                <TopPane screenChange={handleMenuChange} />
+                {Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList})}
+            </div>
 
-            {Menu(menuItems1, menuItems2, menuItems3, {currentMenu})}
+            <div className="centerScreenContainers-cash" style={{display: center === 'previous' ? 'block' : 'none'}}>
+                <div className="previousOrdersTitle-cash">Previous Orders</div>
+                <div className="previousOrdersDisplayBox-cash">{alternateOrderButtons}</div>
+            </div>
         </div>
     );
 }

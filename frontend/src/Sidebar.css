@@ -4,9 +4,10 @@
     color: white;
     display: flex;
     flex-direction: column;
+    height: 100%;
     /*padding-top: 20px; add comment*/
 }
-.navbar-logo {
+.logo {
     width: 100%;
     margin-bottom: 20px;  /* Space below the logo */
     max-width: 300px;
