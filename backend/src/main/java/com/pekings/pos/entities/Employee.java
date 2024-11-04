@@ -27,7 +27,10 @@ public class Employee {
     @Column(name = "pass", length = Integer.MAX_VALUE)
     private String pass;
 
-    @Column(name = "\"position\"", length = Integer.MAX_VALUE)
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "position", length = Integer.MAX_VALUE)
     private String position;
 
     @Column(name = "last_clockin")
@@ -42,6 +45,14 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private List<Order> orders;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public List<Order> getOrders() {
         return orders;
