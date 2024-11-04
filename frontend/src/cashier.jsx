@@ -9,6 +9,7 @@ function createOrder(orderID) {
         id: orderID,
         currentCenter: 'menu', // Each order has its own center state
         orderItems: [],
+        status: true
     };
 }
 
@@ -36,6 +37,15 @@ const ButtonScreen = () => {
         console.log(order.id);
         screens[order.id - 1].currentCenter = 'menu';
         setActiveScreenIndex(order.id - 1);
+    };
+
+    const handleCancel = (order) => {
+        const orderNum = order.id;
+        for(let i = 0; i < screens.length; i++) {
+            if(screens[i].id === orderNum) {
+                screens[i].status = false;
+            }
+        }
     }
 
 
