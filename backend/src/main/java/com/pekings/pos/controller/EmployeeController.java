@@ -1,7 +1,9 @@
 package com.pekings.pos.controller;
 
 import com.pekings.pos.entities.Employee;
+import com.pekings.pos.entities.Order;
 import com.pekings.pos.repository.EmployeeRepository;
+import com.pekings.pos.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     @GetMapping("/all")
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
@@ -29,6 +34,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Employee getAllEmployees(@PathVariable("id") int id) {
         return employeeRepository.findById(id).orElse(null);
+    }
+
+    @GetMapping("/{id}/orders")
+    public List<Order> getEmployeeOrders(@PathVariable("id") int id) {
+        return orderRepository.findByEmployeeId(id);
     }
 
     @PatchMapping("/update")
