@@ -66,6 +66,17 @@ public class InventoryController {
         return inventoryRepository.save(inventory);
     }
 
+    @PatchMapping("/update/stock/{id}")
+    public Inventory updateStock(@PathVariable("id") int id, @RequestParam("amount") int amount) {
+        Inventory inventory = inventoryRepository.findById(id).orElse(null);
+
+        if (inventory == null)
+            return null;
+
+        inventory.setAmount(inventory.getAmount() + amount);
+        return inventoryRepository.save(inventory);
+    }
+
     @PostMapping("/add")
     public Inventory addIngredient(@RequestBody Inventory inventory) {
         return inventoryRepository.save(inventory);

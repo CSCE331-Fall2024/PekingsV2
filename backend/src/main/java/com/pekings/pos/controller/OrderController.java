@@ -1,6 +1,7 @@
 package com.pekings.pos.controller;
 
 import com.pekings.pos.entities.Order;
+import com.pekings.pos.entities.OrderInventory;
 import com.pekings.pos.entities.OrderItem;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
@@ -25,6 +26,9 @@ public class OrderController {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private InventoryController inventoryController;
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable("id") int id) {
@@ -76,6 +80,10 @@ public class OrderController {
     public Order addOrder(@RequestBody Order order) {
         if (order.getItems() != null) {
             order.getItems().forEach(ingredient -> ingredient.setOrder(order));
+        }
+
+        for (OrderInventory oi : order.getExtras()) {
+            inventoryController.updateStock(oi.getIngredient().getId(), oi.getAmount());
         }
 
         return orderRepository.save(order);

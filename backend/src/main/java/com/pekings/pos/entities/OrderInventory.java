@@ -26,7 +26,18 @@ public class OrderInventory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id")
-    private Inventory inventory;
+    private Inventory ingredient;
+
+    @Column(name = "amount")
+    private int amount;
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
     public Integer getId() {
         return id;
@@ -44,12 +55,12 @@ public class OrderInventory {
         this.order = order;
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public Inventory getIngredient() {
+        return ingredient;
     }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
+    public void setIngredient(Inventory ingredient) {
+        this.ingredient = ingredient;
     }
 
 }
