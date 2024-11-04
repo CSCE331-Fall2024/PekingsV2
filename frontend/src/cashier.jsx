@@ -32,9 +32,9 @@ const ButtonScreen = () => {
         });
     };
 
-    const goToFirstScreen = () => {
-        setActiveScreenIndex(0); // Go back to the first screen
-    };
+    // const goToFirstScreen = () => {
+    //     setActiveScreenIndex(0); // Go back to the first screen
+    // };
 
     return (
         <div>
@@ -43,7 +43,8 @@ const ButtonScreen = () => {
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
                         <LeftRect centerChange={handleCenterChange} addScreen={addScreen} />
-                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} alternateOrders={screens} />
+                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} alternateOrders={screens} setOrderNum={setOrderNum}
+                        setIndex={setActiveScreenIndex} />
                         <RightPane orderNumber={order.id} orderItems={order.orderItems} />
                     </div>
                 ))}

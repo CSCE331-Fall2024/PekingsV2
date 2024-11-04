@@ -85,15 +85,19 @@ const menuItems3 = [
     }
 ];
 
-
 // eslint-disable-next-line react/prop-types
-function CenterScreen({center, menuItemList, alternateOrders}){
+function CenterScreen({center, menuItemList, alternateOrders, setOrderNum, setIndex}){
+    let handlePreviousOrderClick = (num) => {
+        // setOrderNum(num);
+        // setIndex(0);
+    }
+
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
 
     let alternateOrderButtons = [];
     for(let i = 0; i < alternateOrders.length; i++){
         alternateOrderButtons.push(
-            <button className="alternateOrderBtn-cash">{alternateOrders[i].id}</button>
+            <button className="alternateOrderBtn-cash" onClick={handlePreviousOrderClick(alternateOrders[i].id)}>{alternateOrders[i].id}</button>
         );
     }
 

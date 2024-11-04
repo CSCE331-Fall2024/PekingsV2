@@ -4,7 +4,7 @@ import './LeftPane.css';
 function LeftRect({ centerChange, addScreen }) {
     return (
         <div className="leftRectangle">
-            <button className="logo">
+            <button className="logo-cash">
                 <img className="logoButton" src="/images/pekingslogo.png" alt="Logo" />
             </button>
             <button className="exit">Exit</button>
