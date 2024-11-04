@@ -1,5 +1,6 @@
 package com.pekings.pos.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +39,7 @@ public class Employee {
     @Column(name = "pin")
     private String pin;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private List<Order> orders;
 

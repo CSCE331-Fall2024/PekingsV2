@@ -1,8 +1,10 @@
 package com.pekings.pos.controller;
 
+import com.pekings.pos.entities.MenuItem;
 import com.pekings.pos.entities.Order;
 import com.pekings.pos.entities.OrderInventory;
 import com.pekings.pos.entities.OrderItem;
+import com.pekings.pos.repository.MenuItemRepository;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class OrderController {
 
     @Autowired
     private InventoryController inventoryController;
+    @Autowired
+    private MenuItemRepository menuItemRepository;
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable("id") int id) {
@@ -80,6 +84,15 @@ public class OrderController {
     public Order addOrder(@RequestBody Order order) {
         if (order.getItems() != null) {
             order.getItems().forEach(ingredient -> ingredient.setOrder(order));
+        }
+
+        for (OrderItem oi : order.getItems()) {
+            menuItemRepository.findById(oi.getMenuItem().getId()).ifPresent(mi -> {
+                mi.getIngredients().forEach(menuIngredient -> {
+                    inventoryController.updateStock(menuIngredient.getId(), menuIngredient.getAmount() * -1);
+                });
+            });
+
         }
 
         for (OrderInventory oi : order.getExtras()) {
