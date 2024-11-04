@@ -1,7 +1,6 @@
 package com.pekings.pos.controller;
 
 import com.pekings.pos.entities.Employee;
-import com.pekings.pos.entities.MenuItem;
 import com.pekings.pos.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

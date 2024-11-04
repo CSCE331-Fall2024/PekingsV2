@@ -9,7 +9,6 @@ import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.SaleItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -80,19 +79,22 @@ public class MenuItemController {
      * updates a menuItem. Sample body:
      * **You must specify the menu item id when using this method**
      * {
-     *     "id": 46,
-     *     "name": "Sushi Platter",
-     *     "price": 20.00,
-     *     "active": true,
-     *     "category": "seasonal",
-     *     "ingredients": [
+     *     "customer": { "id": 873 },
+     *     "employee": { "id": 4 },
+     *     "time": "2024-01-04T22:57:13Z",
+     *     "price": 34.00,
+     *     "items": [
      *         {
-     *             "ingredient": { "id": 5 },
-     *             "amount": 3
+     *             "menuItem": { "id": 22 }
      *         },
      *         {
-     *             "ingredient": { "id": 6 },
-     *             "amount": 3
+     *             "menuItem": { "id": 8 }
+     *         }
+     *     ],
+     *     "extras": [
+     *         {
+     *             "ingredient": { "id": 10 },
+     *             "amount": -1
      *         }
      *     ]
      * }

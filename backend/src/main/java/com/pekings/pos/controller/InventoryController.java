@@ -1,6 +1,5 @@
 package com.pekings.pos.controller;
 
-import com.pekings.pos.entities.Employee;
 import com.pekings.pos.entities.Inventory;
 import com.pekings.pos.repository.InventoryRepository;
 import com.pekings.pos.util.DateUtil;
