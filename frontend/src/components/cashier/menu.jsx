@@ -1,36 +1,6 @@
 import React, {useState} from 'react';
 import './menu.css'
 
-// let menuItemList;
-// const handleButtonClick = (menuItem) => () =>{
-//     menuItemList.push(menuItem);
-// };
-
-
-// const ButtonComponent = (menuItem) => {
-//     return (
-//         <button onClick = {handleButtonClick(menuItem)} className="action-button">
-//             {menuItem.name}
-//         </button>
-//     );
-// };
-
-// export let clearItems = () => {
-//     menuItemList = [];
-// }
-
-// The filter value will likely need to be edited later
-// export let removeItem = (menuItem) => () => {
-//     const index = menuItemList.findIndex(item => item === menuItem);
-//     if (index !== -1) {
-//         menuItemList.splice(index, 1);
-//     }
-// }
-
-// export let getOrderItems = () => {
-//     return menuItemList;
-// }
-
 function Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList}) {
     const handleButtonClick = (menuItem) => () =>{
         menuItemList.push(menuItem);

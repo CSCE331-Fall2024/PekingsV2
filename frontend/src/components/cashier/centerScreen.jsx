@@ -86,8 +86,16 @@ const menuItems3 = [
 ];
 
 
-function CenterScreen({center, menuItemList}){
+// eslint-disable-next-line react/prop-types
+function CenterScreen({center, menuItemList, alternateOrders}){
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
+
+    let alternateOrderButtons = [];
+    for(let i = 0; i < alternateOrders.length; i++){
+        alternateOrderButtons.push(
+            <button className="alternateOrderBtn-cash">{alternateOrders[i].id}</button>
+        );
+    }
 
 
     const handleMenuChange = (menu) => {
@@ -95,14 +103,15 @@ function CenterScreen({center, menuItemList}){
     };
 
     return(
-        <div className="centerScreen">
-            <div className="menuContainer" style={{display: center === 'menu' ? 'block' : 'none'}}>
+        <div className="centerScreen-cash">
+            <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange} />
                 {Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList})}
             </div>
 
-            <div className="previousContainer" style={{display: center === 'previous' ? 'block' : 'none'}}>
-                x
+            <div className="centerScreenContainers-cash" style={{display: center === 'previous' ? 'block' : 'none'}}>
+                <div className="previousOrdersTitle-cash">Previous Orders</div>
+                <div className="previousOrdersDisplayBox-cash">{alternateOrderButtons}</div>
             </div>
         </div>
     );

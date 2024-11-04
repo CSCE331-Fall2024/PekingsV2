@@ -38,12 +38,12 @@ const ButtonScreen = () => {
 
     return (
         <div>
-            <button onClick={goToFirstScreen}>Go to First Order</button>
+            {/*<button onClick={goToFirstScreen}>Go to First Order</button>*/}
             <div className="screens-container">
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
                         <LeftRect centerChange={handleCenterChange} addScreen={addScreen} />
-                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} />
+                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} alternateOrders={screens} />
                         <RightPane orderNumber={order.id} orderItems={order.orderItems} />
                     </div>
                 ))}
