@@ -33,16 +33,19 @@ public class EmployeeController {
         return employeeRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/{id}")
     public Employee getAllEmployees(@PathVariable("id") int id) {
         return employeeRepository.findById(id).orElse(null);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/{id}/orders")
     public List<Order> getEmployeeOrders(@PathVariable("id") int id) {
         return orderRepository.findByEmployeeId(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PatchMapping("/update")
     public Employee updateEmployee(@RequestBody Employee employee) {
 
@@ -52,11 +55,13 @@ public class EmployeeController {
         return employeeRepository.save(employee);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/add")
     public Employee addEmployee(@RequestBody Employee employee) {
         return employeeRepository.save(employee);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/delete")
     public void deleteEmployee(@RequestBody int id) {
         employeeRepository.deleteById(id);

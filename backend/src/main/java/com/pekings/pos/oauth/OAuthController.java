@@ -9,19 +9,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Configuration
@@ -44,9 +39,7 @@ public class OAuthController extends DefaultOAuth2UserService {
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/", "/login").permitAll()
                         .anyRequest().authenticated())
-                .oauth2Login(configurer -> configurer
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/"))
+                .oauth2Login(_ -> {})
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(logoutSuccessHandler)
