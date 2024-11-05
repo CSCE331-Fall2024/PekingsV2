@@ -91,10 +91,9 @@
 }
 
 .priceContainer{
-    padding: 5% 5% 0;
-    /*margin: 5% 5% 0;*/
+    padding: 7% 5% 0;
     color: white;
-    height: 15.7%;
+    height: 20%;
 }
 
 .subtotal{
@@ -112,7 +111,6 @@
 }
 
 .pay{
-    /*margin-top: 1%;*/
     width: 100%;
     text-align: center;
     background-color:#212A31;
