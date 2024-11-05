@@ -87,7 +87,7 @@
 
 .orderItemsContainer{
     height: 49.3%;
-    overflow-y: auto;
+    overflow-y: scroll; /* Makes scroll bar always visible */
 }
 
 .priceContainer{
@@ -118,3 +118,14 @@
     height: 4.5%;
     border: 2px solid black;
 }
+
+
+/* For hiding scroll bars */
+/*.orderItemsContainer::-webkit-scrollbar {*/
+/*    display: none; !* Hide the scrollbar *!*/
+/*}*/
+
+/*!* For Firefox *!*/
+/*.scrollable-container {*/
+/*    scrollbar-width: none; !* Hide scrollbar in Firefox *!*/
+/*}*/

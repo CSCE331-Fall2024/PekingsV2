@@ -84,9 +84,10 @@ const menuItems3 = [
         price: 10.00
     }
 ];
+const pin = 1234;
 
 // eslint-disable-next-line react/prop-types
-function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnClick}){
+function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder}){
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
 
     let alternateOrderButtons = [];
@@ -98,6 +99,13 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
         }
     }
 
+    const handlePaymentProcess = (paymentType) => {
+        if(processOrder(paymentType)){
+            console.log("x");
+            // processOrder(paymentType);
+        }
+    };
+
 
     const handleMenuChange = (menu) => {
         setCurrentMenu(menu);
@@ -105,6 +113,7 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
 
     return(
         <div className="centerScreen-cash">
+
             <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange} />
                 {Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList})}
@@ -114,6 +123,17 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
                 <div className="previousOrdersTitle-cash">Previous Orders</div>
                 <div className="previousOrdersDisplayBox-cash">{alternateOrderButtons}</div>
             </div>
+
+            <div className = "centerScreenContainers-cash" style={{display: center === 'payment' ? 'block' : 'none'}}>
+                <div className="paymentButtons-cash">
+                    <button className="card" onClick={() => handlePaymentProcess('card')}>Card</button>
+                    <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
+                </div>
+                <div className="managerOptionsContainer-cash">
+                    <button className="managerOptions-cash">Manager Options</button>
+                </div>
+            </div>
+
         </div>
     );
 }
