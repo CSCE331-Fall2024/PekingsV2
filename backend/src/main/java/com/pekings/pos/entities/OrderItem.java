@@ -1,8 +1,14 @@
 package com.pekings.pos.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pekings.pos.serialization.MenuIngredientSerializer;
+import com.pekings.pos.serialization.OrderItemSerializer;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -10,18 +16,21 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_items")
+@JsonSerialize(using = OrderItemSerializer.class)
 public class OrderItem {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id")
-    private MenuIngredient menuItem;
+    private MenuItem menuItem;
 
     public Integer getId() {
         return id;
@@ -39,11 +48,11 @@ public class OrderItem {
         this.order = order;
     }
 
-    public MenuIngredient getMenuItem() {
+    public MenuItem getMenuItem() {
         return menuItem;
     }
 
-    public void setMenuItem(MenuIngredient menuItem) {
+    public void setMenuItem(MenuItem menuItem) {
         this.menuItem = menuItem;
     }
 
