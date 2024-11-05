@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './cashier.css';
+import './Cashier.css';
 import LeftRect from './components/cashier/LeftPane.jsx';
 import CenterScreen from './components/cashier/CenterScreen.jsx';
 import RightPane from './components/cashier/RightPane.jsx';

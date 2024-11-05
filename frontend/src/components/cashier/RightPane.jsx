@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import './rightPane.css'
-// import {getOrderItems, clearItems, removeItem} from "../cashier/menu.jsx";
+import './RightPane.css'
+// import {getOrderItems, clearItems, removeItem} from "../cashier/Menu.jsx";
 
 
 // function orderItemDisplay(menuItem) {

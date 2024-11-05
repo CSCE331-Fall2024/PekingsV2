@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import './centerScreen.css'
-import TopPane from './topPane.jsx';
-import Menu from './menu.jsx';
+import './CenterScreen.css'
+import TopPane from './TopPane.jsx';
+import Menu from './Menu.jsx';
 
 const menuItems1 = [
     {
