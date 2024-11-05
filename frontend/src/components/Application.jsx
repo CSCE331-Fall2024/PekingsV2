@@ -151,9 +151,9 @@ const Application = () => {
 
 
         {showHireDialog && (
-          <div className="dialog-box dialog-hire">
-            <h2 className="dialog-title">You're Hired!</h2>
-            <p className="dialog-message">Congratulations! You have been hired.</p>
+            <div className="dialog-box dialog-hire">
+                <h2 className="dialog-title">You're Hired!</h2>
+                <p className="dialog-message">Congratulations! You have been hired.</p>
             
 
             <div className="form-grid">
@@ -189,11 +189,12 @@ const Application = () => {
                         </div>
                 </div>
 
-            </div>
+                </div>
 
             {/* TO:DO: Make different because submitting will save things */}
             <button className="close-btn" onClick={handleCloseDialog}>Submit and Close</button>
-          </div>
+            
+            </div>
         )}
 
         {showRejectDialog && (
