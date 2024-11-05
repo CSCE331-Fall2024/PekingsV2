@@ -24,7 +24,7 @@
     text-align: center;
     flex-direction: column;
     align-items: center;
-    color: #ffee00;
+    color: #8fdfff;
 }
 
 .content-wrapper {
@@ -97,14 +97,14 @@
 
 .title-wrapper h1 {
     font-weight: bold;
-    color: #ffee00;
+    color: #32a0cb;
     font-size: 7rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .title-wrapper p {
     font-weight: bold;
-    color: #ffee00;
+    color: #32a0cb;
     font-size: 3rem;
     max-width: 600px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
