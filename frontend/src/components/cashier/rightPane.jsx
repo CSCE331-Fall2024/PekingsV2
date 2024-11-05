@@ -99,18 +99,23 @@ function RightPane({orderNumber, orderItems}) {
 
     return(
         <div className="rightRect">
-            <div className="orderNumber">Order<br/>#{orderNumber}</div>
-            <hr className="separator"/>
+            <div className="rightPaneContainer1-cash">
+                <div className="orderNumberContainer-cash">
+                    <div className="orderNumber">Order<br/>#{orderNumber}</div>
+                </div>
 
-            <div className="orderItemsContainer">
-                {orderItemsRows}
-            </div>
-            <hr className="separator"/>
+                <hr className="separator"/>
 
-            <div className="priceContainer">
-                <div className="subtotal">Subtotal: ${subtotal}</div>
-                <div className="tax">Tax: ${tax}</div>
-                <div className="total">Total: ${total}</div>
+                <div className="orderItemsContainer">
+                    {orderItemsRows}
+                </div>
+                <hr className="separator"/>
+
+                <div className="priceContainer">
+                    <div className="subtotal">Subtotal: ${subtotal}</div>
+                    <div className="tax">Tax: ${tax}</div>
+                    <div className="total">Total: ${total}</div>
+                </div>
             </div>
 
             <button className="pay" onClick={handlePayment}>Pay</button>

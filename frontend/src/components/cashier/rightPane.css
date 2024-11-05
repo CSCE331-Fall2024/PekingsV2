@@ -5,6 +5,15 @@
     width: 21%
 }
 
+.rightPaneContainer1-cash{
+    height: 95.5%;
+    width: 100%;
+}
+
+.orderNumberContainer-cash{
+    height: 25.6%;
+}
+
 .orderNumber{
     position: relative;
     padding: 10%;
@@ -77,12 +86,13 @@
 }
 
 .orderItemsContainer{
-    height: 50%;
+    height: 49.3%;
     overflow-y: auto;
 }
 
 .priceContainer{
     padding: 5% 5% 0;
+    /*margin: 5% 5% 0;*/
     color: white;
     height: 15.7%;
 }
@@ -102,7 +112,7 @@
 }
 
 .pay{
-    margin-top: 1%;
+    /*margin-top: 1%;*/
     width: 100%;
     text-align: center;
     background-color:#212A31;
