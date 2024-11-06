@@ -83,7 +83,7 @@ const Application = () => {
                     <label htmlFor="position" className="form-label">Position</label>
                     <select
                         id="position"
-                        className="input-field"
+                        className="input-field-p"
                         value={position}
                         onChange={(e) => setPosition(e.target.value)}
                     >
@@ -125,7 +125,7 @@ const Application = () => {
                     <input
                         id="resume"
                         type="file"
-                        className="input-field"
+                        className="input-field-f"
                         onChange={(e) => setResume(e.target.files[0])}
                     />
                 </div>
@@ -193,7 +193,7 @@ const Application = () => {
 
             {/* TO:DO: Make different because submitting will save things */}
             <button className="close-btn" onClick={handleCloseDialog}>Submit and Close</button>
-            
+
             </div>
         )}
 
