@@ -50,6 +50,7 @@ const menuItems1 = [
         price: 8.99
     }
 ];
+// const menuItems1 = fetch("http://129.146.58.184:25569/api/orders/all");
 const menuItems2 = [
     {
         name: "Teriyaki Chicken",
@@ -101,7 +102,7 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
 
     const handlePaymentProcess = (paymentType) => {
         if(processOrder(paymentType)){
-            console.log("x");
+            // console.log("x");
             // processOrder(paymentType);
         }
     };

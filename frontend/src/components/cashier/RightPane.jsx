@@ -108,6 +108,7 @@ function RightPane({ orderNumber, orderItems, centerChange, setProcessFunction }
 
     return (
         <div className="rightRect">
+            <button className="tempBtn" onClick={() => console.log(paidItemsRows)}></button>
             <div className="rightPaneContainer1-cash">
                 <div className="orderNumberContainer-cash">
                     <div className="orderNumber">Order<br />#{orderNumber}</div>
