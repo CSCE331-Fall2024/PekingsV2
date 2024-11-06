@@ -9,7 +9,7 @@ import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.SaleItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,25 +37,25 @@ public class MenuItemController {
     @Autowired
     private MenuIngredientRepository menuIngredientRepository;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public List<MenuItem> getAllMenuItems() {
         return menuItemRepository.findAll().stream().sorted(Comparator.comparingInt(MenuItem::getId)).toList();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
     public MenuItem getMenuItem(@PathVariable("id") int id) {
         return menuItemRepository.findById(id).orElse(null);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}/ingredients")
     public List<MenuIngredient> getIngredients(@PathVariable("id") int id) {
         return menuIngredientRepository.findByMenuItemId(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    //@PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/top")
     public List<SaleItem> getTopMenuItemsPeriodic(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -67,13 +67,13 @@ public class MenuItemController {
         return orderItemRepository.getTopMenuItemPeriodic(startDate, endDate);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/category/{category}")
     public List<MenuItem> getMenuItemsCategory(@PathVariable("category") String category) {
         return menuItemRepository.findByCategory(category);
     }
 
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    //@PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/add")
     public MenuItem addMenuItem(@RequestBody MenuItem menuItem) {
         if (menuItem.getIngredients() != null) {
@@ -107,7 +107,7 @@ public class MenuItemController {
      * @param menuItem The menu item to update
      * @return The menu item with updated contents
      */
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    //@PreAuthorize("hasRole('ROLE_MANAGER')")
     @PatchMapping("/update")
     public MenuItem updateMenuItem(@RequestBody MenuItem menuItem) {
 
@@ -121,7 +121,7 @@ public class MenuItemController {
         return menuItemRepository.save(menuItem);
     }
 
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    //@PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/delete")
     public void deleteMenuItem(@RequestBody int menuItemID) {
         menuItemRepository.deleteById(menuItemID);

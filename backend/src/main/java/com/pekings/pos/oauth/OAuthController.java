@@ -19,59 +19,59 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.HashSet;
 import java.util.Set;
 
-@Configuration
-@EnableMethodSecurity
-@EnableWebSecurity
-public class OAuthController extends DefaultOAuth2UserService {
+//@Configuration
+//@EnableMethodSecurity
+//@EnableWebSecurity
+public class OAuthController {// extends DefaultOAuth2UserService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private CustomLogoutSuccessHandler logoutSuccessHandler;
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/manager/**").hasRole("MANAGER")
-                        .requestMatchers("/cashier/**").hasRole("CASHIER")
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/", "/login").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2Login(_ -> {})
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessHandler(logoutSuccessHandler)
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true))
-                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"));
-        return http.build();
-    }
-
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-
-        // Default role assignment
-        Set<GrantedAuthority> authorities = new HashSet<>(oAuth2User.getAuthorities());
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        String email = oAuth2User.getAttribute("email");
-        Employee employee = employeeRepository.findByEmail(email);
-
-        if (employee != null) {
-            if (employee.getPosition().equalsIgnoreCase("employee")) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
-            }
-
-            if (employee.getPosition().equalsIgnoreCase("manager")) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-            }
-        }
-
-        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "sub");
-    }
+//    @Autowired
+//    private EmployeeRepository employeeRepository;
+//
+//    @Autowired
+//    private CustomLogoutSuccessHandler logoutSuccessHandler;
+//
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests((auth) -> auth
+//                        .requestMatchers("/manager/**").hasRole("MANAGER")
+//                        .requestMatchers("/cashier/**").hasRole("CASHIER")
+//                        .requestMatchers("/user/**").hasRole("USER")
+//                        .requestMatchers("/", "/login").permitAll()
+//                        .anyRequest().authenticated())
+//                .oauth2Login(_ -> {})
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessHandler(logoutSuccessHandler)
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true))
+//                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"));
+//        return http.build();
+//    }
+//
+//    @Override
+//    public OAuth2User loadUser(OAuth2UserRequest userRequest) {
+//        OAuth2User oAuth2User = super.loadUser(userRequest);
+//
+//        // Default role assignment
+//        Set<GrantedAuthority> authorities = new HashSet<>(oAuth2User.getAuthorities());
+//        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//
+//        String email = oAuth2User.getAttribute("email");
+//        Employee employee = employeeRepository.findByEmail(email);
+//
+//        if (employee != null) {
+//            if (employee.getPosition().equalsIgnoreCase("employee")) {
+//                authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
+//            }
+//
+//            if (employee.getPosition().equalsIgnoreCase("manager")) {
+//                authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
+//                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+//            }
+//        }
+//
+//        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "sub");
+//    }
 
 }
