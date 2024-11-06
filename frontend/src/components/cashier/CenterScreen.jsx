@@ -102,9 +102,9 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
 
     const handlePaymentProcess = (paymentType) => {
         if(processOrder(paymentType)){
-            // console.log("x");
-            // processOrder(paymentType);
+            //
         }
+
     };
 
 

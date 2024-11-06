@@ -9,6 +9,7 @@ function createOrder(orderID) {
         id: orderID,
         currentCenter: 'menu', // Each order has its own center state
         orderItems: [],
+        paidItems: [],
         status: true
     };
 }
@@ -80,7 +81,7 @@ const ButtonScreen = () => {
                     <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
                         <LeftRect centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} />
                         <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} processOrder={processOrder} />
-                        <RightPane orderNumber={order.id} orderItems={order.orderItems} centerChange={handleCenterChange} setProcessFunction={setProcessFunc} />
+                        <RightPane orderNumber={order.id} orderItems={order.orderItems} paidItems={order.paidItems} centerChange={handleCenterChange} setProcessFunction={setProcessFunc} />
                     </div>
                 ))}
             </div>

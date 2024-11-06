@@ -1,42 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './rightPane.css';
 
+// COmpare arrays
+const areArraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
+};
+
 // eslint-disable-next-line react/prop-types
-function RightPane({ orderNumber, orderItems, centerChange, setProcessFunction }) {
+function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProcessFunction }) {
     const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
     const [total, setTotal] = useState(0);
-    const [allOrderItemsRows, setAllOrderItemsRows] = useState([]);
-    const [paidItemsRows, setPaidItemsRows] = useState([]);
-    const [unpaidItemRows, setUnpaidItemRows] = useState([]);
+    const [orderItemsRows, setOrderItemsRows] = useState([]);
+    const [orderItemsChecker, setOrderItemsChecker] = useState([]);
 
-    // UseEffect to log paidItemsRows when it changes
-    useEffect(() => {
-        console.log("Updated paidItemsRows:", paidItemsRows);
-    }, [paidItemsRows]);
+
 
     const processPayment = () => (paymentType) => {
-        console.log(paymentType);
+        // console.log(paymentType);
 
         centerChange('menu');
 
-        // Clone the current unpaidItemRows and add them to paidItemsRows
-        const items = [...unpaidItemRows];
+        paidItems.push(...orderItems);
+        // console.log(paidItems);
 
-        // Update paidItemsRows using functional state update
-        setPaidItemsRows((prevPaidItems) => [...prevPaidItems, ...items]);
-
-        // Clear the order items (non-mutating approach)
-        setAllOrderItemsRows([]);
-        setUnpaidItemRows([]);
-
+        // Reset the subtotal, tax, and total
         orderItems.length = 0;
         setSubtotal(0);
         setTax(0);
         setTotal(0);
-
-        // State updates are asynchronous, so the log here will not show updated `paidItemsRows`
-        // instead, rely on the `useEffect` that logs `paidItemsRows` when it changes.
     };
 
     useEffect(() => {
@@ -56,7 +52,7 @@ function RightPane({ orderNumber, orderItems, centerChange, setProcessFunction }
         let name = menuItem.name;
         let price = menuItem.price;
         return (
-            <div className="orderItemRow" key={name}>
+            <div className="orderItemRow">
                 <button className="orderItemRowText">
                     <div className="orderItemsText">{name}</div>
                     <div className="orderItemsPrice">${price}</div>
@@ -67,14 +63,54 @@ function RightPane({ orderNumber, orderItems, centerChange, setProcessFunction }
         );
     }
 
+    function paidItemDisplay(menuItem){
+        let name = menuItem.name;
+        let price = menuItem.price;
+        return (
+            <div className="orderItemRow">
+                <button className="orderItemRowText">
+                    <div className="paidItemsText">{name}</div>
+                    <div className="paidItemsPrice">${price}</div>
+                </button>
+            </div>
+        );
+    }
+
+    function createPaidText(){
+        return (
+            <div className="orderItemRow">
+                <div className="paidItemText">Payment Complete</div>
+            </div>
+        )
+    }
+
     const updateOrderItems = () => {
         // Make sure to update the combined list of all items: unpaid + paid
-        const rows = orderItems.map((item) => orderItemDisplay(item));
-        // const paidRows = paidItemsRows.map((item) => orderItemDisplay(item));
+        const paidRows = paidItems.map((item) => paidItemDisplay(item));
+        if(paidRows.length > 0){
+            paidRows.push(createPaidText());
+        }
 
-        // Combine paid and unpaid items into allOrderItemsRows
-        setAllOrderItemsRows([...paidItemsRows, ...rows]);
+        const unpaidRows = orderItems.map((item) => orderItemDisplay(item));
+
+        setOrderItemsRows([...paidRows, ...unpaidRows]);
+
+        if(!areArraysEqual(orderItems, orderItemsChecker)){
+            setOrderItemsChecker([...orderItems]);
+            // console.log("x");
+            // console.log(orderItemsChecker);
+            // console.log(orderItems);
+        }
     };
+
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [orderItemsChecker]);
 
     const updateOrderTotal = () => {
         let st = 0;
@@ -98,17 +134,17 @@ function RightPane({ orderNumber, orderItems, centerChange, setProcessFunction }
 
         // Cleanup intervals, though using `setInterval` may not be necessary
         const intervalId1 = setInterval(updateOrderItems, 1);
-        const intervalId2 = setInterval(updateOrderTotal, 1); // Check every second
+        const intervalId2 = setInterval(updateOrderTotal, 1);
 
         return () => {
             clearInterval(intervalId1);
             clearInterval(intervalId2);
         } // Cleanup on unmount
-    }, [paidItemsRows, unpaidItemRows, orderItems]); // Depend on unpaid and paid items
+    }, [orderItemsChecker]); // Depend on unpaid and paid items
 
     return (
         <div className="rightRect">
-            <button className="tempBtn" onClick={() => console.log(paidItemsRows)}></button>
+            {/*<button className="tempBtn" onClick={() => console.log(paidItems)}></button>*/}
             <div className="rightPaneContainer1-cash">
                 <div className="orderNumberContainer-cash">
                     <div className="orderNumber">Order<br />#{orderNumber}</div>
@@ -116,8 +152,8 @@ function RightPane({ orderNumber, orderItems, centerChange, setProcessFunction }
 
                 <hr className="separator" />
 
-                <div className="orderItemsContainer">
-                    {allOrderItemsRows}
+                <div className="orderItemsContainer" ref={containerRef}>
+                    {orderItemsRows}
                 </div>
                 <hr className="separator" />
 

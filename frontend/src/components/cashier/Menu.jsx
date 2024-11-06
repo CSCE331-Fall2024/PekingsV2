@@ -4,6 +4,7 @@ import './Menu.css'
 function Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList}) {
     const handleButtonClick = (menuItem) => () =>{
         menuItemList.push(menuItem);
+        // console.log(menuItemList);
     };
 
     const ButtonComponent = (menuItem) => {

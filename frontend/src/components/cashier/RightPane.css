@@ -53,7 +53,7 @@
 }
 
 .orderItemsText {
-    width: 65%; /* Set maximum width for text */
+    width: 90%; /* Set maximum width for text */
     white-space: normal; /* Allow wrapping */
     overflow-wrap: break-word; /* Break long words if necessary */
     text-align: left; /* Align text to the left */
@@ -65,8 +65,32 @@
 .orderItemsPrice {
     display: flex; /* Use flexbox for the price */
     align-self: center; /* Align price to the start of the container */
-    margin-left: 5%; /* Space between text and price */
+    margin-left: 10%; /* Space between text and price */
     width: 10%;
+}
+
+.paidItemsText{
+    width: 90%; /* Set maximum width for text */
+    white-space: normal; /* Allow wrapping */
+    overflow-wrap: break-word; /* Break long words if necessary */
+    text-align: left; /* Align text to the left */
+    display: flex; /* Use flexbox to align text and price */
+    flex-direction: column; /* Stack text vertically */
+    color: white;
+}
+
+.paidItemsPrice {
+    display: flex; /* Use flexbox for the price */
+    align-self: center; /* Align price to the start of the container */
+    margin-left: 10%; /* Space between text and price */
+    width: 10%;
+}
+
+.paidItemText{
+    width: 100%;
+    text-align: center;
+    padding: 5%;
+    color: blue;
 }
 
 .editBtn{
