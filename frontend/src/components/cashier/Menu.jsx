@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './menu.css'
+import './Menu.css'
 
 function Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList}) {
     const handleButtonClick = (menuItem) => () =>{

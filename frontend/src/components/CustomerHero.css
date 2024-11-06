@@ -6,6 +6,27 @@
     overflow-x: hidden;
 }
 
+.menu-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    color: #ffee00;
+}
+
+.season-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    color: #8fdfff;
+}
+
 .content-wrapper {
     width: 100%;
     min-height: 100vh; 
@@ -39,10 +60,12 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.4); 
+    
+    
 }
 
 .marble-section {
-    position: relative; 
+    position: relative;
     width: 100%;
     min-height: 35vh; 
     background-image: url("/images/bluemarble.png");
@@ -52,6 +75,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
 
 .title-content {
@@ -73,14 +97,14 @@
 
 .title-wrapper h1 {
     font-weight: bold;
-    color: #ffee00;
+    color: #32a0cb;
     font-size: 7rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .title-wrapper p {
     font-weight: bold;
-    color: #ffee00;
+    color: #32a0cb;
     font-size: 3rem;
     max-width: 600px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

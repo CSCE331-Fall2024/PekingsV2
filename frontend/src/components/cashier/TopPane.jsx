@@ -1,5 +1,5 @@
 import React from 'react';
-import './topPane.css'
+import './TopPane.css'
 
 // eslint-disable-next-line react/prop-types
 function TopPane({screenChange}){

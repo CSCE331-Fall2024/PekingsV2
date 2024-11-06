@@ -14,7 +14,7 @@ public class MenuIngredientSerializer extends JsonSerializer<MenuIngredient> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectField("id", menuIngredient.getId());
         jsonGenerator.writeObjectField("ingredient", menuIngredient.getIngredient().getId());
-        jsonGenerator.writeObjectField("amount", menuIngredient.getIngredientsInItem());
+        jsonGenerator.writeObjectField("amount", menuIngredient.getAmount());
         jsonGenerator.writeObjectField("menu_item", menuIngredient.getMenuItem().getId());
         jsonGenerator.writeEndObject();
     }
