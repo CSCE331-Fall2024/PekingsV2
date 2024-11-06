@@ -1,4 +1,5 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+// new stuff
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import './DuckMascot.css';
 
 const TAX_RATE = 0.0825;
@@ -13,38 +14,80 @@ const DuckMascot = forwardRef((props, ref) => {
     const [promoCode, setPromoCode] = useState('');
     const [appliedPromo, setAppliedPromo] = useState(null);
     const [promoError, setPromoError] = useState('');
+    const [ingredientNames, setIngredientNames] = useState({});
+
+    // Fetch ingredient name for a given ID
+    const fetchIngredientName = async (id) => {
+        try {
+            const response = await fetch(`/api/inventory/${id}`);
+            if (response.ok) {
+                const data = await response.json();
+                setIngredientNames(prev => ({
+                    ...prev,
+                    [id]: data.name
+                }));
+            }
+        } catch (error) {
+            console.error(`Error fetching ingredient name for ID ${id}:`, error);
+        }
+    };
+
+    //gets ingredient id for each ingredient
+    useEffect(() => {
+        orderItems.forEach(item => {
+            if (item.ingredients) {
+                item.ingredients.forEach(ingredient => {
+                    const ingredientId = ingredient.ingredient || ingredient;
+                    if (!ingredientNames[ingredientId]) {
+                        fetchIngredientName(ingredientId);
+                    }
+                });
+            }
+        });
+    }, [orderItems]);
 
     // function that handles when a menu item is clicked, will add to the order list
     useImperativeHandle(ref, () => ({
         addItem: (item) => {
-            const newItem = {
-                // copies over item property
-                ...item,
-                
-                // id is the current date to track new, will eventually be id added from database
-                id: Date.now(), 
-                
-                // copy of ingredients, if not filled in, choose empty list
-                modifiedIngredients: [...(item.ingredients || [])],
+            try {
 
-                ingredientCounts: Object.fromEntries(
-                    // mapping ingredient name with ingredient count, starting at 1
-                    (item.ingredients || []).map(ingr => [ingr, 1])
-                )
-            };
+                const newItem = {
+                    // copies over item property
+                    ...item,
 
-            //addition of new items to duck mascot thingy
-            setOrderItems(prevItems => [...prevItems, newItem]);
-            setIsOpen(true);
+                    // id is the current date to track new, will eventually be id added from database
+                    id: Date.now(),
+
+                    // copy of ingredients, if not filled in, choose empty list
+                    ingredients: (item.ingredients || []).map(ing => ({
+                        ...ing,
+                        ingredient: ing.ingredient || ing.id || ing
+                    })),
+
+                    // Update ingredientCounts to use correct IDs
+                    ingredientCounts: Object.fromEntries(
+                        (item.ingredients || []).map(ing => [
+                            ing.ingredient || ing.id || ing,
+                            ing.amount || 1
+                        ])
+                    ),
+                    originalPrice: Number(item.price)
+                };
+
+                //addition of new items to duck mascot thingy
+                setOrderItems(prevItems => [...prevItems, newItem]);
+                setIsOpen(true);
+            }
+            catch (error) {
+                console.error("Error adding item:", error);
+            }
         }
     }));
 
-    // changing duck image function lol
     const toggleDuck = () => {
         setIsOpen(!isOpen);
     };
 
-    //ingredient handling functions
     const toggleIngredients = (itemId) => {
         setExpandedItems(prev => ({
             ...prev,
@@ -52,19 +95,20 @@ const DuckMascot = forwardRef((props, ref) => {
         }));
     };
 
+    //function to handle addition or removal of ingredients
     const handleIngredientChange = (itemId, ingredient, action) => {
         setOrderItems(prevItems => {
             return prevItems.map(item => {
                 if (item.id === itemId) {
-                    const newCounts = { ...item.ingredientCounts };
-                    
+                    const newCounts = {...item.ingredientCounts};
+
                     if (action === 'add') {
                         newCounts[ingredient] = (newCounts[ingredient] || 0) + 1;
-                    } 
+                    }
                     else if (action === 'remove' && newCounts[ingredient] > 0) {
                         newCounts[ingredient] = newCounts[ingredient] - 1;
                     }
-        
+
                     return {
                         ...item,
                         ingredientCounts: newCounts
@@ -80,16 +124,17 @@ const DuckMascot = forwardRef((props, ref) => {
 
     const calculateItemIngredientTotal = (item) => {
         if (!item.ingredientCounts) return 0;
-        
+
         const originalTotal = item.ingredients.length;
         const currentTotal = Object.values(item.ingredientCounts)
             .reduce((sum, count) => sum + count, 0);
-        
+
         return (currentTotal - originalTotal) * INGREDIENT_PRICE;
     };
 
     const calculateItemPrice = (item) => {
-        const basePrice = item.price;
+        // Use the stored original price instead of the potentially modified price
+        const basePrice = item.originalPrice || 0;
         const ingredientPrice = calculateItemIngredientTotal(item);
         return basePrice + ingredientPrice;
     };
@@ -114,29 +159,98 @@ const DuckMascot = forwardRef((props, ref) => {
         return calculateSubtotal() - calculateDiscount() + calculateTax();
     };
 
-
-    // promo code calculations
     const handlePromoSubmit = (e) => {
         e.preventDefault();
         if (VALID_PROMO_CODES.includes(promoCode.toUpperCase())) {
             setAppliedPromo(promoCode.toUpperCase());
             setPromoError('');
-        } 
+        }
         else {
             setPromoError('Invalid promo code');
         }
         setPromoCode('');
     };
 
-    // yeets everything after ordered
-    const handleOrder = () => {
-        alert('Order placed!');
-        setOrderItems([]);
-        setIsOpen(false);
-        setAppliedPromo(null);
-        setPromoError('');
-        setExpandedItems({});
+    const handleOrder = async () => {
+        try {
+            // Format extras array - calculate ingredient amount changes
+            const extras = orderItems.flatMap(item => {
+                // Only process items that have ingredients
+                if (!item.ingredients || !item.ingredientCounts) return [];
+
+                return item.ingredients.map(ingredient => {
+                    // Handle both object and string ingredient formats
+                    const ingredientId = typeof ingredient === 'object' ?
+                        ingredient.id :
+                        Number(ingredient);
+
+                    // Get the current count for this ingredient
+                    const currentCount = item.ingredientCounts[typeof ingredient === 'object' ?
+                        ingredient.ingredient :
+                        ingredient] || 0;
+
+                    // Calculate the difference from base amount (1)
+                    const amountChange = currentCount - 1;
+
+                    // Only include if there's a change in amount
+                    return amountChange !== 0 ? {
+                        ingredient: { id: ingredientId },
+                        amount: amountChange
+                    } : null;
+                });
+            }).filter(Boolean); // Remove null entries
+
+            // Format order items array
+            const items = orderItems.map(item => ({
+                menuItem: {
+                    // Use the original item ID from the menu, not the Date.now() ID
+                    id: Number(item.menuItemId || item.id)
+                }
+            }));
+
+            // Create the order object
+            const order = {
+                customer: {
+                    id: Math.floor(Math.random() * 1000) + 1 // Random ID between 1 and 1000
+                },
+                employee: {
+                    id: 7 // Fixed ID for online orders
+                },
+                time: new Date().toISOString(), // Current time in ISO format
+                price: Number(calculateTotal().toFixed(2)), // Total price including tax and discounts
+                items: items,
+                extras: extras
+            };
+
+            // Send the order to the database
+            const response = await fetch('/api/orders/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order)
+            });
+
+            if (response.ok) {
+                // Show success message
+                alert('Order placed successfully!');
+
+                // Clear the order state
+                setOrderItems([]);
+                setIsOpen(false);
+                setAppliedPromo(null);
+                setPromoError('');
+                setExpandedItems({});
+            } else {
+                const errorData = await response.json();
+                throw new Error(`Failed to add order: ${errorData.message || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error processing order:', error);
+            alert('Failed to place order. Please try again.');
+        }
     };
+
 
     return (
         <div className="duck-mascot-container">
@@ -146,7 +260,7 @@ const DuckMascot = forwardRef((props, ref) => {
                         <h3>Order Summary</h3>
                         <button className="close-button" onClick={toggleDuck}>×</button>
                     </div>
-                    
+
                     <div className="speech-box-content">
                         {orderItems.length === 0 ? (
                             <p className="empty-message">Your cart is empty</p>
@@ -162,42 +276,51 @@ const DuckMascot = forwardRef((props, ref) => {
                                             ×
                                         </button>
                                     </div>
-                                    
+
                                     {expandedItems[item.id] && (
                                         <div className="ingredients-list">
                                             <p className="ingredients-title">Ingredients:</p>
-                                            {item.ingredients.map((ingredient, idx) => (
+                                            {item.ingredients.map((ingredient, idx) => {
 
                                                 // handles ingredients
-                                                <div key={idx} className="ingredient-item">
-                                                    <span className="ingredient-name">
-                                                        {ingredient}
-                                                        {/* amount of ingredients lol, x 1 is normal, the 1 will change when added or subtracted */}
-                                                        <span className="ingredient-count"> 
-                                                            × {item.ingredientCounts[ingredient] || 0}
+                                                const ingredientId = ingredient.ingredient || ingredient;
+                                                return (
+                                                    <div key={idx} className="ingredient-item">
+                                                        <span className="ingredient-name">
+                                                            {ingredientNames[ingredientId] || `Loading...`}
+                                                            <span className="ingredient-count">
+                                                                × {item.ingredientCounts[ingredientId] || 0}
+                                                            </span>
                                                         </span>
-                                                    </span>
 
-                                                    {/* controls how many ingredients are added or taken away */}
-                                                    <div className="ingredient-controls">
-                                                        <button className="ingredient-button remove" 
-                                                        onClick={() => handleIngredientChange(item.id, ingredient, 'remove')} 
-                                                        disabled={!item.ingredientCounts[ingredient]}>
-                                                            -
-                                                        </button>
-                                                        
-                                                        <button className="ingredient-button add"
-                                                        onClick={() => handleIngredientChange(item.id, ingredient, 'add')}>
-                                                            +
-                                                        </button>
+                                                        {/* controls how many ingredients are added or taken away */}
+                                                        <div className="ingredient-controls">
+                                                            <button className="ingredient-button remove"
+                                                                onClick={() => handleIngredientChange(
+                                                                    item.id,
+                                                                    ingredientId,
+                                                                    'remove'
+                                                                )}
+                                                                disabled={!item.ingredientCounts[ingredientId]}>
+                                                                -
+                                                            </button>
+                                                            <button className="ingredient-button add"
+                                                                onClick={() => handleIngredientChange(
+                                                                    item.id,
+                                                                    ingredientId,
+                                                                    'add'
+                                                                )}>
+                                                                +
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
 
                                             {/*  overall price change in relation to ingredients */}
                                             {calculateItemIngredientTotal(item) !== 0 && (
                                                 <p className="ingredient-price-change">
-                                                    Ingredient adjustments: 
+                                                    Ingredient adjustments:
                                                     ${calculateItemIngredientTotal(item).toFixed(2)}
                                                 </p>
                                             )}
@@ -207,7 +330,7 @@ const DuckMascot = forwardRef((props, ref) => {
                             ))
                         )}
                     </div>
-                    
+
                     {/* speech box from duck, modified to handle promo codes */}
                     <div className="speech-box-footer">
 
@@ -234,7 +357,7 @@ const DuckMascot = forwardRef((props, ref) => {
                                 Promo code {appliedPromo} applied!
                             </div>
                         )}
-                        
+
                         {/* calculation of price at bottom of speech text */}
                         <div className="price-breakdown">
                             <div className="price-row">
@@ -260,10 +383,14 @@ const DuckMascot = forwardRef((props, ref) => {
                             Place Order
                         </button>
                     </div>
-
                 </div>
             )}
-            <img src={isOpen ? '/images/duckopen.png' : '/images/duckidle.png'} alt="Duck Mascot" className="duck-mascot" onClick={toggleDuck}/>
+            <img
+                src={isOpen ? '/images/duckopen.png' : '/images/duckidle.png'}
+                alt="Duck Mascot"
+                className="duck-mascot"
+                onClick={toggleDuck}
+            />
         </div>
     );
 });
