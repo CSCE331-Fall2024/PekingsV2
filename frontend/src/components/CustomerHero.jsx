@@ -109,6 +109,22 @@ const menuItems = [
 
 ];
 
+// Pre-API menuItems
+const seasonItems = [
+    {
+      name: "Teriyaki Chicken",
+      image: "/images/teriyaki.png",
+      price: 10.00
+    },
+    {
+        name: "Teriyaki Chicken",
+        image: "/images/teriyaki.png",
+        price: 10.00
+    },
+
+];
+
+
 function CustomerHero() {
     const duckMascotRef = useRef();
     
@@ -136,9 +152,22 @@ function CustomerHero() {
                         </div>
                     </div>
                 </div>
+                <div className='video-section'>
+                    <div className='video-container'>
+                        <video autoPlay loop muted className='background-video'>
+                            <source src="/videos/seasonal.mp4" type="video/mp4" />
+                        </video>
+                        <div className='video-overlay'>
+                            <h2 className="season-title">Special Seasonal Items:</h2>
+                            <MenuGrid items={seasonItems} onAddToOrder={handleAddToOrder} />
+                        </div>
+                    </div>
+                </div>
                 <div className='marble-section'>
+                    <h2 className="menu-title">Choose an item to start your order</h2>
                     <MenuGrid items={menuItems} onAddToOrder={handleAddToOrder} />
                 </div>
+                
             </div>
             <DuckMascot ref={duckMascotRef} />
         </div>
