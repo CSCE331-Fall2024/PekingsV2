@@ -19,6 +19,7 @@ const ButtonScreen = () => {
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
     const [processOrder, setProcessFunc] = useState(null); // A function to be passed into rightPane and set there
+    const [discount, setDiscount] = useState(0);
 
     function getLastActive(){
         let lastActive = -1;
@@ -80,8 +81,13 @@ const ButtonScreen = () => {
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
                         <LeftRect centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} />
-                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} processOrder={processOrder} />
-                        <RightPane orderNumber={order.id} orderItems={order.orderItems} paidItems={order.paidItems} centerChange={handleCenterChange} setProcessFunction={setProcessFunc} />
+                        <CenterScreen center={order.currentCenter} centerChange={handleCenterChange} menuItemList={order.orderItems}
+                                      alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} processOrder={processOrder}
+                                      setDiscount={setDiscount}
+                        />
+                        <RightPane orderNumber={order.id} orderItems={order.orderItems} paidItems={order.paidItems}
+                                   centerChange={handleCenterChange} setProcessFunction={setProcessFunc} discount={discount}
+                        />
                     </div>
                 ))}
             </div>

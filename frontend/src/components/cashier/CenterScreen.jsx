@@ -88,10 +88,22 @@ const menuItems3 = [
 const pin = 1234;
 
 // eslint-disable-next-line react/prop-types
-function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder}){
+function CenterScreen({center, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount}){
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
-
+    const [inputValue, setInputValue] = useState('');
     let alternateOrderButtons = [];
+
+    // Handle button click to append number to the input field
+    const handleButtonClick = (number) => {
+        setInputValue(prevValue => prevValue + number);
+    };
+
+    // Clear the input field
+    const handleClear = () => {
+        setInputValue('');
+    };
+
+
     for(let i = 0; i < alternateOrders.length; i++){
         if(alternateOrders[i].status){
             alternateOrderButtons.push(
@@ -101,10 +113,10 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
     }
 
     const handlePaymentProcess = (paymentType) => {
+        setDiscount(0);
         if(processOrder(paymentType)){
             //
         }
-
     };
 
 
@@ -112,11 +124,19 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
         setCurrentMenu(menu);
     };
 
+    const setDiscountAmount = (num) => {
+        // console.log(num);
+        setDiscount(num);
+        centerChange('menu');
+    }
+
+
+
     return(
         <div className="centerScreen-cash">
 
             <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
-                <TopPane screenChange={handleMenuChange} />
+                <TopPane screenChange={handleMenuChange}/>
                 {Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList})}
             </div>
 
@@ -125,18 +145,64 @@ function CenterScreen({center, menuItemList, alternateOrders, handlePreviousBtnC
                 <div className="previousOrdersDisplayBox-cash">{alternateOrderButtons}</div>
             </div>
 
-            <div className = "centerScreenContainers-cash" style={{display: center === 'payment' ? 'block' : 'none'}}>
+            <div className="centerScreenContainers-cash" style={{display: center === 'payment' ? 'block' : 'none'}}>
                 <div className="paymentButtons-cash">
                     <button className="card" onClick={() => handlePaymentProcess('card')}>Card</button>
                     <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
                 </div>
                 <div className="managerOptionsContainer-cash">
-                    <button className="managerOptions-cash">Manager Options</button>
+                    <button className="managerOptions-cash" onClick={() => centerChange('manager-confirm')}>Manager Options
+                    </button>
                 </div>
             </div>
 
-        </div>
-    );
-}
+            <div className="centerScreenContainers-cash"
+                 style={{display: center === 'manager-confirm' ? 'block' : 'none'}}>
+                <div className="number-input-container">
+                    <div className="input-field">
+                        <input
+                            type="text"
+                            value={inputValue}
+                            readOnly
+                            className="number-input"
+                            placeholder="PIN"
+                        />
+                    </div>
 
-export default CenterScreen;
+                    <div className="button-grid">
+                        <button className="number-button" onClick={() => handleButtonClick('1')}>1</button>
+                        <button className="number-button" onClick={() => handleButtonClick('2')}>2</button>
+                        <button className="number-button" onClick={() => handleButtonClick('3')}>3</button>
+                        <button className="number-button" onClick={() => handleButtonClick('4')}>4</button>
+                        <button className="number-button" onClick={() => handleButtonClick('5')}>5</button>
+                        <button className="number-button" onClick={() => handleButtonClick('6')}>6</button>
+                        <button className="number-button" onClick={() => handleButtonClick('7')}>7</button>
+                        <button className="number-button" onClick={() => handleButtonClick('8')}>8</button>
+                        <button className="number-button" onClick={() => handleButtonClick('9')}>9</button>
+                        <button className="number-button" onClick={() => handleButtonClick('0')}>0</button>
+                    </div>
+
+                    <button onClick={handleClear} className="clear-button">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <div className="centerScreenContainers-cash" style={{display: center === 'manager' ? 'block' : 'none'}}>
+                <div className="normalDiscount">
+                    <button className="discountBtn" onClick={() => setDiscountAmount(0.1)}>10%</button>
+                    <button className="discountBtn" onClick={() => setDiscountAmount(0.15)}>15%</button>
+                    <button className="discountBtn" onClick={() => setDiscountAmount(0.2)}>20%</button>
+                </div>
+                <div className="specialDiscount">
+                    <button className="employeeDiscountBtn" onClick={() => setDiscountAmount(0.5)}>Employee
+                        Discount
+                    </button>
+                </div>
+                </div>
+
+            </div>
+            );
+            }
+
+            export default CenterScreen;

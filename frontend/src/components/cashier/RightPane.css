@@ -53,7 +53,7 @@
 }
 
 .orderItemsText {
-    width: 90%; /* Set maximum width for text */
+    width: 60%; /* Set maximum width for text */
     white-space: normal; /* Allow wrapping */
     overflow-wrap: break-word; /* Break long words if necessary */
     text-align: left; /* Align text to the left */
@@ -91,6 +91,14 @@
     text-align: center;
     padding: 5%;
     color: blue;
+}
+
+.discountText{
+    width: 100%;
+    text-align: center;
+    /*padding: 5%;*/
+    color: blue;
+    font-size: 70%;
 }
 
 .editBtn{

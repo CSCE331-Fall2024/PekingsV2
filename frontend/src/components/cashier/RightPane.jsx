@@ -11,7 +11,7 @@ const areArraysEqual = (arr1, arr2) => {
 };
 
 // eslint-disable-next-line react/prop-types
-function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProcessFunction }) {
+function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProcessFunction, discount}) {
     const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
     const [total, setTotal] = useState(0);
@@ -84,6 +84,14 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
         )
     }
 
+    function createDiscountText(){
+        return (
+            <div className="orderItemRow">
+                <div className="discountText">{discount * 100}% Discount Applied</div>
+            </div>
+        );
+    }
+
     const updateOrderItems = () => {
         // Make sure to update the combined list of all items: unpaid + paid
         const paidRows = paidItems.map((item) => paidItemDisplay(item));
@@ -92,6 +100,9 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
         }
 
         const unpaidRows = orderItems.map((item) => orderItemDisplay(item));
+        if(unpaidRows.length > 0 && discount > 0){
+            unpaidRows.push(createDiscountText());
+        }
 
         setOrderItemsRows([...paidRows, ...unpaidRows]);
 
@@ -119,6 +130,12 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
             st += orderItems[i].price;
         }
 
+        // console.log(discount);
+
+        if(discount !== 0){
+            st *= 1 - discount;
+        }
+
         st = parseFloat(st.toFixed(2));
         let tax = parseFloat((st * 0.0625).toFixed(2));
         let total = parseFloat((st * 1.0625).toFixed(2));
@@ -140,7 +157,7 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
             clearInterval(intervalId1);
             clearInterval(intervalId2);
         } // Cleanup on unmount
-    }, [orderItemsChecker]); // Depend on unpaid and paid items
+    }, [orderItemsChecker, discount]); // Depend on unpaid and paid items
 
     return (
         <div className="rightRect">

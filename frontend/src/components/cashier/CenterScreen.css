@@ -81,3 +81,78 @@
     height: 50px;
     /*position: absolute;*/
 }
+
+/* General container styles */
+.number-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    padding: 5%;
+    width: 60%;
+    height: 60%;
+    margin: 25% 20% 20%;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: #748D92;
+}
+
+/* Styling for the input field */
+.input-field {
+    margin-bottom: 20px;
+    color: white;
+}
+
+.number-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: black;
+    color: red;
+}
+
+/* Grid layout for the number buttons */
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for buttons */
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.button-grid button:nth-child(10) { grid-area: 4 / 2; } /* This is for 0 */
+
+/* Style for the number buttons */
+.number-button {
+    padding: 15px;
+    font-size: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #748D92;
+    transition: background-color 0.2s;
+}
+
+.number-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Style for the clear button */
+.clear-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.clear-button:hover {
+    background-color: #ff3333;
+}
