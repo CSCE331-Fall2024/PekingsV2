@@ -7,104 +7,108 @@ import MenuGrid from './MenuGrid';
 // Pre-API menuItems
 const menuItems = [
     {
-      name: "Teriyaki Chicken",
-      image: "/images/teriyaki.png",
-      price: 10.00
+        name: "Teriyaki Chicken",
+        image: "/images/teriyaki.png",
+        price: 10.00,
+        ingredients: ["chicken", "soy sauce", "ginger", "garlic", "sugar"]
     },
     {
-      name: "Broccoli Beef",
-      image: "/images/brocbeef.png",
-      price: 10.00
+        name: "Broccoli Beef",
+        image: "/images/brocbeef.png",
+        price: 10.00,
+        ingredients: ["beef", "broccoli", "soy sauce", "ginger", "garlic"]
     },
     {
-      name: "Chicken Fried Rice",
-      image: "/images/CFR.png",
-      price: 10.00
+        name: "Chicken Fried Rice",
+        image: "/images/CFR.png",
+        price: 10.00,
+        ingredients: ["chicken", "rice", "egg", "carrot", "peas", "soy sauce"]
     },
     {
         name: "Beef Fried Rice",
         image: "/images/BFR.png",
-        price: 10.00
+        price: 10.00,
+        ingredients: ["beef", "rice", "egg", "carrot", "peas", "soy sauce"]
     },
     {
         name: "Orange Chicken",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["chicken", "orange juice", "sugar", "soy sauce", "garlic"]
     },
     {
         name: "Beijing Beef",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["beef", "bell peppers", "onions", "soy sauce", "sugar"]
     },
     {
         name: "Crab Rangoon",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["crab meat", "cream cheese", "wonton wrappers", "scallions"]
     },
     {
         name: "Fortune Cookies",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["flour", "sugar", "vanilla extract", "egg whites"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
     {
         name: "Egg Rolls",
-
-        price: 10.00
+        price: 10.00,
+        ingredients: ["cabbage", "carrot", "pork", "soy sauce", "spring roll wrappers"]
     },
 
 ];
@@ -112,14 +116,16 @@ const menuItems = [
 // Pre-API menuItems
 const seasonItems = [
     {
-      name: "Teriyaki Chicken",
-      image: "/images/teriyaki.png",
-      price: 10.00
+        name: "Teriyaki Chicken",
+        image: "/images/teriyaki.png",
+        price: 10.00,
+        ingredients: ["chicken", "soy sauce", "ginger", "garlic", "sugar"]
     },
     {
         name: "Teriyaki Chicken",
         image: "/images/teriyaki.png",
-        price: 10.00
+        price: 10.00,
+        ingredients: ["chicken", "soy sauce", "ginger", "garlic", "sugar"]
     },
 
 ];
