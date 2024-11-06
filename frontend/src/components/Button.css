@@ -8,6 +8,9 @@
     outline: none;
     border: none;
     cursor: pointer;
+    white-space: nowrap; /* Add this to prevent text wrapping */
+    display: inline-flex; /* Add this to keep button content inline */
+    align-items: center; /* Add this to vertically center the text */
   }
   
   .btn--primary {
@@ -26,7 +29,7 @@
   
   .btn--medium {
     padding: 8px 20px;
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .btn--large {
