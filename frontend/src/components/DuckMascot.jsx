@@ -50,13 +50,15 @@ const DuckMascot = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         addItem: (item) => {
             try {
-
                 const newItem = {
                     // copies over item property
                     ...item,
 
-                    // id is the current date to track new, will eventually be id added from database
+                    // id is the current date to track new
                     id: Date.now(),
+
+                    // store the original menu item ID
+                    menuItemId: item.id,
 
                     // copy of ingredients, if not filled in, choose empty list
                     ingredients: (item.ingredients || []).map(ing => ({
@@ -64,7 +66,7 @@ const DuckMascot = forwardRef((props, ref) => {
                         ingredient: ing.ingredient || ing.id || ing
                     })),
 
-                    // Update ingredientCounts to use correct IDs
+                    // update ingredientCounts to use correct IDs
                     ingredientCounts: Object.fromEntries(
                         (item.ingredients || []).map(ing => [
                             ing.ingredient || ing.id || ing,
@@ -171,6 +173,7 @@ const DuckMascot = forwardRef((props, ref) => {
         setPromoCode('');
     };
 
+
     const handleOrder = async () => {
         try {
             // Format extras array - calculate ingredient amount changes
@@ -180,49 +183,42 @@ const DuckMascot = forwardRef((props, ref) => {
 
                 return item.ingredients.map(ingredient => {
                     // Handle both object and string ingredient formats
-                    const ingredientId = typeof ingredient === 'object' ?
-                        ingredient.id :
-                        Number(ingredient);
+                    const ingredientId = typeof ingredient === 'object' ? ingredient.ingredient : ingredient;
+                    const originalAmount = 1;
+                    const currentAmount = item.ingredientCounts[ingredientId] || 0;
+                    const difference = currentAmount - originalAmount;
 
-                    // Get the current count for this ingredient
-                    const currentCount = item.ingredientCounts[typeof ingredient === 'object' ?
-                        ingredient.ingredient :
-                        ingredient] || 0;
+                    if (difference === 0) return null;
 
-                    // Calculate the difference from base amount (1)
-                    const amountChange = currentCount - 1;
-
-                    // Only include if there's a change in amount
-                    return amountChange !== 0 ? {
-                        ingredient: { id: ingredientId },
-                        amount: amountChange
-                    } : null;
+                    return {ingredient: {id: Number(ingredientId)}, amount: difference};
                 });
-            }).filter(Boolean); // Remove null entries
+            }).filter(Boolean);
 
-            // Format order items array
+            // format order items array using the stored menuItemId
             const items = orderItems.map(item => ({
                 menuItem: {
-                    // Use the original item ID from the menu, not the Date.now() ID
-                    id: Number(item.menuItemId || item.id)
+                    // using stored original menu item ID
+                    id: Number(item.menuItemId)
                 }
             }));
 
-            // Create the order object
+            // creating the order object
             const order = {
                 customer: {
-                    id: Math.floor(Math.random() * 1000) + 1 // Random ID between 1 and 1000
+                    id: Math.floor(Math.random() * 1000) + 1
                 },
                 employee: {
-                    id: 7 // Fixed ID for online orders
+                    id: 7
                 },
-                time: new Date().toISOString(), // Current time in ISO format
-                price: Number(calculateTotal().toFixed(2)), // Total price including tax and discounts
+                time: new Date().toISOString(),
+                price: Number(calculateTotal().toFixed(2)),
                 items: items,
                 extras: extras
             };
 
-            // Send the order to the database
+            //debugging
+            // console.log('Sending order:', JSON.stringify(order, null, 2));
+
             const response = await fetch('/api/orders/add', {
                 method: 'POST',
                 headers: {
@@ -231,26 +227,29 @@ const DuckMascot = forwardRef((props, ref) => {
                 body: JSON.stringify(order)
             });
 
-            if (response.ok) {
-                // Show success message
-                alert('Order placed successfully!');
-
-                // Clear the order state
-                setOrderItems([]);
-                setIsOpen(false);
-                setAppliedPromo(null);
-                setPromoError('');
-                setExpandedItems({});
-            } else {
-                const errorData = await response.json();
-                throw new Error(`Failed to add order: ${errorData.message || 'Unknown error'}`);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'No error details available' }));
+                throw new Error(`Server responded with ${response.status}: ${errorData.message}`);
             }
-        } catch (error) {
+
+            const responseData = await response.json();
+            console.log('Order response:', responseData);
+
+            // clears order
+            setOrderItems([]);
+            setIsOpen(false);
+            setAppliedPromo(null);
+            setPromoError('');
+            setExpandedItems({});
+
+            //yippee it didnt fail
+            alert('Order placed successfully!');
+        }
+        catch (error) {
             console.error('Error processing order:', error);
-            alert('Failed to place order. Please try again.');
+            alert(`Failed to place order: ${error.message}`);
         }
     };
-
 
     return (
         <div className="duck-mascot-container">

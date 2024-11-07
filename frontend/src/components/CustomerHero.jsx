@@ -40,7 +40,7 @@ function CustomerHero() {
     })
 
     const duckMascotRef = useRef();
-    
+
     //also handles adding order to orderItems in relation to menuItems list
     const handleAddToOrder = (item) => {
         if (duckMascotRef.current) {
@@ -80,7 +80,7 @@ function CustomerHero() {
                     <h2 className="menu-title">Choose an item to start your order</h2>
                     <MenuGrid items={menuItems} onAddToOrder={handleAddToOrder} />
                 </div>
-                
+
             </div>
             <DuckMascot ref={duckMascotRef} />
         </div>
