@@ -88,7 +88,7 @@ import Menu from './Menu.jsx';
 const pin = "1234";
 
 // eslint-disable-next-line react/prop-types
-function CenterScreen({center, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount}){
+function CenterScreen({center, order, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount}){
     const [menuItems, setMenuItems] = useState([]);
     const [seasonalItems, setSeasonalItems] = useState([]);
     const [drinks, setDrinks] = useState([]);
@@ -180,9 +180,19 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
     };
 
     const setDiscountAmount = (num) => {
-        // console.log(num);
         setDiscount(num);
         centerChange('menu');
+    }
+
+    const handleRefund = () => {
+        order.status = false;
+
+        let subtotal = 0;
+        for(let i = 0; i < order.paidItems.length; i++){
+            subtotal += order.paidItems[i].price;
+        }
+        let refundText = "Refunded: " + subtotal;
+        console.log(refundText)
     }
 
 
@@ -192,8 +202,9 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
             {/*<button onClick={() => console.log(menuItems[0])}>show</button>*/}
             <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange}/>
-                <Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu} menuItemList={menuItemList}/>
-                {/*{Menu( {seasonItems, menuItems, drinks, currentMenu, menuItemList})}*/}
+                <Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu}
+                      menuItemList={menuItemList}
+                />
             </div>
 
             <div className="centerScreenContainers-cash" style={{display: center === 'previous' ? 'block' : 'none'}}>
@@ -253,6 +264,10 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
                     <button className="employeeDiscountBtn" onClick={() => setDiscountAmount(0.5)}>Employee
                         Discount
                     </button>
+                </div>
+
+                <div className="refunds">
+                    <button className="refundBtn" onClick={() => handleRefund()}>Refund</button>
                 </div>
                 </div>
 

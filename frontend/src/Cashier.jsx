@@ -81,14 +81,20 @@ const ButtonScreen = () => {
         <div>
             <div className="screens-container">
                 {screens.map((order, index) => (
-                    <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
-                        <LeftRect centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} />
-                        <CenterScreen center={order.currentCenter} centerChange={handleCenterChange} menuItemList={order.orderItems}
-                                      alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} processOrder={processOrder[activeScreenIndex]}
+                    <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
+                        {/*<button onClick={() => console.log(order.status)}/>*/}
+                        <LeftRect centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
+                        <CenterScreen center={order.currentCenter}
+                                      order = {order}
+                                      centerChange={handleCenterChange}
+                                      menuItemList={order.orderItems}
+                                      alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick}
+                                      processOrder={processOrder[activeScreenIndex]}
                                       setDiscount={setDiscount}
                         />
                         <RightPane orderNumber={order.id} orderItems={order.orderItems} paidItems={order.paidItems}
-                                   centerChange={handleCenterChange} setProcessFunction={setProcessFunc} processFunctions={processOrder}
+                                   centerChange={handleCenterChange} setProcessFunction={setProcessFunc}
+                                   processFunctions={processOrder}
                                    discount={discount}
                         />
                     </div>
