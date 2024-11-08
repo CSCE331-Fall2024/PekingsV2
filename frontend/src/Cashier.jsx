@@ -10,6 +10,7 @@ function createOrder(orderID) {
         currentCenter: 'menu', // Each order has its own center state
         orderItems: [],
         paidItems: [],
+        amountPaid: 0,
         status: true
     };
 }
@@ -91,9 +92,11 @@ const ButtonScreen = () => {
                                       alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick}
                                       processOrder={processOrder[activeScreenIndex]}
                                       setDiscount={setDiscount}
+                                      addScreen={addScreen}
                         />
-                        <RightPane orderNumber={order.id} orderItems={order.orderItems} paidItems={order.paidItems}
-                                   centerChange={handleCenterChange} setProcessFunction={setProcessFunc}
+                        <RightPane order = {order}
+                                   centerChange={handleCenterChange}
+                                   setProcessFunction={setProcessFunc}
                                    processFunctions={processOrder}
                                    discount={discount}
                         />

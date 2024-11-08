@@ -19,8 +19,6 @@ function Menu({seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList})
     const menuItemBtns2 = [];
     const menuItemBtns3 = [];
 
-    // console.log(mainMenuItems[0]);
-    // console.log(seasonalItems);
 
     for(let i= 0; i < mainMenuItems.length; i++){
         menuItemBtns1.push(ButtonComponent(mainMenuItems[i]));

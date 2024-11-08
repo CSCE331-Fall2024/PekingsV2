@@ -88,7 +88,7 @@ import Menu from './Menu.jsx';
 const pin = "1234";
 
 // eslint-disable-next-line react/prop-types
-function CenterScreen({center, order, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount}){
+function CenterScreen({center, order, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen}){
     const [menuItems, setMenuItems] = useState([]);
     const [seasonalItems, setSeasonalItems] = useState([]);
     const [drinks, setDrinks] = useState([]);
@@ -187,12 +187,10 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
     const handleRefund = () => {
         order.status = false;
 
-        let subtotal = 0;
-        for(let i = 0; i < order.paidItems.length; i++){
-            subtotal += order.paidItems[i].price;
-        }
-        let refundText = "Refunded: " + subtotal;
+        let refundText = "Refunded: " + order.amountPaid;
         console.log(refundText)
+
+        addScreen();
     }
 
 

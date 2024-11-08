@@ -11,7 +11,7 @@ const areArraysEqual = (arr1, arr2) => {
 };
 
 // eslint-disable-next-line react/prop-types
-function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProcessFunction, processFunctions, discount}) {
+function RightPane({ order, centerChange, setProcessFunction, processFunctions, discount}) {
     const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
     const [total, setTotal] = useState(0);
@@ -21,15 +21,26 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
 
 
     const processPayment = (paymentType) => {
-        // console.log(paymentType);
-
         centerChange('menu');
 
-        paidItems.push(...orderItems);
-        // console.log(paidItems);
+        let st = 0;
+
+        for (let i = 0; i < order.orderItems.length; i++) {
+            st += order.orderItems[i].price;
+        }
+
+        if(discount !== 0){
+            st *= 1 - discount;
+        }
+
+        let total = parseFloat((st * 1.0625).toFixed(2));
+
+        order.paidItems.push(...order.orderItems);
+        order.amountPaid += total;
+        order.amountPaid = order.amountPaid.toFixed(2);
 
         // Reset the subtotal, tax, and total
-        orderItems.length = 0;
+        order.orderItems.length = 0;
         setSubtotal(0);
         setTax(0);
         setTotal(0);
@@ -42,9 +53,9 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
     }, [setProcessFunction]);
 
     let removeItem = (menuItem) => () => {
-        const index = orderItems.findIndex((item) => item === menuItem);
+        const index = order.orderItems.findIndex((item) => item === menuItem);
         if (index !== -1) {
-            orderItems.splice(index, 1);
+            order.orderItems.splice(index, 1);
         }
     };
 
@@ -94,20 +105,20 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
 
     const updateOrderItems = () => {
         // Make sure to update the combined list of all items: unpaid + paid
-        const paidRows = paidItems.map((item) => paidItemDisplay(item));
+        const paidRows = order.paidItems.map((item) => paidItemDisplay(item));
         if(paidRows.length > 0){
             paidRows.push(createPaidText());
         }
 
-        const unpaidRows = orderItems.map((item) => orderItemDisplay(item));
+        const unpaidRows = order.orderItems.map((item) => orderItemDisplay(item));
         if(unpaidRows.length > 0 && discount > 0){
             unpaidRows.push(createDiscountText());
         }
 
         setOrderItemsRows([...paidRows, ...unpaidRows]);
 
-        if(!areArraysEqual(orderItems, orderItemsChecker)){
-            setOrderItemsChecker([...orderItems]);
+        if(!areArraysEqual(order.orderItems, orderItemsChecker)){
+            setOrderItemsChecker([...order.orderItems]);
             // console.log("x");
             // console.log(orderItemsChecker);
             // console.log(orderItems);
@@ -126,11 +137,9 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
     const updateOrderTotal = () => {
         let st = 0;
 
-        for (let i = 0; i < orderItems.length; i++) {
-            st += orderItems[i].price;
+        for (let i = 0; i < order.orderItems.length; i++) {
+            st += order.orderItems[i].price;
         }
-
-        // console.log(discount);
 
         if(discount !== 0){
             st *= 1 - discount;
@@ -164,7 +173,7 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
             {/*<button className="tempBtn" onClick={() => console.log(paidItems)}></button>*/}
             <div className="rightPaneContainer1-cash">
                 <div className="orderNumberContainer-cash">
-                    <div className="orderNumber">Order<br />#{orderNumber}</div>
+                    <div className="orderNumber">Order<br />#{order.id}</div>
                 </div>
 
                 <hr className="separator" />
