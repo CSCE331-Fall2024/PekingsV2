@@ -1,19 +1,22 @@
 .sidebar {
     width: 300px;
+    height: 100%;
     background-color: #748D92;
     color: white;
     display: flex;
     flex-direction: column;
     /*padding-top: 20px; add comment*/
 }
-.navbar-logo {
+.navbar-logo_M {
     width: 100%;
     margin-bottom: 20px;  /* Space below the logo */
     max-width: 300px;
 }
 
 .sidebar button {
-    background: none;
+    background: #34495e;
+
+    height: 50px;
     border: none;
     margin-left:auto;
     margin-right:auto;
@@ -26,5 +29,5 @@
 }
 
 .sidebar button:hover {
-    background-color: #34495e;
+    background-color: black;
 }

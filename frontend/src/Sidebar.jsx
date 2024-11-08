@@ -5,7 +5,7 @@ function Sidebar({ onSelect }) {
     return (
         <div className="sidebar">
 
-            <img src = "/images/pekingslogo.png" alt = "PeKing Duck Logo" className = "navbar-logo"/>
+            <img src = "/images/pekingslogo.png" alt = "PeKing Duck Logo" className = "navbar-logo_M"/>
 
             <button onClick={() => onSelect('Inventory')}>Inventory</button>
             <button onClick={() => onSelect('Menu Items')}>Menu Items</button>

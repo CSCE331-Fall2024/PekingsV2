@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Manager.css';
+// import './Display.css';
 
 function Manager({ selectedSection }) {
     const [inventory, setInventory] = useState([]);
@@ -67,6 +68,9 @@ function Manager({ selectedSection }) {
                                 <td>{item.name}</td>
                                 <td>{item.quantity}</td>
                                 <td>${item.price}</td>
+                                <td>
+                                <button className="invButton_M">Edit</button>
+                                </td>
                             </tr>
                         ))}
                         </tbody>

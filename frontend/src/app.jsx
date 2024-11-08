@@ -7,14 +7,14 @@ import Home from './components/pages/Home';
 
 const App = () => {
   return (
-    <>
+    <div className = "empty">
       <Router>
           <Navbar/>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
       </Router>
-    </>
+    </div>
   );
 };
 

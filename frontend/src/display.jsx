@@ -8,7 +8,7 @@ function Display() {
     const [selectedSection, setSelectedSection] = useState('Inventory');
     return (
 
-        <div className="display-container">
+        <div className="display-container_M">
             <Sidebar onSelect={setSelectedSection}/>
             <Manager selectedSection={selectedSection}/>
         </div>
