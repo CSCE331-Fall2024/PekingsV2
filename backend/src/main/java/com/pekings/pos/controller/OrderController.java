@@ -7,7 +7,6 @@ import com.pekings.pos.repository.MenuItemRepository;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,25 +34,21 @@ public class OrderController {
     @Autowired
     private MenuItemRepository menuItemRepository;
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable("id") int id) {
         return orderRepository.findById(id).orElse(null);
     }
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @GetMapping("/{id}/menuitems")
     public List<OrderItem> getOrderItems(@PathVariable("id") int id) {
         return orderItemRepository.findByOrderId(id);
     }
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @GetMapping("/customer/{id}")
     public List<Order> getCustomerOrders(@PathVariable("id") int id) {
         return orderRepository.findByCustomerId(id);
     }
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @PatchMapping("/update")
     public Order updateOrder(@RequestBody Order order) {
 
@@ -89,8 +84,7 @@ public class OrderController {
      * @param order Order to be added
      * @return A copy of the order that was added to the DB
      *
-     */
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
+ */
     @PostMapping("/add")
     public Order addOrder(@RequestBody Order order) {
         if (order.getItems() != null) {
@@ -113,7 +107,6 @@ public class OrderController {
         return orderRepository.save(order);
     }
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @DeleteMapping("/delete")
     public void deleteOrder(@RequestBody int id) {
         orderRepository.deleteById(id);
