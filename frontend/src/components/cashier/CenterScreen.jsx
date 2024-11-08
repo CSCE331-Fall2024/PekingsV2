@@ -73,24 +73,26 @@ import Menu from './Menu.jsx';
 //         price: 10.00
 //     }
 // ];
-const drinks = [
-    {
-        name: "Teriyaki Chicken",
-        image: "/images/teriyaki.png",
-        price: 10.00
-    },
-    {
-        name: "Broccoli Beef",
-        image: "/images/brocbeef.png",
-        price: 10.00
-    }
-];
-const pin = 1234;
+// const drinks = [
+//     {
+//         name: "Teriyaki Chicken",
+//         image: "/images/teriyaki.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Broccoli Beef",
+//         image: "/images/brocbeef.png",
+//         price: 10.00
+//     }
+// ];
+const pin = "1234";
 
 // eslint-disable-next-line react/prop-types
 function CenterScreen({center, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount}){
     const [menuItems, setMenuItems] = useState([]);
-    const [seasonItems, setSeasonItems] = useState([]);
+    const [seasonalItems, setSeasonalItems] = useState([]);
+    const [drinks, setDrinks] = useState([]);
+
     useEffect(() => {
         const fetchItems = async () => {
             try {
@@ -104,13 +106,22 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
                 if (response.ok) {
                     // setMenuItems(await response.json());
                     const items = await response.json();
+
+                    const chunkSize = Math.floor(items.length / 3);
+                    const remainder = items.length % 3;
+
+                    // Place holder since no columns
+                    const list1 = items.slice(0, chunkSize + (remainder > 0 ? 1 : 0)); // First chunk gets an extra item if there's a remainder
+                    const list2 = items.slice(list1.length, list1.length + chunkSize + (remainder > 1 ? 1 : 0)); // Second chunk gets an extra item if needed
+                    const list3 = items.slice(list1.length + list2.length); // The rest goes into the third chunk
+
                     // Separate items based on category
-                    const menu = items.filter(item => item.category === "food" || item.category === "drinks");
-                    const seasonal = items.filter(item => item.category === "seasonal");
+                    // const menu = items.filter(item => item.category === "food" || item.category === "drinks");
+                    // const seasonal = items.filter(item => item.category === "seasonal");
 
-                    setMenuItems(items);
-                    // setSeasonItems(seasonal);
-
+                    setMenuItems(list1);
+                    setSeasonalItems(list2);
+                    setDrinks(list3);
                 } else {
                     console.error("Failed to fetch items:", response.status);
                 }
@@ -123,17 +134,30 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
     });
 
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
+
     const [inputValue, setInputValue] = useState('');
+    const [placeHolderText, setPlaceHolderText] = useState('PIN');
     let alternateOrderButtons = [];
 
     // Handle button click to append number to the input field
     const handleButtonClick = (number) => {
-        setInputValue(prevValue => prevValue + number);
+        let newPin = inputValue + number;
+        if(newPin === pin){
+            centerChange("manager");
+            setPlaceHolderText('PIN');
+            setInputValue('');
+        }else if(newPin.length === 4){
+            setPlaceHolderText('PIN not recognized')
+            setInputValue('');
+        }else{
+            setInputValue(newPin);
+        }
     };
 
     // Clear the input field
     const handleClear = () => {
         setInputValue('');
+        setPlaceHolderText('PIN');
     };
 
 
@@ -170,7 +194,7 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
             {/*<button onClick={() => console.log(menuItems[0])}>show</button>*/}
             <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange}/>
-                <Menu seasonalItems={seasonItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu} menuItemList={menuItemList}/>
+                <Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu} menuItemList={menuItemList}/>
                 {/*{Menu( {seasonItems, menuItems, drinks, currentMenu, menuItemList})}*/}
             </div>
 
@@ -190,8 +214,7 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
                 </div>
             </div>
 
-            <div className="centerScreenContainers-cash"
-                 style={{display: center === 'manager-confirm' ? 'block' : 'none'}}>
+            <div className="centerScreenContainers-cash" style={{display: center === 'manager-confirm' ? 'flex' : 'none'}}>
                 <div className="number-input-container">
                     <div className="input-field">
                         <input
@@ -199,7 +222,7 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
                             value={inputValue}
                             readOnly
                             className="number-input"
-                            placeholder="PIN"
+                            placeholder={placeHolderText}
                         />
                     </div>
 

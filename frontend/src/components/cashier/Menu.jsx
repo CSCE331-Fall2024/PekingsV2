@@ -22,12 +22,12 @@ function Menu({seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList})
     // console.log(mainMenuItems[0]);
     // console.log(seasonalItems);
 
-    // for(let i= 0; i < seasonalItems.length; i++){
-    //     menuItemBtns1.push(ButtonComponent(seasonalItems[i]));
-    // }
-
     for(let i= 0; i < mainMenuItems.length; i++){
         menuItemBtns1.push(ButtonComponent(mainMenuItems[i]));
+    }
+
+    for(let i= 0; i < seasonalItems.length; i++){
+        menuItemBtns2.push(ButtonComponent(seasonalItems[i]));
     }
 
     for(let i= 0; i < drinks.length; i++){
