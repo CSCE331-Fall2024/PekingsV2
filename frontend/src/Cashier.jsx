@@ -18,7 +18,7 @@ const ButtonScreen = () => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
-    const [processOrder, setProcessFunc] = useState(null); // A function to be passed into rightPane and set there
+    const [processOrder, setProcessFunc] = useState([]); // A function to be passed into rightPane and set there
     const [discount, setDiscount] = useState(0);
 
     function getLastActive(){
@@ -74,6 +74,8 @@ const ButtonScreen = () => {
         }
     }
 
+    // console.log(processOrder[activeScreenIndex]);
+
 
     return (
         <div>
@@ -82,11 +84,12 @@ const ButtonScreen = () => {
                     <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
                         <LeftRect centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} />
                         <CenterScreen center={order.currentCenter} centerChange={handleCenterChange} menuItemList={order.orderItems}
-                                      alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} processOrder={processOrder}
+                                      alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} processOrder={processOrder[activeScreenIndex]}
                                       setDiscount={setDiscount}
                         />
                         <RightPane orderNumber={order.id} orderItems={order.orderItems} paidItems={order.paidItems}
-                                   centerChange={handleCenterChange} setProcessFunction={setProcessFunc} discount={discount}
+                                   centerChange={handleCenterChange} setProcessFunction={setProcessFunc} processFunctions={processOrder}
+                                   discount={discount}
                         />
                     </div>
                 ))}

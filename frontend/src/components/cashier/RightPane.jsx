@@ -11,7 +11,7 @@ const areArraysEqual = (arr1, arr2) => {
 };
 
 // eslint-disable-next-line react/prop-types
-function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProcessFunction, discount}) {
+function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProcessFunction, processFunctions, discount}) {
     const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
     const [total, setTotal] = useState(0);
@@ -20,7 +20,7 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
 
 
 
-    const processPayment = () => (paymentType) => {
+    const processPayment = (paymentType) => {
         // console.log(paymentType);
 
         centerChange('menu');
@@ -37,7 +37,7 @@ function RightPane({ orderNumber, orderItems, paidItems, centerChange, setProces
 
     useEffect(() => {
         if (setProcessFunction) {
-            setProcessFunction(processPayment);  // Passing the function to Component A
+            setProcessFunction([...processFunctions, processPayment]);  // Passing the function to Component A
         }
     }, [setProcessFunction]);
 

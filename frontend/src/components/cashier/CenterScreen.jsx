@@ -171,9 +171,7 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
 
     const handlePaymentProcess = (paymentType) => {
         setDiscount(0);
-        if(processOrder(paymentType)){
-            //
-        }
+        processOrder(paymentType);
     };
 
 
