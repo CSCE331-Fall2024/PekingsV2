@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
-public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
+//@Component
+public class CustomLogoutSuccessHandler {// implements LogoutSuccessHandler {
 
-    @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        // Redirect to frontend on port 5173 after logout
-        response.sendRedirect("http://localhost:5173");
-    }
+//    @Override
+//    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+//        // Redirect to frontend on port 5173 after logout
+//        response.sendRedirect("http://localhost:5173");
+//    }
 
 }
 
