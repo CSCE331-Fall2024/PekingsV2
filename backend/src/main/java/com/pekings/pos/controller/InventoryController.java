@@ -6,7 +6,6 @@ import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.InventoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,13 +26,11 @@ public class InventoryController {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public List<Inventory> getAllIngredients() {
         return inventoryRepository.findAll();
     }
 
-    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
     public Inventory getIngredient(@PathVariable("id") int id) {
         return inventoryRepository.findById(id).orElse(null);
@@ -47,8 +44,7 @@ public class InventoryController {
      * @param startDate the date to start from
      * @param endDate the date to stop fetching
      * @return the most used ingredients within the given timeframe
-     */
-    //@PreAuthorize("hasRole('ROLE_MANAGER')")
+    */
     @GetMapping("/top")
     public List<InventoryItem> getTopIngredientsPeriodic(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -60,7 +56,6 @@ public class InventoryController {
         return inventoryRepository.findTopIngredientsPeriodic(startDate, endDate);
     }
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @PatchMapping("/update")
     public Inventory updateIngredient(@RequestBody Inventory inventory) {
 
@@ -70,7 +65,6 @@ public class InventoryController {
         return inventoryRepository.save(inventory);
     }
 
-    //@PreAuthorize("hasRole('ROLE_CASHIER')")
     @PatchMapping("/update/stock/{id}")
     public Inventory updateStock(@PathVariable("id") int id, @RequestParam("amount") int amount) {
         Inventory inventory = inventoryRepository.findById(id).orElse(null);
@@ -82,13 +76,11 @@ public class InventoryController {
         return inventoryRepository.save(inventory);
     }
 
-    //@PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/add")
     public Inventory addIngredient(@RequestBody Inventory inventory) {
         return inventoryRepository.save(inventory);
     }
 
-    //@PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/delete")
     public void deleteIngredient(@RequestBody int id) {
         inventoryRepository.deleteById(id);
