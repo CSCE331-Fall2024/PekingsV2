@@ -1,79 +1,79 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
 
-const menuItems1 = [
-    {
-        name: "Teriyaki Chicken",
-        image: "/images/teriyaki.png",
-        price: 10.00
-    },
-    {
-        name: "Broccoli Beef",
-        image: "/images/brocbeef.png",
-        price: 10.00
-    },
-    {
-        name: "Chicken Fried Rice",
-        image: "/images/CFR.png",
-        price: 10.00
-    },
-    {
-        name: "Beef Fried Rice",
-        image: "/images/BFR.png",
-        price: 10.00
-    },
-    {
-        name: "Orange Chicken",
-
-        price: 10.00
-    },
-    {
-        name: "Beijing Beef",
-
-        price: 10.00
-    },
-    {
-        name: "Crab Rangoon",
-
-        price: 10.00
-    },
-    {
-        name: "Fortune Cookies",
-
-        price: 10.00
-    },
-    {
-        name: "Egg Rolls",
-
-        price: 8.99
-    }
-];
+// const menuItems1 = [
+//     {
+//         name: "Teriyaki Chicken",
+//         image: "/images/teriyaki.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Broccoli Beef",
+//         image: "/images/brocbeef.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Chicken Fried Rice",
+//         image: "/images/CFR.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Beef Fried Rice",
+//         image: "/images/BFR.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Orange Chicken",
+//
+//         price: 10.00
+//     },
+//     {
+//         name: "Beijing Beef",
+//
+//         price: 10.00
+//     },
+//     {
+//         name: "Crab Rangoon",
+//
+//         price: 10.00
+//     },
+//     {
+//         name: "Fortune Cookies",
+//
+//         price: 10.00
+//     },
+//     {
+//         name: "Egg Rolls",
+//
+//         price: 8.99
+//     }
+// ];
 // const menuItems1 = fetch("http://129.146.58.184:25569/api/orders/all");
-const menuItems2 = [
-    {
-        name: "Teriyaki Chicken",
-        image: "/images/teriyaki.png",
-        price: 10.00
-    },
-    {
-        name: "Broccoli Beef",
-        image: "/images/brocbeef.png",
-        price: 10.00
-    },
-    {
-        name: "Chicken Fried Rice",
-        image: "/images/CFR.png",
-        price: 10.00
-    },
-    {
-        name: "Beef Fried Rice",
-        image: "/images/BFR.png",
-        price: 10.00
-    }
-];
-const menuItems3 = [
+// const menuItems2 = [
+//     {
+//         name: "Teriyaki Chicken",
+//         image: "/images/teriyaki.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Broccoli Beef",
+//         image: "/images/brocbeef.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Chicken Fried Rice",
+//         image: "/images/CFR.png",
+//         price: 10.00
+//     },
+//     {
+//         name: "Beef Fried Rice",
+//         image: "/images/BFR.png",
+//         price: 10.00
+//     }
+// ];
+const drinks = [
     {
         name: "Teriyaki Chicken",
         image: "/images/teriyaki.png",
@@ -89,6 +89,39 @@ const pin = 1234;
 
 // eslint-disable-next-line react/prop-types
 function CenterScreen({center, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount}){
+    const [menuItems, setMenuItems] = useState([]);
+    const [seasonItems, setSeasonItems] = useState([]);
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await fetch("/api/menuitem/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.ok) {
+                    // setMenuItems(await response.json());
+                    const items = await response.json();
+                    // Separate items based on category
+                    const menu = items.filter(item => item.category === "food" || item.category === "drinks");
+                    const seasonal = items.filter(item => item.category === "seasonal");
+
+                    setMenuItems(items);
+                    // setSeasonItems(seasonal);
+
+                } else {
+                    console.error("Failed to fetch items:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching items:", error);
+            }
+        };
+
+        fetchItems();
+    });
+
     const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
     const [inputValue, setInputValue] = useState('');
     let alternateOrderButtons = [];
@@ -134,10 +167,11 @@ function CenterScreen({center, centerChange, menuItemList, alternateOrders, hand
 
     return(
         <div className="centerScreen-cash">
-
+            {/*<button onClick={() => console.log(menuItems[0])}>show</button>*/}
             <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange}/>
-                {Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList})}
+                <Menu seasonalItems={seasonItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu} menuItemList={menuItemList}/>
+                {/*{Menu( {seasonItems, menuItems, drinks, currentMenu, menuItemList})}*/}
             </div>
 
             <div className="centerScreenContainers-cash" style={{display: center === 'previous' ? 'block' : 'none'}}>

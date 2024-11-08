@@ -65,7 +65,7 @@
 .orderItemsPrice {
     display: flex; /* Use flexbox for the price */
     align-self: center; /* Align price to the start of the container */
-    margin-left: 10%; /* Space between text and price */
+    margin-left: 15%; /* Space between text and price */
     width: 10%;
 }
 
