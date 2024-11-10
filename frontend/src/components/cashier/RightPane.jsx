@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './rightPane.css';
 
-// COmpare arrays
+// Compare arrays
 const areArraysEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) return false;
     for (let i = 0; i < arr1.length; i++) {
@@ -19,15 +19,115 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     const [orderItemsChecker, setOrderItemsChecker] = useState([]);
 
 
-
-    const processPayment = (paymentType) => {
-        centerChange('menu');
-
+    // Functions used for Nathan L place orders
+    function calculateSubtotal(){
         let st = 0;
 
         for (let i = 0; i < order.orderItems.length; i++) {
             st += order.orderItems[i].price;
         }
+
+        return parseFloat((st * (1 - discount)).toFixed(2));
+    }
+
+    function calculateTax(){
+        let st = calculateSubtotal();
+        let tax = parseFloat((st * 1.0625).toFixed(2));
+
+        return tax;
+    }
+
+    function calculateTotal(){
+        let st = calculateSubtotal();
+        let tax = calculateTax();
+        return st + tax;
+    }
+
+
+    // Reinsert try statements when fixed
+    const handleOrder = async (orderUse, paymentType) => {
+        // try {
+            let orderItems = orderUse.orderItems;
+
+            // Format extras array - calculate ingredient amount changes
+            const extras = orderItems.flatMap(item => {
+                // Only process items that have ingredients
+                if (!item.ingredients || !item.ingredientCounts) return [];
+
+                return item.ingredients.map(ingredient => {
+                    // Handle both object and string ingredient formats
+                    const ingredientId = typeof ingredient === 'object' ? ingredient.ingredient : ingredient;
+                    const originalAmount = 1;
+                    const currentAmount = item.ingredientCounts[ingredientId] || 0;
+                    const difference = currentAmount - originalAmount;
+
+                    if (difference === 0) return null;
+
+                    return {ingredient: {id: Number(ingredientId)}, amount: difference};
+                });
+            }).filter(Boolean);
+
+            // format order items array using the stored menuItemId
+            const items = orderItems.map(item => ({
+                menuItem: {
+                    // using stored original menu item ID
+                    id: Number(item.menuItemId)
+                }
+            }));
+
+            // creating the order object
+            const order = {
+                customer: {
+                    id: Math.floor(Math.random() * 1000) + 1
+                },
+                employee: {
+                    id: 3
+                },
+                time: new Date().toISOString(),
+                price: Number(calculateTotal().toFixed(2)),
+                items: items,
+                extras: extras
+            };
+
+
+            const response = await fetch('/api/orders/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'No error details available' }));
+                throw new Error(`Server responded with ${response.status}: ${errorData.message}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Order response:', responseData);
+
+            // clears order
+            // setOrderItems([]);
+            // setIsOpen(false);
+            // setAppliedPromo(null);
+            // setPromoError('');
+            // setExpandedItems({});
+
+            //yippee it didnt fail
+            alert('Order placed successfully!');
+        // }
+        // catch (error) {
+        //     console.error('Error processing order:', error);
+        //     alert(`Failed to place order: ${error.message}`);
+        // }
+    };
+
+    const processPayment = (paymentType) => {
+        // handleOrder(order);
+
+        centerChange('menu');
+
+        let st = calculateSubtotal();
 
         if(discount !== 0){
             st *= 1 - discount;
@@ -37,10 +137,12 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
         order.paidItems.push(...order.orderItems);
         order.amountPaid += total;
-        order.amountPaid = order.amountPaid.toFixed(2);
+        order.amountPaid = parseFloat(order.amountPaid.toFixed(2));
 
         // Reset the subtotal, tax, and total
+        // console.log(order.orderItems);
         order.orderItems.length = 0;
+        // console.log(order.orderItems);
         setSubtotal(0);
         setTax(0);
         setTotal(0);
@@ -119,9 +221,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
         if(!areArraysEqual(order.orderItems, orderItemsChecker)){
             setOrderItemsChecker([...order.orderItems]);
-            // console.log("x");
-            // console.log(orderItemsChecker);
-            // console.log(orderItems);
         }
     };
 
