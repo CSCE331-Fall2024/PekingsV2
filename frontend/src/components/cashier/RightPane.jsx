@@ -32,7 +32,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
     function calculateTax(){
         let st = calculateSubtotal();
-        let tax = parseFloat((st * 1.0625).toFixed(2));
+        let tax = parseFloat((st * 0.0625).toFixed(2));
 
         return tax;
     }
@@ -40,7 +40,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     function calculateTotal(){
         let st = calculateSubtotal();
         let tax = calculateTax();
-        return st + tax;
+        return parseFloat((st + tax).toFixed(2));
     }
 
 
@@ -129,11 +129,12 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
         let st = calculateSubtotal();
 
-        if(discount !== 0){
-            st *= 1 - discount;
-        }
+        // if(discount !== 0){
+        //     st *= 1 - discount;
+        // }
 
-        let total = parseFloat((st * 1.0625).toFixed(2));
+        // let total = parseFloat((st * 1.0625).toFixed(2));
+        let total = calculateTotal();
 
         order.paidItems.push(...order.orderItems);
         order.amountPaid += total;
@@ -234,23 +235,9 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     }, [orderItemsChecker]);
 
     const updateOrderTotal = () => {
-        let st = 0;
-
-        for (let i = 0; i < order.orderItems.length; i++) {
-            st += order.orderItems[i].price;
-        }
-
-        if(discount !== 0){
-            st *= 1 - discount;
-        }
-
-        st = parseFloat(st.toFixed(2));
-        let tax = parseFloat((st * 0.0625).toFixed(2));
-        let total = parseFloat((st * 1.0625).toFixed(2));
-
-        setSubtotal(st);
-        setTax(tax);
-        setTotal(total);
+        setSubtotal(calculateSubtotal());
+        setTax(calculateTax());
+        setTotal(calculateTotal());
     };
 
     useEffect(() => {
@@ -283,9 +270,9 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 <hr className="separator" />
 
                 <div className="priceContainer">
-                    <div className="subtotal">Subtotal: ${subtotal}</div>
-                    <div className="tax">Tax: ${tax}</div>
-                    <div className="total">Total: ${total}</div>
+                    <div className="subtotal">Subtotal: ${subtotal.toFixed(2)}</div>
+                    <div className="tax">Tax: ${tax.toFixed(2)}</div>
+                    <div className="total">Total: ${total.toFixed(2)}</div>
                 </div>
             </div>
 

@@ -187,8 +187,10 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
     const handleRefund = () => {
         order.status = false;
 
-        let refundText = "Refunded: " + order.amountPaid;
-        console.log(refundText)
+
+        let refundText = "Refunded: $" + order.amountPaid.toFixed(2);
+        alert(refundText);
+        // console.log(refundText);
 
         addScreen();
     }
