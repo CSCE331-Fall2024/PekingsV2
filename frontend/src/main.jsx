@@ -9,8 +9,8 @@ import Cashier from './Cashier.jsx'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        {/*<App/>*/}
-        <Cashier/>
+        <App/>
+        {/*<Cashier/>*/}
         {/*<Display/>*/}
     </StrictMode>,
 )

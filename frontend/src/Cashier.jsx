@@ -15,7 +15,7 @@ function createOrder(orderID) {
     };
 }
 
-const ButtonScreen = () => {
+const Cashier = ({logout}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
@@ -75,8 +75,6 @@ const ButtonScreen = () => {
         }
     }
 
-    // console.log(processOrder[activeScreenIndex]);
-
 
     return (
         <div>
@@ -84,7 +82,7 @@ const ButtonScreen = () => {
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
                         {/*<button onClick={() => console.log(order.status)}/>*/}
-                        <LeftRect centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
+                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
                         <CenterScreen center={order.currentCenter}
                                       order = {order}
                                       centerChange={handleCenterChange}
@@ -107,4 +105,4 @@ const ButtonScreen = () => {
     );
 };
 
-export default ButtonScreen;
+export default Cashier;
