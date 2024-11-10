@@ -1,6 +1,6 @@
 .login-screen{
     width: 100vw;
-    height: 90vh;
+    height: 90.3vh;
     display: block;
     background-color: black;
 }
@@ -8,10 +8,8 @@
 .title-container-login {
     width: 100%;
     height: 25%;
-    /*background-color: black;*/
     display: flex;          /* Enable flexbox */
     justify-content: center; /* Center horizontally */
-    /*align-items: center;     !* Center vertically *!*/
 }
 
 .title {
@@ -24,13 +22,11 @@
 .login-information-container{
     width: 100%;
     height: 75%;
-    /*background-color: black;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: white;
-    /*gap: 5%;*/
 }
 
 .login-information-container input{
@@ -43,6 +39,5 @@
 .login-information-container button{
     width: 35%;
     height: 15%;
-    /*padding-top: 5%;*/
     text-align: center;
 }
