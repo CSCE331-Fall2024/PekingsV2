@@ -171,7 +171,12 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                     <div className="orderItemsText">{name}</div>
                     <div className="orderItemsPrice">${price}</div>
                 </button>
-                <button className="editBtn">E</button>
+                <button className="editBtn">
+                    <img src="./Images/Edit-Btn.png"
+                         alt=""
+                         // style={{ cursor: 'pointer' }}
+                    />
+                </button>
                 <button className="orderItemX" onClick={removeItem(menuItem)}>X</button>
             </div>
         );
