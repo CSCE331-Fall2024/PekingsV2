@@ -26,7 +26,26 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         let st = 0;
 
         for (let i = 0; i < order.orderItems.length; i++) {
-            st += order.orderItems[i].menuItem.price;
+            let menuItem = order.orderItems[i].menuItem;
+            let menuItemTotal = menuItem.price;
+
+            // For Nathan
+            let ingredients = menuItem.ingredients;
+            let noIngredients = true;
+            for(let j = 0; j < ingredients.length; j++){
+                if(ingredients[j].amount > 0){
+                    noIngredients = false;
+                }
+                if(ingredients[j].amount === 2){
+                    menuItemTotal += 0.5;
+                }
+                if(ingredients[j].amount === 0){
+                    menuItemTotal -= 0.5;
+                }
+            }
+            if(!noIngredients){
+                st += menuItemTotal;
+            }
         }
 
         return parseFloat((st * (1 - discount)).toFixed(2));
