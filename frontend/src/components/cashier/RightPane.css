@@ -160,36 +160,46 @@
 
 .ingredient-name{
     margin-left: 5%;
-    width: 60%;
+    width: 45%;
+    white-space: normal;  /* Allows the text to wrap onto multiple lines */
+    word-wrap: break-word;  /* Allows long words to break and wrap to the next line */
+    word-break: break-word;  /* Ensures long words break properly */
+    overflow: hidden;
 }
 
-.ingredient-list{
-    display: block;
+.ingredients-list{
+    display: flex;
+    flex-direction: column;
+    height: auto;
     width: 100%;
+    background-color: transparent;
+    border-top: solid black 1px;
+    border-bottom: solid black 1px;
 }
 
 .ingredient-row{
     display: flex;
     flex-direction: row;
+    margin-bottom: 2.5%;
 }
 
 .ingredient-editions{
+    width: 50%;
     display: flex;
     flex-direction: row;
-    gap: 30%;
     align-self: center;
 }
 
 .ingredient-editions button{
     background-color: transparent;
     border: none;
+    align-items: center;
     width: 30%;
 }
 
-.ingredient-amount{
+.ingredientAmount{
     text-align: center;
     align-self: center;
-    background-color: black;
     width: 40%;
 }
 
