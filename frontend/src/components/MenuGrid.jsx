@@ -6,7 +6,7 @@ import './MenuGrid.css';
 const MenuGrid = ({ items, onAddToOrder }) => {
     return (
         <div className="menu-section">
-            <h2 className="menu-title">Choose an item to start your order</h2>
+            {/* <h2 className="menu-title">Choose an item to start your order</h2> */}
             <div className="menu-grid">
                 {items.map((item, index) => (
                     // inserting menu items :)

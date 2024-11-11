@@ -3,6 +3,7 @@ package com.pekings.pos.util;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 
 public class DateUtil {
@@ -24,5 +25,17 @@ public class DateUtil {
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         return new Date(calendar.getTimeInMillis());
+    }
+
+    public static Instant startOfData() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.JANUARY, 1);
+        return calendar.toInstant();
+    }
+
+    public static Instant endOfData() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 31);
+        return calendar.toInstant();
     }
 }

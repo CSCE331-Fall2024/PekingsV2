@@ -156,3 +156,150 @@
         bottom: 140px;
     }
 }
+
+/* new for sprint 2 */
+
+.order-item-container {
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.item-name-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    cursor: pointer;
+    color: #124E66;
+    font-weight: 500;
+}
+
+.item-name-button:hover {
+    color: #5298a7;
+}
+
+.ingredients-list {
+    padding: 10px;
+    background: #f8f9fa;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.ingredients-title {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.ingredient-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ingredient-count {
+    color: #666;
+    font-size: 0.8rem;
+    margin-left: 4px;
+}
+
+.ingredient-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.ingredient-button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.ingredient-button.remove {
+    background: #ff4444;
+    color: white;
+}
+
+.ingredient-button.add {
+    background: #124E66;
+    color: white;
+}
+
+.ingredient-button:hover {
+    opacity: 0.9;
+}
+
+.ingredient-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.ingredient-price-change {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.promo-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.promo-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.promo-button {
+    background: #124E66;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.promo-button:hover {
+    background: #5298a7;
+}
+
+.promo-error {
+    color: #ff4444;
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+.applied-promo {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.price-row.discount {
+    color: #2e7d32;
+}

@@ -1,0 +1,42 @@
+.centerScreen-cash{
+    position: relative;
+    width: 60%;
+    height: 100%;
+}
+
+.test{
+    background-color: black;
+    width: 200px;
+    height: 100px;
+    position: absolute;
+}
+
+.centerScreenContainers-cash{
+    width:100%;
+    height: 100%;
+}
+
+.previousOrdersTitle-cash{
+    text-align: center;
+    font-size: 200%;
+    width:100%;
+    height: 7.7%;
+    padding: 5% 4% 2%;
+}
+
+.centerScreenContainers-cash .previousOrdersDisplayBox-cash{
+    margin: 5%;
+    /*background-color: black;*/
+    border: 1px solid black;
+    height: 83%;
+    width: 90%;
+    display: block;
+    overflow-y: auto;
+}
+
+.alternateOrderBtn-cash{
+    width: 100%;
+    height: 10%;
+    /*background-color: black;*/
+}
+
