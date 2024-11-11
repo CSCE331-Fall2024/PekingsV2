@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
+import editButtonImage from './Images/Edit-Btn.png';
 import './rightPane.css';
+import Cashier from "../../Cashier.jsx";
 
 // Compare arrays
 const areArraysEqual = (arr1, arr2) => {
@@ -24,7 +26,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         let st = 0;
 
         for (let i = 0; i < order.orderItems.length; i++) {
-            st += order.orderItems[i].price;
+            st += order.orderItems[i].menuItem.price;
         }
 
         return parseFloat((st * (1 - discount)).toFixed(2));
@@ -127,23 +129,13 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
         centerChange('menu');
 
-        let st = calculateSubtotal();
-
-        // if(discount !== 0){
-        //     st *= 1 - discount;
-        // }
-
-        // let total = parseFloat((st * 1.0625).toFixed(2));
         let total = calculateTotal();
 
         order.paidItems.push(...order.orderItems);
         order.amountPaid += total;
         order.amountPaid = parseFloat(order.amountPaid.toFixed(2));
 
-        // Reset the subtotal, tax, and total
-        // console.log(order.orderItems);
         order.orderItems.length = 0;
-        // console.log(order.orderItems);
         setSubtotal(0);
         setTax(0);
         setTotal(0);
@@ -160,31 +152,48 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         if (index !== -1) {
             order.orderItems.splice(index, 1);
         }
+        console.log(order.orderItems);
     };
 
-    function orderItemDisplay(menuItem) {
-        let name = menuItem.name;
-        let price = menuItem.price;
+    function orderItemDisplay(item) {
+        let name = item.menuItem.name;
+        let price = item.menuItem.price;
+
+        let ingredients = item.menuItem.ingredients;
+
+        const ingredientsRows = ingredients.map((ingredient, index) => (
+            <div className="ingredient-row" key={index}>
+                {ingredient.id}
+            </div>
+        ));
+
         return (
-            <div className="orderItemRow">
-                <button className="orderItemRowText">
-                    <div className="orderItemsText">{name}</div>
-                    <div className="orderItemsPrice">${price}</div>
-                </button>
-                <button className="editBtn">
-                    <img src="./Images/Edit-Btn.png"
-                         alt=""
-                         // style={{ cursor: 'pointer' }}
-                    />
-                </button>
-                <button className="orderItemX" onClick={removeItem(menuItem)}>X</button>
+            <div className="orderItemContainer">
+                <div className="orderItemRow">
+                    <button className="orderItemRowText">
+                        <div className="orderItemsText">{name}</div>
+                        <div className="orderItemsPrice">${price}</div>
+                    </button>
+                    <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}>
+                        <img src={editButtonImage}
+                             className="editBtnIcon"
+                        />
+                    </button>
+                    <button className="orderItemX" onClick={removeItem(item)}>X</button>
+                </div>
+
+                {item.editStatus && (
+                    <div className="ingredients-list">
+                        {ingredientsRows}
+                    </div>
+                )}
             </div>
         );
     }
 
-    function paidItemDisplay(menuItem){
-        let name = menuItem.name;
-        let price = menuItem.price;
+    function paidItemDisplay(menuItem) {
+        let name = menuItem.menuItem.name;
+        let price = menuItem.menuItem.price;
         return (
             <div className="orderItemRow">
                 <button className="orderItemRowText">
@@ -195,7 +204,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         );
     }
 
-    function createPaidText(){
+    function createPaidText() {
         return (
             <div className="orderItemRow">
                 <div className="paidItemText">Payment Complete</div>

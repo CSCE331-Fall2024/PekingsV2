@@ -185,21 +185,22 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
     }
 
     const handleRefund = () => {
-        order.status = false;
+        if(order.amountPaid === 0){
+            alert("Nothing to refund");
+        }else{
+            order.status = false;
 
+            let refundText = "Refunded: $" + order.amountPaid.toFixed(2);
+            alert(refundText);
 
-        let refundText = "Refunded: $" + order.amountPaid.toFixed(2);
-        alert(refundText);
-        // console.log(refundText);
-
-        addScreen();
+            addScreen();
+        }
     }
 
 
 
     return(
         <div className="centerScreen-cash">
-            {/*<button onClick={() => console.log(menuItems[0])}>show</button>*/}
             <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
                 <TopPane screenChange={handleMenuChange}/>
                 <Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu}

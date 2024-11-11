@@ -45,7 +45,7 @@
     border: none;
     position:relative;
     display: flex;
-    width: 100%;
+    width: 70%;
     height: auto;
     padding: 1.5% 3%;
     color: white;
@@ -96,7 +96,6 @@
 .discountText{
     width: 100%;
     text-align: center;
-    /*padding: 5%;*/
     color: blue;
     font-size: 70%;
 }
@@ -107,13 +106,21 @@
     color: black;
     display: flex;
     align-self: center;
-    margin-left: 10px;
+    width: 15%;
+}
+
+.editBtnIcon{
+    width: 30%;
+    height: 20%;
+    padding: 0;
+    margin: 0;
 }
 
 .orderItemX{
     background-color: transparent;
     border: none;
     color: red;
+    /*width: 15%;*/
     margin-left: 5%;
 }
 
@@ -150,6 +157,7 @@
     height: 4.5%;
     border: 2px solid black;
 }
+
 
 
 /* For hiding scroll bars */

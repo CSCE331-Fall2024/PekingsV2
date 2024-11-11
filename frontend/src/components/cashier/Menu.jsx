@@ -2,9 +2,19 @@ import React, {useState} from 'react';
 import './Menu.css'
 
 function Menu({seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList}) {
+    const [itemID, setItemID] = useState(1);
+
     const handleButtonClick = (menuItem) => () =>{
-        menuItemList.push(menuItem);
-        // console.log(menuItemList);
+        setItemID(itemID + 1);
+
+        // menuItemList.push(menuItem);
+        menuItemList.push(
+            {
+                menuItemID: itemID,
+                menuItem: menuItem,
+                editStatus: false
+            }
+        )
     };
 
     const ButtonComponent = (menuItem) => {

@@ -62,7 +62,12 @@ const Cashier = ({logout}) => {
 
         for(let i = 0; i < screens.length; i++) {
             if(screens[i].id === orderNum) {
-                screens[i].status = false;
+                if(!(screens[i].paidItems.length)){
+                    screens[i].status = false;
+                }else{
+                    screens[i].orderItems = [];
+                    alert("Current order items cancelled");
+                }
             }
         }
 
