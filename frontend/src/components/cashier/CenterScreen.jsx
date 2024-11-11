@@ -1,94 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
 
-// const menuItems1 = [
-//     {
-//         name: "Teriyaki Chicken",
-//         image: "/images/teriyaki.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Broccoli Beef",
-//         image: "/images/brocbeef.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Chicken Fried Rice",
-//         image: "/images/CFR.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Beef Fried Rice",
-//         image: "/images/BFR.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Orange Chicken",
-//
-//         price: 10.00
-//     },
-//     {
-//         name: "Beijing Beef",
-//
-//         price: 10.00
-//     },
-//     {
-//         name: "Crab Rangoon",
-//
-//         price: 10.00
-//     },
-//     {
-//         name: "Fortune Cookies",
-//
-//         price: 10.00
-//     },
-//     {
-//         name: "Egg Rolls",
-//
-//         price: 8.99
-//     }
-// ];
-// const menuItems1 = fetch("http://129.146.58.184:25569/api/orders/all");
-// const menuItems2 = [
-//     {
-//         name: "Teriyaki Chicken",
-//         image: "/images/teriyaki.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Broccoli Beef",
-//         image: "/images/brocbeef.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Chicken Fried Rice",
-//         image: "/images/CFR.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Beef Fried Rice",
-//         image: "/images/BFR.png",
-//         price: 10.00
-//     }
-// ];
-// const drinks = [
-//     {
-//         name: "Teriyaki Chicken",
-//         image: "/images/teriyaki.png",
-//         price: 10.00
-//     },
-//     {
-//         name: "Broccoli Beef",
-//         image: "/images/brocbeef.png",
-//         price: 10.00
-//     }
-// ];
 const pin = "1234";
 
-// eslint-disable-next-line react/prop-types
-function CenterScreen({center, order, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen}){
+// Memoize the CenterScreen component to avoid unnecessary re-renders
+const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen }) => {
     const [menuItems, setMenuItems] = useState([]);
     const [seasonalItems, setSeasonalItems] = useState([]);
     const [drinks, setDrinks] = useState([]);
@@ -104,20 +22,14 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
                 });
 
                 if (response.ok) {
-                    // setMenuItems(await response.json());
                     const items = await response.json();
 
                     const chunkSize = Math.floor(items.length / 3);
                     const remainder = items.length % 3;
 
-                    // Place holder since no columns
-                    const list1 = items.slice(0, chunkSize + (remainder > 0 ? 1 : 0)); // First chunk gets an extra item if there's a remainder
-                    const list2 = items.slice(list1.length, list1.length + chunkSize + (remainder > 1 ? 1 : 0)); // Second chunk gets an extra item if needed
-                    const list3 = items.slice(list1.length + list2.length); // The rest goes into the third chunk
-
-                    // Separate items based on category
-                    // const menu = items.filter(item => item.category === "food" || item.category === "drinks");
-                    // const seasonal = items.filter(item => item.category === "seasonal");
+                    const list1 = items.slice(0, chunkSize + (remainder > 0 ? 1 : 0));
+                    const list2 = items.slice(list1.length, list1.length + chunkSize + (remainder > 1 ? 1 : 0));
+                    const list3 = items.slice(list1.length + list2.length);
 
                     setMenuItems(list1);
                     setSeasonalItems(list2);
@@ -131,40 +43,36 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
         };
 
         fetchItems();
-    });
+    }, []);  // Add an empty dependency array to fetch items once on mount
 
-    const [currentMenu, setCurrentMenu] = useState('main'); // Default to 'main'
-
+    const [currentMenu, setCurrentMenu] = useState('main');
     const [inputValue, setInputValue] = useState('');
     const [placeHolderText, setPlaceHolderText] = useState('PIN');
     let alternateOrderButtons = [];
 
-    // Handle button click to append number to the input field
     const handleButtonClick = (number) => {
         let newPin = inputValue + number;
-        if(newPin === pin){
+        if (newPin === pin) {
             centerChange("manager");
             setPlaceHolderText('PIN');
             setInputValue('');
-        }else if(newPin.length === 4){
-            setPlaceHolderText('PIN not recognized')
+        } else if (newPin.length === 4) {
+            setPlaceHolderText('PIN not recognized');
             setInputValue('');
-        }else{
+        } else {
             setInputValue(newPin);
         }
     };
 
-    // Clear the input field
     const handleClear = () => {
         setInputValue('');
         setPlaceHolderText('PIN');
     };
 
-
-    for(let i = 0; i < alternateOrders.length; i++){
-        if(alternateOrders[i].status){
+    for (let i = 0; i < alternateOrders.length; i++) {
+        if (alternateOrders[i].status) {
             alternateOrderButtons.push(
-                <button className="alternateOrderBtn-cash" onClick={() => {handlePreviousBtnClick(alternateOrders[i])}}>{alternateOrders[i].id}</button>
+                <button className="alternateOrderBtn-cash" onClick={() => { handlePreviousBtnClick(alternateOrders[i]) }} key={alternateOrders[i].id}>{alternateOrders[i].id}</button>
             );
         }
     }
@@ -173,7 +81,6 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
         setDiscount(0);
         processOrder(paymentType);
     };
-
 
     const handleMenuChange = (menu) => {
         setCurrentMenu(menu);
@@ -185,9 +92,9 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
     }
 
     const handleRefund = () => {
-        if(order.amountPaid === 0){
+        if (order.amountPaid === 0) {
             alert("Nothing to refund");
-        }else{
+        } else {
             order.status = false;
 
             let refundText = "Refunded: $" + order.amountPaid.toFixed(2);
@@ -195,36 +102,31 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
 
             addScreen();
         }
-    }
+    };
 
-
-
-    return(
+    return (
         <div className="centerScreen-cash">
-            <div className="centerScreenContainers-cash" style={{display: center === 'menu' ? 'block' : 'none'}}>
-                <TopPane screenChange={handleMenuChange}/>
-                <Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu}
-                      menuItemList={menuItemList}
-                />
+            <div className="centerScreenContainers-cash" style={{ display: center === 'menu' ? 'block' : 'none' }}>
+                <TopPane screenChange={handleMenuChange} />
+                <Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu} menuItemList={menuItemList} />
             </div>
 
-            <div className="centerScreenContainers-cash" style={{display: center === 'previous' ? 'block' : 'none'}}>
+            <div className="centerScreenContainers-cash" style={{ display: center === 'previous' ? 'block' : 'none' }}>
                 <div className="previousOrdersTitle-cash">Previous Orders</div>
                 <div className="previousOrdersDisplayBox-cash">{alternateOrderButtons}</div>
             </div>
 
-            <div className="centerScreenContainers-cash" style={{display: center === 'payment' ? 'block' : 'none'}}>
+            <div className="centerScreenContainers-cash" style={{ display: center === 'payment' ? 'block' : 'none' }}>
                 <div className="paymentButtons-cash">
                     <button className="card" onClick={() => handlePaymentProcess('card')}>Card</button>
                     <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
                 </div>
                 <div className="managerOptionsContainer-cash">
-                    <button className="managerOptions-cash" onClick={() => centerChange('manager-confirm')}>Manager Options
-                    </button>
+                    <button className="managerOptions-cash" onClick={() => centerChange('manager-confirm')}>Manager Options</button>
                 </div>
             </div>
 
-            <div className="centerScreenContainers-cash" style={{display: center === 'manager-confirm' ? 'flex' : 'none'}}>
+            <div className="centerScreenContainers-cash" style={{ display: center === 'manager-confirm' ? 'flex' : 'none' }}>
                 <div className="number-input-container">
                     <div className="input-field">
                         <input
@@ -249,31 +151,26 @@ function CenterScreen({center, order, centerChange, menuItemList, alternateOrder
                         <button className="number-button" onClick={() => handleButtonClick('0')}>0</button>
                     </div>
 
-                    <button onClick={handleClear} className="clear-button">
-                        Clear
-                    </button>
+                    <button onClick={handleClear} className="clear-button">Clear</button>
                 </div>
             </div>
 
-            <div className="centerScreenContainers-cash" style={{display: center === 'manager' ? 'block' : 'none'}}>
+            <div className="centerScreenContainers-cash" style={{ display: center === 'manager' ? 'block' : 'none' }}>
                 <div className="normalDiscount">
                     <button className="discountBtn" onClick={() => setDiscountAmount(0.1)}>10%</button>
                     <button className="discountBtn" onClick={() => setDiscountAmount(0.15)}>15%</button>
                     <button className="discountBtn" onClick={() => setDiscountAmount(0.2)}>20%</button>
                 </div>
                 <div className="specialDiscount">
-                    <button className="employeeDiscountBtn" onClick={() => setDiscountAmount(0.5)}>Employee
-                        Discount
-                    </button>
+                    <button className="employeeDiscountBtn" onClick={() => setDiscountAmount(0.5)}>Employee Discount</button>
                 </div>
 
                 <div className="refunds">
                     <button className="refundBtn" onClick={() => handleRefund()}>Refund</button>
                 </div>
-                </div>
-
             </div>
-            );
-            }
+        </div>
+    );
+});
 
-            export default CenterScreen;
+export default CenterScreen;
