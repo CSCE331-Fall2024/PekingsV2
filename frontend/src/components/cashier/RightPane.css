@@ -158,6 +158,41 @@
     border: 2px solid black;
 }
 
+.ingredient-name{
+    margin-left: 5%;
+    width: 60%;
+}
+
+.ingredient-list{
+    display: block;
+    width: 100%;
+}
+
+.ingredient-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.ingredient-editions{
+    display: flex;
+    flex-direction: row;
+    gap: 30%;
+    align-self: center;
+}
+
+.ingredient-editions button{
+    background-color: transparent;
+    border: none;
+    width: 30%;
+}
+
+.ingredient-amount{
+    text-align: center;
+    align-self: center;
+    background-color: black;
+    width: 40%;
+}
+
 
 
 /* For hiding scroll bars */

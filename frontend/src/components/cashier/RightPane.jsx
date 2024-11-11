@@ -52,7 +52,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             let orderItems = orderUse.orderItems;
 
             // Format extras array - calculate ingredient amount changes
-            const extras = orderItems.flatMap(item => {
+            const extras = orderItems.flatMap(orderItem => {
+                let item = orderItem.menuItem;
                 // Only process items that have ingredients
                 if (!item.ingredients || !item.ingredientCounts) return [];
 
@@ -158,12 +159,32 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     function orderItemDisplay(item) {
         let name = item.menuItem.name;
         let price = item.menuItem.price;
-
         let ingredients = item.menuItem.ingredients;
+
+        const handleDecrease = (ingredient) => {
+            if(ingredient.amount > 0){
+                ingredient.amount--;
+            }
+        }
+
+        const handleIncrease = (ingredient) => {
+            if(ingredient.amount < 2){
+                ingredient.amount++;
+            }
+        }
 
         const ingredientsRows = ingredients.map((ingredient, index) => (
             <div className="ingredient-row" key={index}>
-                {ingredient.id}
+                <div className="ingredient-name">{ingredient.id}</div>
+                <div className="ingredient-editions">
+                    <button className="changeIngredientAmount-Less" onClick={() => handleDecrease(ingredient)}>&lt;</button>
+                    <div className="ingredientAmount">
+                        {ingredient.amount === 0 && ("None")}
+                        {ingredient.amount === 1 && ("Normal")}
+                        {ingredient.amount === 2 && ("Extra")}
+                    </div>
+                    <button className="changeIngredientAmount-Less" onClick={() => handleIncrease(ingredient)}>&gt;</button>
+                </div>
             </div>
         ));
 
