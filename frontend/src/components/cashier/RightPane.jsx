@@ -71,7 +71,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         try {
             let orderItems = orderUse.orderItems;
             let items = [];
-            let extraIngredients = [];
 
             for(let i = 0; i < orderItems.length; i++){
                 let menuItem = orderItems[i].menuItem;
@@ -86,7 +85,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 }
 
                 if(addToOrder){
-                    items.push({menuItem: {id: menuItem.id}});
+                    let extraIngredients = [];
                     for(let j = 0; j < ingredients.length; j++){
                         if(ingredients[j].amount > 1){
                             extraIngredients.push({
@@ -100,6 +99,14 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                             });
                         }
                     }
+
+                    // console.log(extraIngredients);
+
+                    items.push({
+                        menuItem: {id: menuItem.id},
+                        extras: extraIngredients
+                    });
+
                 }
             }
 
@@ -115,8 +122,9 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 },
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
+                // items: [],
                 items: items,
-                extras: [], // Fabio is changing this, don't worry about it rn
+                // extras: [], // Fabio is changing this, don't worry about it rn
                 payment_method: paymentType
             };
 
