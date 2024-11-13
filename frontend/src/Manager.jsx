@@ -1,50 +1,104 @@
 import React, { useState, useEffect } from 'react';
 import './Manager.css';
-// import './Display.css';
 
 function Manager({ selectedSection }) {
     const [inventory, setInventory] = useState([]);
     const [menuItems, setMenuItems] = useState([]);
     const [employees, setEmployees] = useState([]);
+    const [editIdx, setEditIdx] = useState(-1);
 
     useEffect(() => {
-        // Generate random inventory data
-        const ingredientList = [
-            'Rice', 'Noodles', 'Soy Sauce', 'Ginger', 'Garlic', 'Green Onion',
-            'Tofu', 'Mushrooms', 'Bok Choy', 'Bean Sprouts', 'Bell Pepper',
-            'Egg', 'Sesame Oil', 'Chicken', 'Pork', 'Beef', 'Shrimp'
-        ];
+        const fetchItems = async () => {
+            try {
+                const response = await fetch("/api/menuitem/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
 
-        const generateRandomInventory = () => {
-            return ingredientList.map((item) => ({
-                name: item,
-                quantity: Math.floor(Math.random() * 100) + 1,
-                price: (Math.random() * 10).toFixed(2)
-            }));
-        };
+                if (response.ok) {
+                    const items = await response.json();
 
-        // Generate random menu items data
-        const menuList = ['Sweet and Sour Pork', 'Kung Pao Chicken', 'Spring Rolls', 'Dumplings', 'Hot and Sour Soup'];
+                    console.log(items);
+                    setMenuItems(items);
+                } else {
+                    console.error("Failed to fetch items:", response.status);
+                }
 
-        const generateRandomMenuItems = () => {
-            return menuList.map((item) => ({
-                name: item,
-                price: (Math.random() * (10 - 8) + 8).toFixed(2) // Random price between 8 and 10
-            }));
-        };
-
-        // Define employees list
-        const employeeList = [
-            { id: 1, name: "Nathan M.", role: "Manager" },
-            { id: 2, name: "Nathan L.", role: "Manager" },
-            { id: 3, name: "Fabio", role: "Employee" },
-            { id: 4, name: "Jeremiah", role: "Employee" }
-        ];
-
-        setInventory(generateRandomInventory());
-        setMenuItems(generateRandomMenuItems());
-        setEmployees(employeeList);
+            } catch (error) {
+                console.error("Error fetching items:", error);
+            }
+    };
+        fetchItems();
     }, []);
+    useEffect(() => {
+        const fetchItems2 = async () => {
+            try {
+                const invResponse = await fetch("/api/inventory/all", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+                if (invResponse.ok) {
+                const items = await invResponse.json();
+                    setInventory(items);
+                } else {
+                    console.error("Failed to fetch items:", invResponse.status);
+                }
+
+            }   catch (error) {
+                console.error("Error fetching items:", error);
+            }
+        };
+        fetchItems2();
+    },[]);
+    useEffect(() => {
+        const fetchItems3 = async () => {
+            try {
+                const empResponse = await fetch("/api/employee/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (empResponse.ok) {
+                    const items = await empResponse.json();
+                    setEmployees(items);
+                } else {
+                    console.error("Failed to fetch items:", empResponse.status);
+                }
+
+            }   catch (error) {
+                console.error("Error fetching items:", error);
+            }
+        };
+        fetchItems3();
+    },[]);
+
+
+    // const handleEditClick = (index) => {
+    //     setEditIdx(index);
+    // };
+    //
+    // const handleInputChange = (e, field, index) => {
+    //     const updatedInventory = inventory.map((item, idx) => {
+    //         if (idx === index) {
+    //             return { ...item, [field]: e.target.value };
+    //         }
+    //         return item;
+    //     });
+    //     setInventory(updatedInventory);
+    // };
+    //
+    // const handleSave = () => {
+    //     setEditIdx(-1);
+    // };
+    //
+    // const handleCancel = () => {
+    //     setEditIdx(-1);
+    // };
 
     return (
         <div className="managerRoot">
@@ -57,20 +111,23 @@ function Manager({ selectedSection }) {
                     <table className="data-table">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Ingredient</th>
                             <th>Quantity</th>
-                            <th>Price</th>
+                            {/*<th>Unit Price</th>*/}
+                            {/*<th>Batch Price</th>*/}
+                            {/*<th>Actions</th>*/}
                         </tr>
                         </thead>
                         <tbody>
                         {inventory.map((item, index) => (
                             <tr key={index}>
+                                <td>{item.id}</td>
                                 <td>{item.name}</td>
-                                <td>{item.quantity}</td>
-                                <td>${item.price}</td>
-                                <td>
-                                <button className="invButton_M">Edit</button>
-                                </td>
+                                <td>{item.amount}</td>
+                                {/*<td>${item.servingPrice}</td>*/}
+                                {/*<td>${item.priceBatch}</td>*/}
+                                {/*<td>{item.actions}</td>*/}
                             </tr>
                         ))}
                         </tbody>
@@ -95,22 +152,31 @@ function Manager({ selectedSection }) {
                         </tbody>
                     </table>
                 )}
-
+                {/*"id": 1,*/}
+                {/*"username": "ThomasC",*/}
+                {/*"pass": "CC137",*/}
+                {/*"email": null,*/}
+                {/*"position": "employee",*/}
+                {/*"lastClockin": "00:00:00",*/}
+                {/*"isClockedin": false,*/}
+                {/*"pin": null*/}
                 {selectedSection === "Employees" && (
                     <table className="data-table">
                         <thead>
                         <tr>
-                            <th>Employee</th>
                             <th>ID</th>
-                            <th>Role</th>
+                            <th>User</th>
+                            <th>Pass</th>
+                            <th>Position</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {employees.map((employee) => (
-                            <tr key={employee.id}>
-                                <td>{employee.name}</td>
+                        {employees.map((employee, index) => (
+                            <tr key={index}>
                                 <td>{employee.id}</td>
-                                <td>{employee.role}</td>
+                                <td>{employee.username}</td>
+                                <td>{employee.pass}</td>
+                                <td>{employee.position}</td>
                             </tr>
                         ))}
                         </tbody>
