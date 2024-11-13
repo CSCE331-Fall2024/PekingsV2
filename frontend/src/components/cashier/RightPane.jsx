@@ -67,35 +67,42 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
     // Reinsert try statements when fixed
     const handleOrder = async (orderUse, paymentType) => {
-        // try {
+        try {
             let orderItems = orderUse.orderItems;
+            let items = [];
+            let extraIngredients = [];
 
-            // Format extras array - calculate ingredient amount changes
-            const extras = orderItems.flatMap(orderItem => {
-                let item = orderItem.menuItem;
-                // Only process items that have ingredients
-                if (!item.ingredients || !item.ingredientCounts) return [];
+            for(let i = 0; i < orderItems.length; i++){
+                let menuItem = orderItems[i].menuItem;
+                let ingredients = menuItem.ingredients;
+                let addToOrder = false;
 
-                return item.ingredients.map(ingredient => {
-                    // Handle both object and string ingredient formats
-                    const ingredientId = typeof ingredient === 'object' ? ingredient.ingredient : ingredient;
-                    const originalAmount = 1;
-                    const currentAmount = item.ingredientCounts[ingredientId] || 0;
-                    const difference = currentAmount - originalAmount;
-
-                    if (difference === 0) return null;
-
-                    return {ingredient: {id: Number(ingredientId)}, amount: difference};
-                });
-            }).filter(Boolean);
-
-            // format order items array using the stored menuItemId
-            const items = orderItems.map(item => ({
-                menuItem: {
-                    // using stored original menu item ID
-                    id: Number(item.menuItemId)
+                for(let j = 0; j < ingredients.length; j++){
+                    if(ingredients[j].amount > 0){
+                        addToOrder = true;
+                        break;
+                    }
                 }
-            }));
+
+                if(addToOrder){
+                    items.push({menuItem: {id: menuItem.id}});
+                    for(let j = 0; j < ingredients.length; j++){
+                        if(ingredients[j].amount > 1){
+                            extraIngredients.push({
+                                ingredient: {id: ingredients[j].id},
+                                amount: 1
+                            });
+                        }else if(ingredients[j].amount < 1){
+                            extraIngredients.push({
+                                ingredient: {id: ingredients[j].id},
+                                amount: -1
+                            });
+                        }
+                    }
+                }
+            }
+
+
 
             // creating the order object
             const order = {
@@ -108,8 +115,12 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
                 items: items,
-                extras: extras
+                extras: [], // Fabio is changing this, don't worry about it rn
+                payment_method: paymentType
             };
+
+            console.log(items);
+            // console.log(extraIngredients);
 
 
             const response = await fetch('/api/orders/add', {
@@ -137,28 +148,52 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
             //yippee it didnt fail
             alert('Order placed successfully!');
-        // }
-        // catch (error) {
-        //     console.error('Error processing order:', error);
-        //     alert(`Failed to place order: ${error.message}`);
-        // }
+        }
+        catch (error) {
+            console.error('Error processing order:', error);
+            alert(`Failed to place order: ${error.message}`);
+        }
     };
 
     const processPayment = (paymentType) => {
-        // handleOrder(order);
+        if(order.orderItems.length === 0){
+            alert("No order to place")
+            return;
+        }
 
-        centerChange('menu');
+        let placeOrder = false;
+        for(let i = 0; i < order.orderItems.length; i++){
+            let item = order.orderItems[i].menuItem;
+            for(let j = 0; j < item.ingredients.length; j++){
+                let ingredient = item.ingredients[j];
+                if(ingredient.amount > 0){
+                    placeOrder = true;
+                    break;
+                }
+            }
+            if(placeOrder){
+                break;
+            }
+        }
 
-        let total = calculateTotal();
+        if(placeOrder){
+            handleOrder(order, paymentType);
 
-        order.paidItems.push(...order.orderItems);
-        order.amountPaid += total;
-        order.amountPaid = parseFloat(order.amountPaid.toFixed(2));
+            centerChange('menu');
 
-        order.orderItems.length = 0;
-        setSubtotal(0);
-        setTax(0);
-        setTotal(0);
+            let total = calculateTotal();
+
+            order.paidItems.push(...order.orderItems);
+            order.amountPaid += total;
+            order.amountPaid = parseFloat(order.amountPaid.toFixed(2));
+
+            order.orderItems.length = 0;
+            setSubtotal(0);
+            setTax(0);
+            setTotal(0);
+        }else{
+            alert("No menu items with valid ingredients");
+        }
     };
 
     useEffect(() => {

@@ -118,7 +118,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, al
 
             <div className="centerScreenContainers-cash" style={{ display: center === 'payment' ? 'block' : 'none' }}>
                 <div className="paymentButtons-cash">
-                    <button className="card" onClick={() => handlePaymentProcess('card')}>Card</button>
+                    <button className="card" onClick={() => handlePaymentProcess('credit_card')}>Card</button>
                     <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
                 </div>
                 <div className="managerOptionsContainer-cash">
