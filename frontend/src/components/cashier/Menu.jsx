@@ -7,11 +7,11 @@ function Menu({seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList})
     const handleButtonClick = (menuItem) => () =>{
         setItemID(itemID + 1);
 
-        // menuItemList.push(menuItem);
+        const menuItemCopy = JSON.parse(JSON.stringify(menuItem));
         menuItemList.push(
             {
                 menuItemID: itemID,
-                menuItem: menuItem,
+                menuItem: menuItemCopy,
                 editStatus: false
             }
         )

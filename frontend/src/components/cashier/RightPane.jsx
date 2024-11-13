@@ -252,7 +252,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
         function findIngredientName(ingredient){
             for (let i = 0; i < ingredientNames.length; i++) {
-                // console.log(ingredientNames[i].name);
                 if (ingredientNames[i].id === ingredient.ingredient) {
                     return ingredientNames[i].name;
                 }
@@ -262,7 +261,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         const ingredientsRows = ingredients.map((ingredient, index) => (
             <div className="ingredient-row" key={index}>
                 <div className="ingredient-name">{findIngredientName(ingredient)}</div>
-                {/*<div className="ingredient-name">{ingredient.ingredient}</div>*/}
                 <div className="ingredient-editions">
                     <button className="changeIngredientAmount-Less"
                             onClick={() => handleDecrease(ingredient)}>&lt;</button>
