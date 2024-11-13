@@ -15,7 +15,7 @@ function createOrder(orderID) {
     };
 }
 
-const Cashier = ({logout}) => {
+const Cashier = ({logout, employee}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
@@ -102,6 +102,7 @@ const Cashier = ({logout}) => {
                                    setProcessFunction={setProcessFunc}
                                    processFunctions={processOrder}
                                    discount={discount}
+                                   employee={employee}
                         />
                     </div>
                 ))}

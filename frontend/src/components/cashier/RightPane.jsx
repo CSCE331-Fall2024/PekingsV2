@@ -13,7 +13,7 @@ const areArraysEqual = (arr1, arr2) => {
 };
 
 // eslint-disable-next-line react/prop-types
-function RightPane({ order, centerChange, setProcessFunction, processFunctions, discount}) {
+function RightPane({ order, centerChange, setProcessFunction, processFunctions, discount, employee}) {
     const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
     const [total, setTotal] = useState(0);
@@ -111,7 +111,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                     id: Math.floor(Math.random() * 1000) + 1
                 },
                 employee: {
-                    id: 3
+                    id: employee.id
                 },
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),

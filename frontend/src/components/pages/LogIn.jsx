@@ -1,76 +1,105 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './LogIn.css';
 
 import Cashier from '../../Cashier.jsx'
 import Display from '../../Display.jsx'
 
-const employees = [
-    {
-        "id": 1,
-        "username": "ThomasC",
-        "pass": "CC137",
-        "email": null,
-        "position": "employee",
-        "lastClockin": "00:00:00",
-        "isClockedin": false,
-        "pin": null
-    },
-    {
-        "id": 5,
-        "username": "NathanM",
-        "pass": "yourboi",
-        "email": null,
-        "position": "employee",
-        "lastClockin": "00:00:00",
-        "isClockedin": false,
-        "pin": null
-    },
-    {
-        "id": 2,
-        "username": "Fabio",
-        "pass": "thebatcave",
-        "email": null,
-        "position": "employee",
-        "lastClockin": "17:57:46.214",
-        "isClockedin": true,
-        "pin": null
-    },
-    {
-        "id": 4,
-        "username": "NathanL",
-        "pass": "meltmyeyes",
-        "email": null,
-        "position": "employee",
-        "lastClockin": "00:00:00",
-        "isClockedin": true,
-        "pin": null
-    },
-    {
-        "id": 6,
-        "username": "Yasuo",
-        "pass": "hasagi",
-        "email": null,
-        "position": "manager",
-        "lastClockin": "00:00:00",
-        "isClockedin": false,
-        "pin": null
-    },
-    {
-        "id": 3,
-        "username": "Germ",
-        "pass": "Machamp",
-        "email": null,
-        "position": "employee",
-        "lastClockin": "17:28:26.18",
-        "isClockedin": false,
-        "pin": null
-    }
-]
+// const employees = [
+//     {
+//         "id": 1,
+//         "username": "ThomasC",
+//         "pass": "CC137",
+//         "email": null,
+//         "position": "employee",
+//         "lastClockin": "00:00:00",
+//         "isClockedin": false,
+//         "pin": null
+//     },
+//     {
+//         "id": 5,
+//         "username": "NathanM",
+//         "pass": "yourboi",
+//         "email": null,
+//         "position": "employee",
+//         "lastClockin": "00:00:00",
+//         "isClockedin": false,
+//         "pin": null
+//     },
+//     {
+//         "id": 2,
+//         "username": "Fabio",
+//         "pass": "thebatcave",
+//         "email": null,
+//         "position": "employee",
+//         "lastClockin": "17:57:46.214",
+//         "isClockedin": true,
+//         "pin": null
+//     },
+//     {
+//         "id": 4,
+//         "username": "NathanL",
+//         "pass": "meltmyeyes",
+//         "email": null,
+//         "position": "employee",
+//         "lastClockin": "00:00:00",
+//         "isClockedin": true,
+//         "pin": null
+//     },
+//     {
+//         "id": 6,
+//         "username": "Yasuo",
+//         "pass": "hasagi",
+//         "email": null,
+//         "position": "manager",
+//         "lastClockin": "00:00:00",
+//         "isClockedin": false,
+//         "pin": null
+//     },
+//     {
+//         "id": 3,
+//         "username": "Germ",
+//         "pass": "Machamp",
+//         "email": null,
+//         "position": "employee",
+//         "lastClockin": "17:28:26.18",
+//         "isClockedin": false,
+//         "pin": null
+//     }
+// ]
+
 
 function LogIn(){
+    let currentEmployee = {};
+
     // State to hold username and password input values
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await fetch("/api/employee/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.ok) {
+                    const employeeList = await response.json();
+
+                    setEmployees(employeeList)
+                } else {
+                    console.error("Failed to fetch employees:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching employess:", error);
+            }
+        };
+
+        fetchItems();
+    }, []);
 
     const [currentScreen, setCurrentScreen] = useState('login');
 
@@ -85,6 +114,7 @@ function LogIn(){
                 console.log(employees[i].position);
                 if(employees[i].position === "employee"){
                     setCurrentScreen('employee');
+                    currentEmployee = employees[i];
                 }else if(employees[i].position === "manager"){
                     setCurrentScreen('manager');
                 }else{
@@ -132,7 +162,7 @@ function LogIn(){
             )}
 
             {currentScreen === 'employee' && (
-                <Cashier logout={logout} />
+                <Cashier logout={logout} employee={currentEmployee} />
             )}
 
             {currentScreen === 'manager' && (
