@@ -19,6 +19,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     const [total, setTotal] = useState(0);
     const [orderItemsRows, setOrderItemsRows] = useState([]);
     const [orderItemsChecker, setOrderItemsChecker] = useState([]);
+    const [ingredientNames, setIngredientNames] = useState([]);
 
 
     // Functions used for Nathan L place orders
@@ -139,13 +140,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             const responseData = await response.json();
             console.log('Order response:', responseData);
 
-            // clears order
-            // setOrderItems([]);
-            // setIsOpen(false);
-            // setAppliedPromo(null);
-            // setPromoError('');
-            // setExpandedItems({});
-
             //yippee it didnt fail
             alert('Order placed successfully!');
         }
@@ -154,6 +148,34 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             alert(`Failed to place order: ${error.message}`);
         }
     };
+
+    useEffect(() => {
+        const fetchIngredients = async () => {
+            try {
+                const response = await fetch("/api/inventory/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+
+                if (response.ok) {
+                    const ingredients = await response.json();
+
+                    setIngredientNames(ingredients);
+                } else {
+                    console.error("Failed to fetch ingredients:", response.status);
+                }
+
+            } catch (error) {
+                console.error('Error finding ingredient:', error);
+                alert(`Failed to find ingredient: ${error.message}`);
+            }
+        }
+
+        fetchIngredients();
+    }, []);
 
     const processPayment = (paymentType) => {
         if(order.orderItems.length === 0){
@@ -225,26 +247,39 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             if(ingredient.amount < 2){
                 ingredient.amount++;
             }
+            console.log(ingredient);
+        }
+
+        function findIngredientName(ingredient){
+            for (let i = 0; i < ingredientNames.length; i++) {
+                // console.log(ingredientNames[i].name);
+                if (ingredientNames[i].id === ingredient.ingredient) {
+                    return ingredientNames[i].name;
+                }
+            }
         }
 
         const ingredientsRows = ingredients.map((ingredient, index) => (
             <div className="ingredient-row" key={index}>
-                <div className="ingredient-name">{ingredient.id}</div>
+                <div className="ingredient-name">{findIngredientName(ingredient)}</div>
+                {/*<div className="ingredient-name">{ingredient.ingredient}</div>*/}
                 <div className="ingredient-editions">
-                    <button className="changeIngredientAmount-Less" onClick={() => handleDecrease(ingredient)}>&lt;</button>
+                    <button className="changeIngredientAmount-Less"
+                            onClick={() => handleDecrease(ingredient)}>&lt;</button>
                     <div className="ingredientAmount">
                         {ingredient.amount === 0 && ("None")}
                         {ingredient.amount === 1 && ("Normal")}
                         {ingredient.amount === 2 && ("Extra")}
                     </div>
-                    <button className="changeIngredientAmount-Less" onClick={() => handleIncrease(ingredient)}>&gt;</button>
+                    <button className="changeIngredientAmount-Less"
+                            onClick={() => handleIncrease(ingredient)}>&gt;</button>
                 </div>
             </div>
         ));
 
         return (
             <div className="orderItemContainer">
-                <div className="orderItemRow">
+            <div className="orderItemRow">
                     <button className="orderItemRowText">
                         <div className="orderItemsText">{name}</div>
                         <div className="orderItemsPrice">${price}</div>
