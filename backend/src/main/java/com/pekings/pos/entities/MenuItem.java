@@ -33,6 +33,9 @@ public class MenuItem {
     @Column(name = "category")
     private String category;
 
+    @Column(name = "image")
+    private String image;
+
     @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL)
     private List<MenuIngredient> ingredients;
 
@@ -84,4 +87,11 @@ public class MenuItem {
         this.active = active;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

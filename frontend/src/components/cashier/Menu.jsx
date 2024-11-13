@@ -1,9 +1,20 @@
 import React, {useState} from 'react';
 import './Menu.css'
 
-function Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList}) {
+function Menu({seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList}) {
+    const [itemID, setItemID] = useState(1);
+
     const handleButtonClick = (menuItem) => () =>{
-        menuItemList.push(menuItem);
+        setItemID(itemID + 1);
+
+        const menuItemCopy = JSON.parse(JSON.stringify(menuItem));
+        menuItemList.push(
+            {
+                menuItemID: itemID,
+                menuItem: menuItemCopy,
+                editStatus: false
+            }
+        )
     };
 
     const ButtonComponent = (menuItem) => {
@@ -18,16 +29,17 @@ function Menu(menuItems1, menuItems2, menuItems3, {currentMenu, menuItemList}) {
     const menuItemBtns2 = [];
     const menuItemBtns3 = [];
 
-    for(let i= 0; i < menuItems1.length; i++){
-        menuItemBtns1.push(ButtonComponent(menuItems1[i]));
+
+    for(let i= 0; i < mainMenuItems.length; i++){
+        menuItemBtns1.push(ButtonComponent(mainMenuItems[i]));
     }
 
-    for(let i= 0; i < menuItems2.length; i++){
-        menuItemBtns2.push(ButtonComponent(menuItems2[i]));
+    for(let i= 0; i < seasonalItems.length; i++){
+        menuItemBtns2.push(ButtonComponent(seasonalItems[i]));
     }
 
-    for(let i= 0; i < menuItems3.length; i++){
-        menuItemBtns3.push(ButtonComponent(menuItems3[i]));
+    for(let i= 0; i < drinks.length; i++){
+        menuItemBtns3.push(ButtonComponent(drinks[i]));
     }
 
     return (
