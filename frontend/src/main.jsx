@@ -11,11 +11,11 @@ createRoot(document.getElementById('root')).render(
     <StrictMode>
         {/*<App />*/}
         <Cashier employee={{
-            "id": 6,
-            "username": "Yasuo",
-            "pass": "hasagi",
+            "id": 1,
+            "username": "ThomasC",
+            "pass": "CC137",
             "email": null,
-            "position": "manager",
+            "position": "employee",
             "lastClockin": "00:00:00",
             "isClockedin": false,
             "pin": null

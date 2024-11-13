@@ -37,8 +37,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 if(ingredients[j].amount > 0){
                     noIngredients = false;
                 }
-                if(ingredients[j].amount === 2){
-                    menuItemTotal += 0.5;
+                if(ingredients[j].amount > 1){
+                    menuItemTotal += 0.5 * (ingredients[j].amount - 1);
                 }
                 if(ingredients[j].amount === 0){
                     menuItemTotal -= 0.5;
@@ -71,7 +71,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         try {
             let orderItems = orderUse.orderItems;
             let items = [];
-            let extraIngredients = [];
 
             for(let i = 0; i < orderItems.length; i++){
                 let menuItem = orderItems[i].menuItem;
@@ -86,12 +85,13 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 }
 
                 if(addToOrder){
-                    items.push({menuItem: {id: menuItem.id}});
+                    let extraIngredients = [];
                     for(let j = 0; j < ingredients.length; j++){
                         if(ingredients[j].amount > 1){
                             extraIngredients.push({
                                 ingredient: {id: ingredients[j].id},
                                 amount: 1
+                                // amount: (ingredients[j].amount - 1)
                             });
                         }else if(ingredients[j].amount < 1){
                             extraIngredients.push({
@@ -100,6 +100,14 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                             });
                         }
                     }
+
+                    // console.log(extraIngredients);
+
+                    items.push({
+                        menuItem: {id: menuItem.id},
+                        extras: extraIngredients
+                    });
+
                 }
             }
 
@@ -115,8 +123,9 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 },
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
+                // items: [],
                 items: items,
-                extras: [], // Fabio is changing this, don't worry about it rn
+                // extras: [], // Fabio is changing this, don't worry about it rn
                 payment_method: paymentType
             };
 
@@ -244,10 +253,10 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         const handleIncrease = (ingredient) => {
-            if(ingredient.amount < 2){
+            // Leave code for max extras
+            // if(ingredient.amount < 2){
                 ingredient.amount++;
-            }
-            console.log(ingredient);
+            // }
         }
 
         function findIngredientName(ingredient){
@@ -258,22 +267,50 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             }
         }
 
-        const ingredientsRows = ingredients.map((ingredient, index) => (
-            <div className="ingredient-row" key={index}>
-                <div className="ingredient-name">{findIngredientName(ingredient)}</div>
-                <div className="ingredient-editions">
-                    <button className="changeIngredientAmount-Less"
-                            onClick={() => handleDecrease(ingredient)}>&lt;</button>
-                    <div className="ingredientAmount">
-                        {ingredient.amount === 0 && ("None")}
-                        {ingredient.amount === 1 && ("Normal")}
-                        {ingredient.amount === 2 && ("Extra")}
+        let ingredientsRows = [];
+        if(item.menuItem.category !== "drink"){
+            ingredientsRows = ingredients.map((ingredient, index) => (
+                <div className="ingredient-row" key={index}>
+                    <div className="ingredient-name">{findIngredientName(ingredient)}</div>
+                    <div className="ingredient-editions">
+                        <button className="changeIngredientAmount-Less"
+                                onClick={() => handleDecrease(ingredient)}>&lt;</button>
+                        <div className="ingredientAmount">
+                            {ingredient.amount === 0 && ("None")}
+                            {ingredient.amount === 1 && ("Normal")}
+                            {ingredient.amount > 1 && "Extra: " + (ingredient.amount - 1)}
+
+                        </div>
+                        <button className="changeIngredientAmount-Less"
+                                onClick={() => handleIncrease(ingredient)}>&gt;</button>
                     </div>
-                    <button className="changeIngredientAmount-Less"
-                            onClick={() => handleIncrease(ingredient)}>&gt;</button>
                 </div>
-            </div>
-        ));
+            ));
+
+            return (
+                <div className="orderItemContainer">
+                    <div className="orderItemRow">
+                        <button className="orderItemRowText">
+                            <div className="orderItemsText">{name}</div>
+                            <div className="orderItemsPrice">${price}</div>
+                        </button>
+                        <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}>
+                            <img src={editButtonImage}
+                                 className="editBtnIcon"
+                            />
+                        </button>
+                        <button className="orderItemX" onClick={removeItem(item)}>X</button>
+                    </div>
+
+                    {item.editStatus && (
+                        <div className="ingredients-list">
+                            {ingredientsRows}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
 
         return (
             <div className="orderItemContainer">
@@ -282,11 +319,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                         <div className="orderItemsText">{name}</div>
                         <div className="orderItemsPrice">${price}</div>
                     </button>
-                    <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}>
-                        <img src={editButtonImage}
-                             className="editBtnIcon"
-                        />
-                    </button>
+                    <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}></button>
                     <button className="orderItemX" onClick={removeItem(item)}>X</button>
                 </div>
 

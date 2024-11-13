@@ -6,7 +6,9 @@ import Menu from './Menu.jsx';
 // const pin = "1234";
 
 // Memoize the CenterScreen component to avoid unnecessary re-renders
+// eslint-disable-next-line react/display-name,react/prop-types
 const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
+                                     // eslint-disable-next-line react/prop-types
                                      alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen, employee
 }) => {
     const [menuItems, setMenuItems] = useState([]);
@@ -95,11 +97,6 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                 return;
             }
         }
-        // if (newPin === pin) {
-        //     centerChange("manager");
-        //     setPlaceHolderText('PIN');
-        //     setInputValue('');
-        // }else
         if (newPin.length === 4) {
             setPlaceHolderText('PIN not recognized');
             setInputValue('');
