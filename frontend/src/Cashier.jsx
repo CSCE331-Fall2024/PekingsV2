@@ -96,6 +96,7 @@ const Cashier = ({logout, employee}) => {
                                       processOrder={processOrder[activeScreenIndex]}
                                       setDiscount={setDiscount}
                                       addScreen={addScreen}
+                                      employee={employee}
                         />
                         <RightPane order = {order}
                                    centerChange={handleCenterChange}

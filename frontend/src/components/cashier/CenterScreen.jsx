@@ -6,7 +6,9 @@ import Menu from './Menu.jsx';
 const pin = "1234";
 
 // Memoize the CenterScreen component to avoid unnecessary re-renders
-const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen }) => {
+const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
+                                     alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen, employee
+}) => {
     const [menuItems, setMenuItems] = useState([]);
     const [seasonalItems, setSeasonalItems] = useState([]);
     const [drinks, setDrinks] = useState([]);
@@ -45,6 +47,33 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, al
         fetchItems();
     }, []);  // Add an empty dependency array to fetch items once on mount
 
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await fetch("/api/employee/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.ok) {
+                    const employeeList = await response.json();
+
+                    setEmployees(employeeList)
+                } else {
+                    console.error("Failed to fetch employees:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching employess:", error);
+            }
+        };
+
+        fetchItems();
+    }, []);
+
     const [currentMenu, setCurrentMenu] = useState('main');
     const [inputValue, setInputValue] = useState('');
     const [placeHolderText, setPlaceHolderText] = useState('PIN');
@@ -52,11 +81,20 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, al
 
     const handleButtonClick = (number) => {
         let newPin = inputValue + number;
-        if (newPin === pin) {
-            centerChange("manager");
-            setPlaceHolderText('PIN');
-            setInputValue('');
-        } else if (newPin.length === 4) {
+        for(let i = 0; i < employees.length; i++){
+            if(newPin === employees[i].pin){
+                centerChange("manager");
+                setPlaceHolderText('PIN');
+                setInputValue('');
+                return;
+            }
+        }
+        // if (newPin === pin) {
+        //     centerChange("manager");
+        //     setPlaceHolderText('PIN');
+        //     setInputValue('');
+        // }else
+        if (newPin.length === 4) {
             setPlaceHolderText('PIN not recognized');
             setInputValue('');
         } else {
@@ -104,6 +142,14 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, al
         }
     };
 
+    const handleManagerOptionsClick = () => {
+        if(employee.position === 'manager'){
+            centerChange('manager');
+        }else{
+            centerChange('manager-confirm')
+        }
+    }
+
     return (
         <div className="centerScreen-cash">
             <div className="centerScreenContainers-cash" style={{ display: center === 'menu' ? 'block' : 'none' }}>
@@ -122,7 +168,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList, al
                     <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
                 </div>
                 <div className="managerOptionsContainer-cash">
-                    <button className="managerOptions-cash" onClick={() => centerChange('manager-confirm')}>Manager Options</button>
+                    <button className="managerOptions-cash" onClick={() => handleManagerOptionsClick()}>Manager Options</button>
                 </div>
             </div>
 

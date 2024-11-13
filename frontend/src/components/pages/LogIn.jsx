@@ -4,69 +4,6 @@ import './LogIn.css';
 import Cashier from '../../Cashier.jsx'
 import Display from '../../Display.jsx'
 
-// const employees = [
-//     {
-//         "id": 1,
-//         "username": "ThomasC",
-//         "pass": "CC137",
-//         "email": null,
-//         "position": "employee",
-//         "lastClockin": "00:00:00",
-//         "isClockedin": false,
-//         "pin": null
-//     },
-//     {
-//         "id": 5,
-//         "username": "NathanM",
-//         "pass": "yourboi",
-//         "email": null,
-//         "position": "employee",
-//         "lastClockin": "00:00:00",
-//         "isClockedin": false,
-//         "pin": null
-//     },
-//     {
-//         "id": 2,
-//         "username": "Fabio",
-//         "pass": "thebatcave",
-//         "email": null,
-//         "position": "employee",
-//         "lastClockin": "17:57:46.214",
-//         "isClockedin": true,
-//         "pin": null
-//     },
-//     {
-//         "id": 4,
-//         "username": "NathanL",
-//         "pass": "meltmyeyes",
-//         "email": null,
-//         "position": "employee",
-//         "lastClockin": "00:00:00",
-//         "isClockedin": true,
-//         "pin": null
-//     },
-//     {
-//         "id": 6,
-//         "username": "Yasuo",
-//         "pass": "hasagi",
-//         "email": null,
-//         "position": "manager",
-//         "lastClockin": "00:00:00",
-//         "isClockedin": false,
-//         "pin": null
-//     },
-//     {
-//         "id": 3,
-//         "username": "Germ",
-//         "pass": "Machamp",
-//         "email": null,
-//         "position": "employee",
-//         "lastClockin": "17:28:26.18",
-//         "isClockedin": false,
-//         "pin": null
-//     }
-// ]
-
 
 function LogIn(){
     let currentEmployee = {};
