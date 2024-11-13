@@ -3,7 +3,7 @@ import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
 
-const pin = "1234";
+// const pin = "1234";
 
 // Memoize the CenterScreen component to avoid unnecessary re-renders
 const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
