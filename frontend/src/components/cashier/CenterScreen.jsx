@@ -31,15 +31,9 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                     const chunkSize = Math.floor(items.length / 3);
                     const remainder = items.length % 3;
 
-                    const list1 = (items.slice(0, chunkSize + (remainder > 0 ? 1 : 0))).filter(item => {
-                        return item.active
-                    });
-                    const list2 = (items.slice(list1.length, list1.length + chunkSize + (remainder > 1 ? 1 : 0))).filter(item => {
-                        return item.active
-                    });
-                    const list3 = (items.slice(list1.length + list2.length)).filter(item => {
-                        return item.active
-                    });
+                    const list1 = items.filter(item => (item.category === "food") && (item.active));
+                    const list2 = items.filter(item => (item.category === "seasonal") && (item.active));
+                    const list3 = items.filter(item => (item.category === "drink") && (item.active));
 
                     setMenuItems(list1);
                     setSeasonalItems(list2);
