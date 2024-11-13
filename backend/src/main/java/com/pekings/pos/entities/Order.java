@@ -36,7 +36,7 @@ public class Order {
     private BigDecimal price;
 
     @Column(name = "payment_method", length = Integer.MAX_VALUE)
-    private String paymentMethod;
+    private String payment_method;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employee_id", nullable = false)
@@ -47,17 +47,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderInventory> extras;
-
-    public List<OrderInventory> getExtras() {
-        return extras;
-    }
-
-    public void setExtras(List<OrderInventory> extras) {
-        this.extras = extras;
-    }
 
     public List<OrderItem> getItems() {
         return items;
@@ -92,11 +81,11 @@ public class Order {
     }
 
     public String getPaymentMethod() {
-        return paymentMethod;
+        return payment_method;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
+    public void setPaymentMethod(String payment_method) {
+        this.payment_method = payment_method;
     }
 
     public Employee getEmployee() {

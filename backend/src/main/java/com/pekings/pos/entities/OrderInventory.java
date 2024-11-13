@@ -1,5 +1,9 @@
 package com.pekings.pos.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pekings.pos.serialization.OrderInventorySerializer;
+import com.pekings.pos.serialization.OrderItemSerializer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,10 +13,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "order_inventory")
+@JsonSerialize(using = OrderInventorySerializer.class)
 public class OrderInventory {
 
     @Id
@@ -20,11 +29,11 @@ public class OrderInventory {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
-    private Order order;
-
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_item_id")
+    private OrderItem orderItem;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id")
     private Inventory ingredient;
 
@@ -47,12 +56,12 @@ public class OrderInventory {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public OrderItem getOrderItem() {
+        return orderItem;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderItem(OrderItem orderItem) {
+        this.orderItem = orderItem;
     }
 
     public Inventory getIngredient() {
