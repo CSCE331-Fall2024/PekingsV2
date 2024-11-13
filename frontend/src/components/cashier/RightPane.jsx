@@ -88,19 +88,16 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                     for(let j = 0; j < ingredients.length; j++){
                         if(ingredients[j].amount > 1){
                             extraIngredients.push({
-                                ingredient: {id: ingredients[j].id},
-                                amount: 1
-                                // amount: (ingredients[j].amount - 1)
+                                ingredient: {id: ingredients[j].ingredient},
+                                amount: (ingredients[j].amount - 1)
                             });
                         }else if(ingredients[j].amount < 1){
                             extraIngredients.push({
-                                ingredient: {id: ingredients[j].id},
+                                ingredient: {id: ingredients[j].ingredient},
                                 amount: -1
                             });
                         }
                     }
-
-                    // console.log(extraIngredients);
 
                     items.push({
                         menuItem: {id: menuItem.id},
@@ -128,9 +125,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 payment_method: paymentType
             };
 
-            console.log(items);
-            // console.log(extraIngredients);
-
 
             const response = await fetch('/api/orders/add', {
                 method: 'POST',
@@ -146,7 +140,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             }
 
             const responseData = await response.json();
-            console.log('Order response:', responseData);
 
             //yippee it didnt fail
             alert('Order placed successfully!');
@@ -237,7 +230,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         if (index !== -1) {
             order.orderItems.splice(index, 1);
         }
-        console.log(order.orderItems);
     };
 
     function orderItemDisplay(item) {
@@ -410,7 +402,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
     return (
         <div className="rightRect">
-            {/*<button className="tempBtn" onClick={() => console.log(paidItems)}></button>*/}
             <div className="rightPaneContainer1-cash">
                 <div className="orderNumberContainer-cash">
                     <div className="orderNumber">Order<br />#{order.id}</div>
