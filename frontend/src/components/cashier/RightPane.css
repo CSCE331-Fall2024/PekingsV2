@@ -5,6 +5,15 @@
     width: 21%
 }
 
+.rightPaneContainer1-cash{
+    height: 95.5%;
+    width: 100%;
+}
+
+.orderNumberContainer-cash{
+    height: 25.6%;
+}
+
 .orderNumber{
     position: relative;
     padding: 10%;
@@ -36,7 +45,7 @@
     border: none;
     position:relative;
     display: flex;
-    width: 100%;
+    width: 70%;
     height: auto;
     padding: 1.5% 3%;
     color: white;
@@ -44,7 +53,7 @@
 }
 
 .orderItemsText {
-    width: 65%; /* Set maximum width for text */
+    width: 60%; /* Set maximum width for text */
     white-space: normal; /* Allow wrapping */
     overflow-wrap: break-word; /* Break long words if necessary */
     text-align: left; /* Align text to the left */
@@ -56,8 +65,39 @@
 .orderItemsPrice {
     display: flex; /* Use flexbox for the price */
     align-self: center; /* Align price to the start of the container */
-    margin-left: 5%; /* Space between text and price */
+    margin-left: 15%; /* Space between text and price */
     width: 10%;
+}
+
+.paidItemsText{
+    width: 90%; /* Set maximum width for text */
+    white-space: normal; /* Allow wrapping */
+    overflow-wrap: break-word; /* Break long words if necessary */
+    text-align: left; /* Align text to the left */
+    display: flex; /* Use flexbox to align text and price */
+    flex-direction: column; /* Stack text vertically */
+    color: white;
+}
+
+.paidItemsPrice {
+    display: flex; /* Use flexbox for the price */
+    align-self: center; /* Align price to the start of the container */
+    margin-left: 10%; /* Space between text and price */
+    width: 10%;
+}
+
+.paidItemText{
+    width: 100%;
+    text-align: center;
+    padding: 5%;
+    color: blue;
+}
+
+.discountText{
+    width: 100%;
+    text-align: center;
+    color: blue;
+    font-size: 70%;
 }
 
 .editBtn{
@@ -66,25 +106,33 @@
     color: black;
     display: flex;
     align-self: center;
-    margin-left: 10px;
+    width: 15%;
+}
+
+.editBtnIcon{
+    width: 30%;
+    height: 20%;
+    padding: 0;
+    margin: 0;
 }
 
 .orderItemX{
     background-color: transparent;
     border: none;
     color: red;
+    /*width: 15%;*/
     margin-left: 5%;
 }
 
 .orderItemsContainer{
-    height: 50%;
-    overflow-y: auto;
+    height: 49.3%;
+    overflow-y: scroll; /* Makes scroll bar always visible */
 }
 
 .priceContainer{
-    padding: 5% 5% 0;
+    padding: 7% 5% 0;
     color: white;
-    height: 15.7%;
+    height: 20%;
 }
 
 .subtotal{
@@ -102,7 +150,6 @@
 }
 
 .pay{
-    margin-top: 1%;
     width: 100%;
     text-align: center;
     background-color:#212A31;
@@ -110,3 +157,60 @@
     height: 4.5%;
     border: 2px solid black;
 }
+
+.ingredient-name{
+    margin-left: 5%;
+    width: 45%;
+    white-space: normal;  /* Allows the text to wrap onto multiple lines */
+    word-wrap: break-word;  /* Allows long words to break and wrap to the next line */
+    word-break: break-word;  /* Ensures long words break properly */
+    overflow: hidden;
+}
+
+.ingredients-list{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    background-color: transparent;
+    border-top: solid black 1px;
+    border-bottom: solid black 1px;
+}
+
+.ingredient-row{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2.5%;
+}
+
+.ingredient-editions{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+}
+
+.ingredient-editions button{
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    width: 30%;
+}
+
+.ingredientAmount{
+    text-align: center;
+    align-self: center;
+    width: 40%;
+}
+
+
+
+/* For hiding scroll bars */
+/*.orderItemsContainer::-webkit-scrollbar {*/
+/*    display: none; !* Hide the scrollbar *!*/
+/*}*/
+
+/*!* For Firefox *!*/
+/*.scrollable-container {*/
+/*    scrollbar-width: none; !* Hide scrollbar in Firefox *!*/
+/*}*/

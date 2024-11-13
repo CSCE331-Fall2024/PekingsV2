@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(("/api/orders"))
@@ -61,22 +62,22 @@ public class OrderController {
     /**
      * Adds an order. Sample request:
      * {
-     *     "customer": { "id": 873 },
-     *     "employee": { "id": 4 },
-     *     "time": "2024-01-04T22:57:13Z",
-     *     "price": 34.00,
+     *     "customer": { "id": 503 },
+     *     "employee": { "id": 3 },
+     *     "time": "2024-11-13T02:47:03.484Z",
+     *     "price": 10.63,
+     *     "payment_method": "credit_card",
      *     "items": [
      *         {
-     *             "menuItem": { "id": 22 }
-     *         },
-     *         {
-     *             "menuItem": { "id": 8 }
-     *         }
-     *     ],
-     *     "extras": [
-     *         {
-     *             "ingredient": { "id": 10 },
-     *             "amount": -1
+     *             "menuItem": { "id": 6 },
+     *             "extras": [
+     *                 {
+     *                     "ingredient": {
+     *                         "id": 5
+     *                     },
+     *                     "amount": -1
+     *                 }
+     *             ]
      *         }
      *     ]
      * }
@@ -88,20 +89,23 @@ public class OrderController {
     @PostMapping("/add")
     public Order addOrder(@RequestBody Order order) {
         if (order.getItems() != null) {
-            order.getItems().forEach(ingredient -> ingredient.setOrder(order));
+            order.getItems().forEach(item -> {
+                item.setOrder(order);
+                item.getExtras().forEach(extra -> extra.setOrderItem(item));
+            });
         }
 
         for (OrderItem oi : order.getItems()) {
             menuItemRepository.findById(oi.getMenuItem().getId()).ifPresent(mi -> {
                 mi.getIngredients().forEach(menuIngredient -> {
-                    inventoryController.updateStock(menuIngredient.getId(), menuIngredient.getAmount() * -1);
+                    OrderInventory extra = oi.getExtras().stream().filter(orderInventory -> Objects.equals(orderInventory.getId(),
+                            menuIngredient.getId())).findAny().orElse(null);
+
+                    int extraAmount = extra == null ? 0 : extra.getAmount();
+                    inventoryController.updateStock(menuIngredient.getId(), extraAmount + menuIngredient.getAmount());
                 });
             });
 
-        }
-
-        for (OrderInventory oi : order.getExtras()) {
-            inventoryController.updateStock(oi.getIngredient().getId(), oi.getAmount());
         }
 
         return orderRepository.save(order);
