@@ -15,6 +15,7 @@ const DuckMascot = forwardRef((props, ref) => {
     const [appliedPromo, setAppliedPromo] = useState(null);
     const [promoError, setPromoError] = useState('');
     const [ingredientNames, setIngredientNames] = useState({});
+    const [ingredientInventory, setIngredientInventory] = useState({});
 
     // Fetch ingredient name for a given ID
     const fetchIngredientName = async (id) => {
@@ -25,6 +26,10 @@ const DuckMascot = forwardRef((props, ref) => {
                 setIngredientNames(prev => ({
                     ...prev,
                     [id]: data.name
+                }));
+                setIngredientInventory(prev => ({
+                    ...prev,
+                    [id]: data.amount
                 }));
             }
         } catch (error) {
@@ -103,9 +108,15 @@ const DuckMascot = forwardRef((props, ref) => {
             return prevItems.map(item => {
                 if (item.id === itemId) {
                     const newCounts = {...item.ingredientCounts};
+                    const currentInventory = ingredientInventory[ingredient] || 0;
 
                     if (action === 'add') {
-                        newCounts[ingredient] = (newCounts[ingredient] || 0) + 1;
+                        if (currentInventory > newCounts[ingredient]) {
+                            newCounts[ingredient] = (newCounts[ingredient] || 0) + 1;
+                        } else {
+                            alert(`Sorry, we don't have enough ${ingredientNames[ingredient]} in stock!`);
+                            return item;
+                        }
                     }
                     else if (action === 'remove' && newCounts[ingredient] > 0) {
                         newCounts[ingredient] = newCounts[ingredient] - 1;
@@ -135,6 +146,18 @@ const DuckMascot = forwardRef((props, ref) => {
     };
 
     const calculateItemPrice = (item) => {
+        if (!item.ingredientCounts) return item.originalPrice || 0;
+
+        const allIngredientsZero = item.ingredients.every(
+            ingredient => {
+                const ingredientId = ingredient.ingredient || ingredient;
+                return item.ingredientCounts[ingredientId] === 0;
+            }
+        );
+
+        if (allIngredientsZero)
+            return 0;
+
         // Use the stored original price instead of the potentially modified price
         const basePrice = item.originalPrice || 0;
         const ingredientPrice = calculateItemIngredientTotal(item);
@@ -173,9 +196,41 @@ const DuckMascot = forwardRef((props, ref) => {
         setPromoCode('');
     };
 
+    const checkInventoryAvailability = () => {
+        // track the total ingredients
+        const totalIngredientUsage = {};
+
+        // calculate amount needed
+        orderItems.forEach(item => {
+            if (item.ingredientCounts) {
+                Object.entries(item.ingredientCounts).forEach(([ingredientId, count]) => {
+                    totalIngredientUsage[ingredientId] = (totalIngredientUsage[ingredientId] || 0) + count;
+                });
+            }
+        });
+
+        // Check if there is enough of an ingredient
+        for (const [ingredientId, needed] of Object.entries(totalIngredientUsage)) {
+            const available = ingredientInventory[ingredientId] || 0;
+            if (needed > available) {
+                return {
+                    available: false,
+                    ingredient: ingredientNames[ingredientId]
+                };
+            }
+        }
+
+        return { available: true };
+    };
 
     const handleOrder = async () => {
         try {
+            // Check if ingredients are available
+            const inventoryCheck = checkInventoryAvailability();
+            if (!inventoryCheck.available) {
+                throw new Error(`Not enough ${inventoryCheck.ingredient} in stock to complete this order.`);
+            }
+
             // Format extras array - calculate ingredient amount changes
             const extras = orderItems.flatMap(item => {
                 // Only process items that have ingredients
@@ -232,8 +287,20 @@ const DuckMascot = forwardRef((props, ref) => {
                 throw new Error(`Server responded with ${response.status}: ${errorData.message}`);
             }
 
+            //debugging with console to see final product
             const responseData = await response.json();
             console.log('Order response:', responseData);
+
+            orderItems.forEach(item => {
+                if (item.ingredientCounts) {
+                    Object.entries(item.ingredientCounts).forEach(([ingredientId, count]) => {
+                        setIngredientInventory(prev => ({
+                            ...prev,
+                            [ingredientId]: (prev[ingredientId] || 0) - count
+                        }));
+                    });
+                }
+            });
 
             // clears order
             setOrderItems([]);

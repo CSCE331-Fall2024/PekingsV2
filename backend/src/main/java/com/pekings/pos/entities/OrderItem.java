@@ -12,7 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "order_items")
@@ -31,6 +34,9 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
+
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderInventory> extras;
 
     public Integer getId() {
         return id;
@@ -56,4 +62,7 @@ public class OrderItem {
         this.menuItem = menuItem;
     }
 
+    public List<OrderInventory> getExtras() {
+        return extras;
+    }
 }

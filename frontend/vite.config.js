@@ -7,6 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
+        // target: 'http://pekings.ceedric.dev',
+
         target: 'http://localhost:8080',
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
