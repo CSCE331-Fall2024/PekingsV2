@@ -45,3 +45,18 @@
 .data-table tbody tr:hover {
     background-color: #f9f9f9;
 }
+.data-table .invButton_M {
+    background: none;
+    border: none;
+    margin-left:auto;
+    margin-right:auto;
+    color: black;
+    padding: 15px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 80%;
+}
+.data-table .invButton_M:hover {
+    background-color: #34495e;
+}
