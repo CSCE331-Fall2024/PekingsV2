@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import editButtonImage from './Images/Edit-Btn.png';
-import './rightPane.css';
-import Cashier from "../../Cashier.jsx";
+import './RightPane.css';
 
 // Compare arrays
 const areArraysEqual = (arr1, arr2) => {
