@@ -4,12 +4,12 @@ import Manager from './Manager';
 import './Display.css';
 /*comment*/
 
-function Display() {
+function Display({logout}) {
     const [selectedSection, setSelectedSection] = useState('Inventory');
     return (
 
         <div className="display-container">
-            <Sidebar onSelect={setSelectedSection}/>
+            <Sidebar logout={logout} onSelect={setSelectedSection}/>
             <Manager selectedSection={selectedSection}/>
         </div>
 
