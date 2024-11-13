@@ -28,9 +28,6 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                 if (response.ok) {
                     const items = await response.json();
 
-                    const chunkSize = Math.floor(items.length / 3);
-                    const remainder = items.length % 3;
-
                     const list1 = items.filter(item => (item.category === "food") && (item.active));
                     const list2 = items.filter(item => (item.category === "seasonal") && (item.active));
                     const list3 = items.filter(item => (item.category === "drink") && (item.active));
