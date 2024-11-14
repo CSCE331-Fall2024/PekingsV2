@@ -3,6 +3,10 @@ import { Button } from './Button';
 import {Link} from 'react-router-dom';
 
 import './Navbar.css';
+import Login from "./login/Login.jsx";
+import {gapi} from "gapi-script";
+import Logout from "./login/Logout.jsx";
+import GoogleAuth from "./login/GoogleAuth.jsx";
 
 // const mobileMenuIcon = document.querySelector('.mobile-menu-icon');
 // const navbarLinks = document.querySelector('.navbar-links');
@@ -34,7 +38,6 @@ function Navbar() {
       
       //whenever I resize I want showButton to work for me
       window.addEventListener('resize', showButton);
-    
 
   return (
     <>
@@ -82,7 +85,7 @@ function Navbar() {
               </Link>
             </li>
           </ul>
-          {button && <Button buttonStyle='btn--outline'>Log in</Button>}
+          {button && <GoogleAuth />}
         </div>
     </nav>
     </>

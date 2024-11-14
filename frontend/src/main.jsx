@@ -5,13 +5,14 @@ import './index.css'
 import Display from './Display.jsx'
 import App from './App.jsx'
 import Cashier from './Cashier.jsx'
+import {AuthProvider} from "./components/login/AuthProvider.jsx";
 
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
+    <AuthProvider>
 
-        <App />
-        {/*<Cashier employee={{
+            <App />
+            {/*<Cashier employee={{
             "id": 1,
             "username": "ThomasC",
             "pass": "CC137",
@@ -21,7 +22,6 @@ createRoot(document.getElementById('root')).render(
             "isClockedin": false,
             "pin": null
         }}/>*/}
-        {/*<Display/>*/}
-
-    </StrictMode>,
+            {/*<Display/>*/}
+    </AuthProvider>
 )
