@@ -5,7 +5,7 @@ import Cashier from '../../Cashier.jsx'
 import Display from '../../Display.jsx'
 
 
-function LogIn(){
+function LogIn({setNavbarVisibility}){
     let currentEmployee = {};
 
     // State to hold username and password input values
@@ -42,18 +42,20 @@ function LogIn(){
 
     function logout(){
         setCurrentScreen('login');
+        setNavbarVisibility(true);
     }
 
     // Handler for form submission (for simplicity, just logging the values)
     const handleLogin = () => {
         for(let i = 0; i < employees.length; i++){
             if( (employees[i].username.toLowerCase() === username.toLowerCase()) && (employees[i].pass === password) ){
-                console.log(employees[i].position);
+                setNavbarVisibility(false);
                 if(employees[i].position === "employee"){
                     setCurrentScreen('employee');
                     currentEmployee = employees[i];
                 }else if(employees[i].position === "manager"){
                     setCurrentScreen('manager');
+                    currentEmployee = employees[i];
                 }else{
                     console.log(employees[i].position);
                 }
