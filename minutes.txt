@@ -76,7 +76,7 @@ Meeting Minutes for Scrum Meeting #5: 11/6/2024
 Meeting Agenda:
 - members set up database connection 
 - sprint 2 workday
-- go over what has been accomplished6/what has yet to be done/what will be done in the future
+- go over what has been accomplished/what has yet to be done/what will be done in the future
 In Attendance: 
 - Nathan M, Nathan L, Jeremiah, Fabio
 Summary: 
