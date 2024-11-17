@@ -31,7 +31,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
             // For Nathan
             let ingredients = menuItem.ingredients;
-            let noIngredients = true;
+            let noIngredients = (ingredients.length !== 0);
             for(let j = 0; j < ingredients.length; j++){
                 if(ingredients[j].amount > 0){
                     noIngredients = false;
@@ -234,19 +234,21 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
     function orderItemDisplay(item) {
         let name = item.menuItem.name;
-        let price = item.menuItem.price;
+        let price = parseFloat(item.menuItem.price);
         let ingredients = item.menuItem.ingredients;
 
         const handleDecrease = (ingredient) => {
             if(ingredient.amount > 0){
                 ingredient.amount--;
+                price -= 0.5;
             }
         }
 
         const handleIncrease = (ingredient) => {
             // Leave code for max extras
             // if(ingredient.amount < 2){
-                ingredient.amount++;
+            ingredient.amount++;
+            price += 0.5;
             // }
         }
 
@@ -273,7 +275,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
                         </div>
                         <button className="changeIngredientAmount-Less"
-                                onClick={() => handleIncrease(ingredient)}>&gt;</button>
+                                onClick={() => handleIncrease(ingredient)}>&gt;
+                        </button>
                     </div>
                 </div>
             ));
@@ -283,7 +286,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                     <div className="orderItemRow">
                         <button className="orderItemRowText">
                             <div className="orderItemsText">{name}</div>
-                            <div className="orderItemsPrice">${price}</div>
+                            <div className="orderItemsPrice">${price.toFixed(2)}</div>
                         </button>
                         <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}>
                             <img src={editButtonImage}
@@ -308,7 +311,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             <div className="orderItemRow">
                     <button className="orderItemRowText">
                         <div className="orderItemsText">{name}</div>
-                        <div className="orderItemsPrice">${price}</div>
+                        <div className="orderItemsPrice">${price.toFixed(2)}</div>
                     </button>
                     <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}></button>
                     <button className="orderItemX" onClick={removeItem(item)}>X</button>

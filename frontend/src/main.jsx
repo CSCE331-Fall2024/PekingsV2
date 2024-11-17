@@ -5,21 +5,23 @@ import './index.css'
 import Display from './Display.jsx'
 import App from './App.jsx'
 import Cashier from './Cashier.jsx'
+import Kitchen from './Kitchen.jsx'
 
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <App />
-        {/*<Cashier employee={{*/}
-        {/*    "id": 1,*/}
-        {/*    "username": "ThomasC",*/}
-        {/*    "pass": "CC137",*/}
-        {/*    "email": null,*/}
-        {/*    "position": "employee",*/}
-        {/*    "lastClockin": "00:00:00",*/}
-        {/*    "isClockedin": false,*/}
-        {/*    "pin": null*/}
-        {/*}}/>*/}
+        {/*<App />*/}
+        <Kitchen />
+        <Cashier employee={{
+            "id": 1,
+            "username": "ThomasC",
+            "pass": "CC137",
+            "email": null,
+            "position": "employee",
+            "lastClockin": "00:00:00",
+            "isClockedin": false,
+            "pin": null
+        }}/>
         {/*<Display/>*/}
     </StrictMode>,
 )
