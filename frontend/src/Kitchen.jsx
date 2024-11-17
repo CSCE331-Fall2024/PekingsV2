@@ -87,6 +87,41 @@ function Kitchen() {
         fetchIngredients();
     }, []);
 
+    function completeOrder(OrderNumber) {
+        setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
+    }
+
+    const handleKeyPress = (event) => {
+        // Check if the pressed key is "1"
+        if (event.key === "1") {
+            completeOrder(0);  // Remove the item at index 0 (first item)
+        }else if (event.key === "2") {
+            completeOrder(1);  // Remove the item at index 0 (first item)
+        }else if (event.key === "3") {
+            completeOrder(2);  // Remove the item at index 0 (first item)
+        }else if (event.key === "4") {
+            completeOrder(3);  // Remove the item at index 0 (first item)
+        }else if (event.key === "5") {
+            completeOrder(4);  // Remove the item at index 0 (first item)
+        }else if (event.key === "6") {
+            completeOrder(5);  // Remove the item at index 0 (first item)
+        }else if (event.key === "7") {
+            completeOrder(6);  // Remove the item at index 0 (first item)
+        }else if (event.key === "8") {
+            completeOrder(7);  // Remove the item at index 0 (first item)
+        }
+    };
+
+    useEffect(() => {
+        // Add event listener for keydown event
+        window.addEventListener("keydown", handleKeyPress);
+
+        // Cleanup event listener when the component is unmounted
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, []);
+
     function createItemContainer(item){
         const officialItem = officialMenuItems.find(menuItem => menuItem.id === item.menu_item_id);
         const extras = item.extras;
@@ -152,7 +187,6 @@ function Kitchen() {
 
     return (
         <div className="Screen-Container">
-            {/*<button className="TempBtn">Remove</button>*/}
             <div className="Kitchen-Screen">
                 {orderContainers}
             </div>

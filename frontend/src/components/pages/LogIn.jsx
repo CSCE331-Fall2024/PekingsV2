@@ -72,6 +72,24 @@ function LogIn({setNavbarVisibility}){
         setPassword("");
     };
 
+    const handleKeyPress = (event) => {
+        // Check if the pressed key is "Enter"
+        if (event.key === "Enter") {
+            // Call the function you want to run here
+            handleLogin();
+        }
+    };
+
+    useEffect(() => {
+        // Add event listener for keydown event
+        window.addEventListener("keydown", handleKeyPress);
+
+        // Cleanup event listener when the component is unmounted
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, []);
+
     return (
         <div>
             {currentScreen === 'login' && (
