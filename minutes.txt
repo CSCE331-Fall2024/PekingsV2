@@ -44,7 +44,6 @@ Meeting was adjourned at 3:40 PM
 
 Sprint 2: 
 
-
 Meeting Minutes for Scrum Meeting #4: 10/30/2024
 Meeting Agenda:
 - select which stories we accomplish for sprint 2
@@ -58,4 +57,48 @@ Summary:
 Next Meeting:
 - Held on Nov 4th
 Meeting was adjourned at 3:40 PM
+
+Meeting Minutes for Scrum Meeting #4: 10/30/2024
+Meeting Agenda:
+- select which stories we accomplish for sprint 2
+- sprint 2 workday
+- go over what has been accomplished/what has yet to be done/what will be done in the future
+In Attendance: 
+- Nathan M, Nathan L, Jeremiah 
+Summary: 
+- Completed all tasks in agenda
+- prepared sprint 2 deadlines and agenda
+Next Meeting:
+- Held on Nov 6th
+Meeting was adjourned at 3:40 PM
+
+Meeting Minutes for Scrum Meeting #5: 11/6/2024
+Meeting Agenda:
+- members set up database connection 
+- sprint 2 workday
+- go over what has been accomplished/what has yet to be done/what will be done in the future
+In Attendance: 
+- Nathan M, Nathan L, Jeremiah, Fabio
+Summary: 
+- Nathan L and Jeremiah set up database, Nathan M partially set up database
+- Nathan L worked on loading in menu items 
+Next Meeting:
+- Held on Nov 13th
+Meeting was adjourned at 2:50 PM
+
+
+Meeting Minutes for Scrum Meeting #6: 11/13/2024
+Meeting Agenda:
+- sprint 2 retrospective meeting
+- planned details for sprint 3
+- go over what has been accomplished/what has yet to be done/what will be done in the future
+In Attendance: 
+- Nathan M, Nathan L, Jeremiah, Fabio 
+Summary: 
+- reviewed sprint 2 accomplishments 
+- prepared sprint 3 deadlines and agenda
+Next Meeting:
+- Held on Nov 18th
+Meeting was adjourned at 3:45 PM
+
 
