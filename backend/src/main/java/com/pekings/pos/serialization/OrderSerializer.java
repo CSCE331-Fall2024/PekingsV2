@@ -17,6 +17,7 @@ public class OrderSerializer extends JsonSerializer<Order> {
         jsonGenerator.writeObjectField("employee_id", order.getEmployee().getId());
         jsonGenerator.writeObjectField("time", order.getTime().toString());
         jsonGenerator.writeObjectField("price", order.getPrice());
+        jsonGenerator.writeObjectField("status", order.getStatus());
         jsonGenerator.writeObjectField("items", order.getItems());
         jsonGenerator.writeEndObject();
     }
