@@ -77,6 +77,11 @@ function Manager({ selectedSection }) {
         fetchItems3();
     },[]);
 
+    /*@PostMapping("/add")
+    public Inventory addIngredient(@RequestBody Inventory inventory) {
+        return inventoryRepository.save(inventory);
+    }*/
+
 
     // const handleEditClick = (index) => {
     //     setEditIdx(index);
@@ -99,6 +104,39 @@ function Manager({ selectedSection }) {
     // const handleCancel = () => {
     //     setEditIdx(-1);
     // };
+    // useEffect(() => {
+    //     const addInventory = async () => {
+    //         {
+    //             "customer": { "id": 503 },
+    //             "employee": { "id": 3 },
+    //             "time": "2024-11-13T02:47:03.484Z",
+    //             "price": 10.63,
+    //             "payment_method": "credit_card",
+    //             "items": [
+    //             {
+    //                 "menuItem": { "id": 6 },
+    //                 "extras": [
+    //                     {
+    //                         "ingredient": {
+    //                             "id": 5
+    //                         },
+    //                         "amount": -1
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //         }[]);
+    useEffect(() => {
+        const addInventoryItem = async () => {
+            const invResponse = await fetch("/api/inventory/add", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
+    },[]);
+
 
     return (
         <div className="managerRoot">
@@ -108,8 +146,11 @@ function Manager({ selectedSection }) {
 
                 {/* Conditional Rendering for Table Layout */}
                 {selectedSection === "Inventory" && (
+                    <div className="add button">
+                        <button onClick={() => }>Add Item</button>
+                    </div>
                     <table className="data-table">
-                        <thead>
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Ingredient</th>
