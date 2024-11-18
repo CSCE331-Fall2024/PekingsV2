@@ -9,8 +9,8 @@ import Cashier from './Cashier.jsx'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        {/*<App />*/}
-        <Cashier employee={{
+        <App />
+        {/* <Cashier employee={{
             "id": 6,
             "username": "Yasuo",
             "pass": "hasagi",
@@ -19,8 +19,8 @@ createRoot(document.getElementById('root')).render(
             "lastClockin": "00:00:00",
             "isClockedin": false,
             "pin": null
-        }}/>
-        {/*<Display/>*/}
+        }}/> */}
+        {/* <Display/> */}
 
     </StrictMode>,
 )

@@ -61,12 +61,7 @@ const AccessibilityPanel = () => {
               >
                 <div
                   className="accessibility-toggle-knob"
-                  style={{
-                    '--toggle-knob-position': isHighContrast ? '26px' : '2px',
-                    '--toggle-background': isHighContrast
-                      ? '#4CAF50'
-                      : '#e2e2e2',
-                  }}
+                  style={{'--toggle-knob-position': isHighContrast ? '26px' : '2px','--toggle-background': isHighContrast? '#4CAF50' : '#e2e2e2',}}
                 />
               </button>
             </label>
