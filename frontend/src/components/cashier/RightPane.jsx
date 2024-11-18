@@ -119,11 +119,11 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 },
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
-                // items: [],
                 items: items,
-                // extras: [], // Fabio is changing this, don't worry about it rn
-                payment_method: paymentType
+                payment_method: paymentType,
+                status: "incomplete"
             };
+            // console.log(order);
 
 
             const response = await fetch('/api/orders/add', {

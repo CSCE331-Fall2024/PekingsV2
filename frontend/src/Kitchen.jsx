@@ -10,28 +10,35 @@ function Kitchen() {
     const [orderIndex, setOrderIndex] = useState(0);
 
     // Gets all the current active orders
-    useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const response = await fetch("/api/orders/69352", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
+    // Fetch incomplete orders
+    const fetchIncompleteOrders = async () => {
+        try {
+            const response = await fetch('/api/orders/status/incomplete', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-                if (response.ok) {
-                    const orderList = await response.json();
-                    setCurrentOrders([...currentOrders, orderList, orderList, orderList, orderList, orderList, orderList, orderList, orderList, orderList, orderList, orderList]);
-                } else {
-                    console.error("Failed to fetch orders:", response.status);
-                }
-            } catch (error) {
-                console.error("Error fetching orders:", error);
+            if (response.ok) {
+                const orderList = await response.json();
+                setCurrentOrders(orderList); // Update current orders state
+            } else {
+                console.error('Failed to fetch orders:', response.status);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    };
 
-        fetchItems();
+    // Polling mechanism to periodically fetch orders every 5 seconds
+    useEffect(() => {
+        fetchIncompleteOrders(); // Initial fetch
+        const interval = setInterval(fetchIncompleteOrders, 1000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
     // Gets all the menu items for changing an ID into a name

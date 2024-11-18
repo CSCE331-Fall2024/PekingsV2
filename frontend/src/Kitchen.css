@@ -40,6 +40,7 @@
 
 .Order-Container {
     width: 100%;
+    min-height: 90%;
     padding: 2.5%;
     background-color: white;
 }
