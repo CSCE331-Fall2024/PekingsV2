@@ -257,6 +257,7 @@ const DuckMascot = forwardRef((props, ref) => {
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
                 payment_method: "credit-card",
+                status: "incomplete",
                 items: items,
             };
 

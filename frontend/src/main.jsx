@@ -5,7 +5,6 @@ import './index.css'
 import Display from './Display.jsx'
 import App from './App.jsx'
 import Cashier from './Cashier.jsx'
-import {AuthProvider} from "./components/login/AuthProvider.jsx";
 
 
 createRoot(document.getElementById('root')).render(

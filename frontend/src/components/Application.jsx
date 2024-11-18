@@ -110,7 +110,7 @@ const Application = () => {
                             <input
                                 id="name"
                                 type="text"
-                                className="input-field"
+                                className="input-field-cc"
                                 placeholder="Enter your name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
@@ -122,7 +122,7 @@ const Application = () => {
                             <label htmlFor="position" className="form-label">Position</label>
                             <select
                                 id="position"
-                                className="input-field-p"
+                                className="input-field-cc-p"
                                 value={position}
                                 onChange={(e) => setPosition(e.target.value)}
                             >
@@ -138,7 +138,7 @@ const Application = () => {
                             <input
                                 id="gender"
                                 type="text"
-                                className="input-field"
+                                className="input-field-cc"
                                 placeholder="Enter your gender"
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
@@ -151,7 +151,7 @@ const Application = () => {
                             <input
                                 id="race"
                                 type="text"
-                                className="input-field"
+                                className="input-field-cc"
                                 placeholder="Enter your race"
                                 value={race}
                                 onChange={(e) => setRace(e.target.value)}
@@ -164,7 +164,7 @@ const Application = () => {
                             <input
                                 id="resume"
                                 type="file"
-                                className="input-field-f"
+                                className="input-field-cc-f"
                                 onChange={(e) => setResume(e.target.files[0])}
                             />
                         </div>
@@ -174,7 +174,7 @@ const Application = () => {
                             <label htmlFor="reason" className="form-label">Reason for Working</label>
                             <textarea
                                 id="reason"
-                                className="input-field"
+                                className="input-field-cc"
                                 placeholder="Enter your reason for working here"
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
@@ -201,7 +201,7 @@ const Application = () => {
                                 <input
                                     id="username"
                                     type="text"
-                                    className="input-field"
+                                    className="input-field-cc"
                                     placeholder="Enter a username"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
@@ -215,7 +215,7 @@ const Application = () => {
                                     <input
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
-                                        className="input-field"
+                                        className="input-field-cc"
                                         placeholder="Enter a password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
@@ -237,12 +237,12 @@ const Application = () => {
                 {/* Reject Dialog */}
                 {showRejectDialog && (
                     <div className="dialog-box dialog-reject">
-                        <h2 className="dialog-title">Sorry, you're rejected. Go flip burgers instead.</h2>
+                        <h2 className="dialog-title">Sorry, you're rejected.</h2>
                         <div>
                             <label htmlFor="reject-feedback" className="form-label">Feedback</label>
                             <textarea
                                 id="reject-feedback"
-                                className="input-field"
+                                className="input-field-cc"
                                 placeholder="Enter your feedback"
                                 value={rejectFeedback}
                                 onChange={(e) => setRejectFeedback(e.target.value)}

@@ -23,6 +23,7 @@ const AccessibilityPanel = () => {
     const handleMouseMove = (e) => {
       if (!isMagnifierEnabled) return;
       const magnifier = document.querySelector('.app-content::after');
+      
       if (magnifier) {
         magnifier.style.left = `${e.clientX}px`;
         magnifier.style.top = `${e.clientY}px`;
@@ -31,7 +32,8 @@ const AccessibilityPanel = () => {
 
     if (isMagnifierEnabled) {
       document.addEventListener('mousemove', handleMouseMove);
-    } else {
+    } 
+    else {
       document.removeEventListener('mousemove', handleMouseMove);
     }
 
@@ -45,12 +47,7 @@ const AccessibilityPanel = () => {
         className="accessibility-toggle"
         aria-label="Toggle Accessibility Options"
       >
-        <img
-          src="/images/handicap.png"
-          alt="Accessibility"
-          width="24"
-          height="24"
-        />
+        <img src="/images/handicap.png" alt="Accessibility"/>
       </button>
 
       {isPanelOpen && (
@@ -58,19 +55,13 @@ const AccessibilityPanel = () => {
           <div className="accessibility-row">
             <label className="accessibility-label">
               High Contrast
-              <button
-                onClick={toggleHighContrastMode}
+              <button onClick={toggleHighContrastMode}
                 className="accessibility-toggle-button"
                 aria-pressed={isHighContrast}
               >
                 <div
                   className="accessibility-toggle-knob"
-                  style={{
-                    '--toggle-knob-position': isHighContrast ? '26px' : '2px',
-                    '--toggle-background': isHighContrast
-                      ? '#4CAF50'
-                      : '#e2e2e2',
-                  }}
+                  style={{'--toggle-knob-position': isHighContrast ? '26px' : '2px','--toggle-background': isHighContrast? '#4CAF50' : '#e2e2e2',}}
                 />
               </button>
             </label>
