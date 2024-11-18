@@ -48,6 +48,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
 
+    @Column(columnDefinition = "varchar(256) default 'complete'")
+    private String status;
+
     public List<OrderItem> getItems() {
         return items;
     }
@@ -104,4 +107,11 @@ public class Order {
         this.time = time;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

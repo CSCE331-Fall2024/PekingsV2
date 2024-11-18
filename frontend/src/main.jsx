@@ -9,17 +9,18 @@ import Cashier from './Cashier.jsx'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <App />
-        {/* <Cashier employee={{
+        {/*<App />*/}
+        <Cashier employee={{
             "id": 6,
             "username": "Yasuo",
             "pass": "hasagi",
             "email": null,
-            "position": "manager",
+            "position": "employee",
             "lastClockin": "00:00:00",
             "isClockedin": false,
             "pin": null
-        }}/> */}
+        }}/>
         {/*<Display/>*/}
+
     </StrictMode>,
 )

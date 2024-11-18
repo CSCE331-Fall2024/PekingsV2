@@ -37,7 +37,7 @@ const App = () => {
   
 
   return (
-    <>
+    <div className = "empty">
       <Router>
         <Navbar />
         <div className="app-content">
@@ -51,7 +51,7 @@ const App = () => {
         </div>
         <AccessibilityPanel/>
       </Router>
-    </>
+    </div>
   );
 };
 

@@ -86,7 +86,6 @@ const Cashier = ({logout, employee}) => {
             <div className="screens-container">
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
-                        {/*<button onClick={() => console.log(order.status)}/>*/}
                         <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
                         <CenterScreen center={order.currentCenter}
                                       order = {order}

@@ -3,12 +3,16 @@ import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
 
+
 // const pin = "1234";
 
 // Memoize the CenterScreen component to avoid unnecessary re-renders
+// eslint-disable-next-line react/display-name,react/prop-types
 const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
+                                     // eslint-disable-next-line react/prop-types
                                      alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen, employee
 }) => {
+
     const [menuItems, setMenuItems] = useState([]);
     const [seasonalItems, setSeasonalItems] = useState([]);
     const [drinks, setDrinks] = useState([]);
@@ -26,18 +30,10 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                 if (response.ok) {
                     const items = await response.json();
 
-                    const chunkSize = Math.floor(items.length / 3);
-                    const remainder = items.length % 3;
 
-                    const list1 = (items.slice(0, chunkSize + (remainder > 0 ? 1 : 0))).filter(item => {
-                        return item.active
-                    });
-                    const list2 = (items.slice(list1.length, list1.length + chunkSize + (remainder > 1 ? 1 : 0))).filter(item => {
-                        return item.active
-                    });
-                    const list3 = (items.slice(list1.length + list2.length)).filter(item => {
-                        return item.active
-                    });
+                    const list1 = items.filter(item => (item.category === "food") && (item.active));
+                    const list2 = items.filter(item => (item.category === "seasonal") && (item.active));
+                    const list3 = items.filter(item => (item.category === "drink") && (item.active));
 
                     setMenuItems(list1);
                     setSeasonalItems(list2);
@@ -80,6 +76,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
         fetchItems();
     }, []);
 
+
     const [currentMenu, setCurrentMenu] = useState('main');
     const [inputValue, setInputValue] = useState('');
     const [placeHolderText, setPlaceHolderText] = useState('PIN');
@@ -87,6 +84,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
 
     const handleButtonClick = (number) => {
         let newPin = inputValue + number;
+
         for(let i = 0; i < employees.length; i++){
             if(newPin === employees[i].pin){
                 centerChange("manager");
@@ -95,12 +93,8 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                 return;
             }
         }
-        // if (newPin === pin) {
-        //     centerChange("manager");
-        //     setPlaceHolderText('PIN');
-        //     setInputValue('');
-        // }else
         if (newPin.length === 4) {
+
             setPlaceHolderText('PIN not recognized');
             setInputValue('');
         } else {
@@ -148,6 +142,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
         }
     };
 
+
     const handleManagerOptionsClick = () => {
         if(employee.position === 'manager'){
             centerChange('manager');
@@ -155,6 +150,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
             centerChange('manager-confirm')
         }
     }
+
 
     return (
         <div className="centerScreen-cash">
@@ -170,11 +166,13 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
 
             <div className="centerScreenContainers-cash" style={{ display: center === 'payment' ? 'block' : 'none' }}>
                 <div className="paymentButtons-cash">
+
                     <button className="card" onClick={() => handlePaymentProcess('credit_card')}>Card</button>
                     <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
                 </div>
                 <div className="managerOptionsContainer-cash">
                     <button className="managerOptions-cash" onClick={() => handleManagerOptionsClick()}>Manager Options</button>
+
                 </div>
             </div>
 
