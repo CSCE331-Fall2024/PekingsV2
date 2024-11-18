@@ -9,3 +9,59 @@ body {
   min-height: 100vh;
   width: 100%;
 }
+
+.high-contrast {
+  background: #000000 !important;
+  color: #ffffff !important;
+  filter: contrast(200%) brightness(150%);
+}
+
+.high-contrast * {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.high-contrast [style*="background-image"] {
+  filter: contrast(200%) brightness(150%) !important;
+}
+
+.high-contrast button:not(.accessibility-toggle) {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.high-contrast img,
+.high-contrast video {
+  filter: contrast(200%) brightness(150%);
+}
+
+.app-content {
+  min-height: calc(100vh - [your-navbar-height]px);
+  width: 100%;
+}
+
+.app-content.high-contrast {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+.app-content.high-contrast * {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.app-content.high-contrast button:not(.accessibility-toggle) {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.app-content.high-contrast img,
+.app-content.high-contrast video {
+  filter: contrast(200%) brightness(150%);
+}
+
+.app-content.high-contrast [style*="background-image"] {
+  filter: contrast(200%) brightness(150%) !important;
+}

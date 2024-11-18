@@ -68,7 +68,7 @@ function CustomerHero() {
                 <div className='video-section'>
                     <div className='video-container'>
                         <video autoPlay loop muted className='background-video'>
-                            <source src="/videos/seasonal.mp4" type="video/mp4" />
+                            <source src="/videos/foodstock.mp4" type="video/mp4" />
                         </video>
                         <div className='video-overlay'>
                             <h2 className="season-title">Special Seasonal Items:</h2>
