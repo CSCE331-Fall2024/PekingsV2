@@ -3,6 +3,7 @@ import './LogIn.css';
 
 import Cashier from '../../Cashier.jsx'
 import Display from '../../Display.jsx'
+import Kitchen from '../../Kitchen.jsx'
 
 
 function LogIn({setNavbarVisibility}){
@@ -56,8 +57,9 @@ function LogIn({setNavbarVisibility}){
                 }else if(employees[i].position === "manager"){
                     setCurrentScreen('manager');
                     currentEmployee = employees[i];
-                }else{
-                    console.log(employees[i].position);
+                }else if(employees[i].position === "kitchen"){
+                    setCurrentScreen('kitchen');
+                    currentEmployee = employees[i];
                 }
                 break;
             }
@@ -88,7 +90,7 @@ function LogIn({setNavbarVisibility}){
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         };
-    }, []);
+    }, [username, password, employees]);
 
     return (
         <div>
@@ -124,6 +126,10 @@ function LogIn({setNavbarVisibility}){
 
             {currentScreen === 'manager' && (
                 <Display logout={logout} />
+            )}
+
+            {currentScreen === 'kitchen' && (
+                <Kitchen />
             )}
         </div>
     );
