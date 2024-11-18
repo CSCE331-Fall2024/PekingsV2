@@ -7,6 +7,7 @@ function Kitchen() {
     const [currentOrders, setCurrentOrders] = useState([]);
     const [officialMenuItems, setOfficialMenuItems] = useState([]);
     const [ingredientNames, setIngredientNames] = useState([]);
+    const [orderIndex, setOrderIndex] = useState(0);
 
     // Gets all the current active orders
     useEffect(() => {
@@ -89,26 +90,45 @@ function Kitchen() {
 
     function completeOrder(OrderNumber) {
         setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
+
+        // Adjusts the screen to show at minimum 8 orders
+        if( (currentOrders.length > 8) && (orderIndex + 8 >= currentOrders.length) ){
+            console.log("x");
+            setOrderIndex(orderIndex - 1);
+        }
     }
 
     const handleKeyPress = (event) => {
         // Check if the pressed key is "1"
         if (event.key === "1") {
-            completeOrder(0);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex);  // Remove the item at index 0 (first item)
         }else if (event.key === "2") {
-            completeOrder(1);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 1);  // Remove the item at index 0 (first item)
         }else if (event.key === "3") {
-            completeOrder(2);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 2);  // Remove the item at index 0 (first item)
         }else if (event.key === "4") {
-            completeOrder(3);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 3);  // Remove the item at index 0 (first item)
         }else if (event.key === "5") {
-            completeOrder(4);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 4);  // Remove the item at index 0 (first item)
         }else if (event.key === "6") {
-            completeOrder(5);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 5);  // Remove the item at index 0 (first item)
         }else if (event.key === "7") {
-            completeOrder(6);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 6);  // Remove the item at index 0 (first item)
         }else if (event.key === "8") {
-            completeOrder(7);  // Remove the item at index 0 (first item)
+            completeOrder(orderIndex + 7);  // Remove the item at index 0 (first item)
+        }
+
+        if (event.key === "ArrowLeft" && orderIndex > 0) {
+            setOrderIndex(orderIndex - 1);
+        } else if (event.key === "ArrowRight" && orderIndex + 8 < currentOrders.length) {
+            setOrderIndex(orderIndex + 1);
+        }
+
+        // Error checking button
+        if (event.key === "Enter") {
+            console.log(currentOrders);
+            console.log(orderIndex);
+            console.log(currentOrders.length);
         }
     };
 
@@ -120,7 +140,7 @@ function Kitchen() {
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         };
-    }, []);
+    }, [currentOrders, orderIndex]);
 
     function createItemContainer(item){
         const officialItem = officialMenuItems.find(menuItem => menuItem.id === item.menu_item_id);
@@ -181,9 +201,12 @@ function Kitchen() {
 
 
     let orderContainers = [];
-    for(let i = 0; i < currentOrders.length; i++) {
-        orderContainers.push(createOrderContainer(currentOrders[i]));
-    }
+    orderContainers = currentOrders.slice(orderIndex, orderIndex + 8).map(order => createOrderContainer(order));
+
+    useEffect(() => {
+        orderContainers = currentOrders.slice(orderIndex, orderIndex + 8).map(order => createOrderContainer(order));
+        // console.log("Updated currentOrders:", currentOrders);
+    }, [orderIndex]);
 
     return (
         <div className="Screen-Container">
