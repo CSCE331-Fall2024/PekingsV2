@@ -12,7 +12,7 @@ import MenuBoard from './components/pages/MenuBoard';
 const App = () => {
     const [isVisible, setIsVisible] = useState(true);
       return (
-        <>
+        <div className = "empty">
           <Router>
               {isVisible ? ( <Navbar/> ) : (<div/>) }
             <Routes>
@@ -22,7 +22,7 @@ const App = () => {
               <Route path="/sign-up" element={<LogIn setNavbarVisibility={setIsVisible}/>} /> {/* No idea where the sign-up path comes from*/}
             </Routes>
           </Router>
-        </>
+        </div>
       );
 };
 

@@ -3,6 +3,7 @@ import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
 
+
 // const pin = "1234";
 
 // Memoize the CenterScreen component to avoid unnecessary re-renders
@@ -11,6 +12,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                                      // eslint-disable-next-line react/prop-types
                                      alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen, employee
 }) => {
+
     const [menuItems, setMenuItems] = useState([]);
     const [seasonalItems, setSeasonalItems] = useState([]);
     const [drinks, setDrinks] = useState([]);
@@ -27,6 +29,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
 
                 if (response.ok) {
                     const items = await response.json();
+
 
                     const list1 = items.filter(item => (item.category === "food") && (item.active));
                     const list2 = items.filter(item => (item.category === "seasonal") && (item.active));
@@ -73,6 +76,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
         fetchItems();
     }, []);
 
+
     const [currentMenu, setCurrentMenu] = useState('main');
     const [inputValue, setInputValue] = useState('');
     const [placeHolderText, setPlaceHolderText] = useState('PIN');
@@ -80,6 +84,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
 
     const handleButtonClick = (number) => {
         let newPin = inputValue + number;
+
         for(let i = 0; i < employees.length; i++){
             if(newPin === employees[i].pin){
                 centerChange("manager");
@@ -89,6 +94,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
             }
         }
         if (newPin.length === 4) {
+
             setPlaceHolderText('PIN not recognized');
             setInputValue('');
         } else {
@@ -136,6 +142,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
         }
     };
 
+
     const handleManagerOptionsClick = () => {
         if(employee.position === 'manager'){
             centerChange('manager');
@@ -143,6 +150,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
             centerChange('manager-confirm')
         }
     }
+
 
     return (
         <div className="centerScreen-cash">
@@ -158,11 +166,13 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
 
             <div className="centerScreenContainers-cash" style={{ display: center === 'payment' ? 'block' : 'none' }}>
                 <div className="paymentButtons-cash">
+
                     <button className="card" onClick={() => handlePaymentProcess('credit_card')}>Card</button>
                     <button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash</button>
                 </div>
                 <div className="managerOptionsContainer-cash">
                     <button className="managerOptions-cash" onClick={() => handleManagerOptionsClick()}>Manager Options</button>
+
                 </div>
             </div>
 

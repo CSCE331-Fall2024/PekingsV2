@@ -5,7 +5,6 @@ import './index.css'
 import Display from './Display.jsx'
 import App from './App.jsx'
 import Cashier from './Cashier.jsx'
-import Kitchen from './Kitchen.jsx'
 
 
 createRoot(document.getElementById('root')).render(
