@@ -54,12 +54,12 @@ function Navbar() {
             </li>
             <li className='nav-item'>
               <Link
-                to='/Mission'
+                to='/MenuBoard'
                 className='nav-links'
                 onClick={closeMobileMenu}
                 // could also be menu board if needed
               >  
-                Our Mission
+                Menu Board
               </Link>
             </li>
             <li className='nav-item'>

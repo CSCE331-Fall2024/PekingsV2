@@ -9,14 +9,29 @@ function createOrder(orderID) {
         id: orderID,
         currentCenter: 'menu', // Each order has its own center state
         orderItems: [],
+        paidItems: [],
+        amountPaid: 0,
         status: true
     };
 }
 
-const ButtonScreen = () => {
+const Cashier = ({logout, employee}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
+    const [processOrder, setProcessFunc] = useState([]); // A function to be passed into rightPane and set there
+    const [discount, setDiscount] = useState(0);
+
+    function getLastActive(){
+        let lastActive = -1;
+        for(let i = 0; i < screens.length; i++){
+            if(screens[i].status){
+                lastActive = screens[i].id;
+            }
+        }
+
+        return lastActive;
+    }
 
     const addScreen = () => {
         const newOrderNum = orderNum + 1;
@@ -34,17 +49,34 @@ const ButtonScreen = () => {
     };
 
     const handlePrevOrderClick = (order) => {
-        console.log(order.id);
-        screens[order.id - 1].currentCenter = 'menu';
-        setActiveScreenIndex(order.id - 1);
+        if(order.id === activeScreenIndex + 1){
+            handleCenterChange('menu');
+        }else{
+            screens[order.id - 1].currentCenter = 'menu';
+            setActiveScreenIndex(order.id - 1);
+        }
     };
 
-    const handleCancel = (order) => {
-        const orderNum = order.id;
+    const handleCancel = () => {
+        const orderNum = screens[activeScreenIndex].id;
+
         for(let i = 0; i < screens.length; i++) {
             if(screens[i].id === orderNum) {
-                screens[i].status = false;
+                if(!(screens[i].paidItems.length)){
+                    screens[i].status = false;
+                }else{
+                    screens[i].orderItems = [];
+                    alert("Current order items cancelled");
+                }
             }
+        }
+
+        let lastActive = getLastActive();
+        if(lastActive === -1){ //If no other orders we create a new one
+            addScreen();
+        }else{ // If active orders exist, cancelling will send the screen to the last active order completed
+            screens[lastActive - 1].currentCenter = 'menu';
+            setActiveScreenIndex(lastActive - 1);
         }
     }
 
@@ -53,10 +85,25 @@ const ButtonScreen = () => {
         <div>
             <div className="screens-container">
                 {screens.map((order, index) => (
-                    <div className="cashierScreen" key={index} style={{ display: index === activeScreenIndex ? 'flex' : 'none' }}>
-                        <LeftRect centerChange={handleCenterChange} addScreen={addScreen} />
-                        <CenterScreen center={order.currentCenter} menuItemList={order.orderItems} alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick} />
-                        <RightPane orderNumber={order.id} orderItems={order.orderItems} />
+                    <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
+                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
+                        <CenterScreen center={order.currentCenter}
+                                      order = {order}
+                                      centerChange={handleCenterChange}
+                                      menuItemList={order.orderItems}
+                                      alternateOrders={screens} handlePreviousBtnClick={handlePrevOrderClick}
+                                      processOrder={processOrder[activeScreenIndex]}
+                                      setDiscount={setDiscount}
+                                      addScreen={addScreen}
+                                      employee={employee}
+                        />
+                        <RightPane order = {order}
+                                   centerChange={handleCenterChange}
+                                   setProcessFunction={setProcessFunc}
+                                   processFunctions={processOrder}
+                                   discount={discount}
+                                   employee={employee}
+                        />
                     </div>
                 ))}
             </div>
@@ -64,4 +111,4 @@ const ButtonScreen = () => {
     );
 };
 
-export default ButtonScreen;
+export default Cashier;

@@ -39,11 +39,16 @@
     border: 2px solid black;
 }
 
+.leftRect3Btns-cash{
+    width: 100%;
+    height: 63.4%;
+}
+
 .cancelOrder{
     /*position: absolute;*/
     width: 100%;
     height: 7.4%;
-    margin-top: 25%;
+    /*margin-top: 25%;*/
     font-size: 30px;
     background-color: #212A31;
     color: white;
@@ -52,7 +57,7 @@
 
 .newOrder{
     width: 75%;
-    height: 13.3%;
+    height: 23%;
     margin-top: 15%;
     margin-left: var(--leftRectMargin);
     margin-right: var(--leftRectMargin);
@@ -64,7 +69,7 @@
 
 .viewPrevious{
     width: 75%;
-    height: 13.3%;
+    height: 23%;
     margin-top: 10%;
     margin-left: var(--leftRectMargin);
     margin-right: var(--leftRectMargin);
@@ -76,7 +81,7 @@
 
 .menuBtn{
     width: 75%;
-    height: 13.3%;
+    height: 23%;
     margin-top: 17%;
     margin-left: var(--leftRectMargin);
     margin-right: var(--leftRectMargin);

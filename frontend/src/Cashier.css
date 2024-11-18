@@ -4,3 +4,13 @@
     width: 100vw;
     background-color: #124E66;
 }
+
+/* For hiding scroll bars */
+.scrollable-container::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar */
+}
+
+/* For Firefox */
+.scrollable-container {
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
