@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "react-magnifier": "^3.0.4",
     "@react-oauth/google": "^0.12.1",
     "gapi-script": "^1.2.0",
     "react-google-login": "^5.2.2"
