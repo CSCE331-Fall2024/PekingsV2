@@ -129,7 +129,7 @@ function LogIn({setNavbarVisibility}){
             )}
 
             {currentScreen === 'kitchen' && (
-                <Kitchen />
+                <Kitchen logout={logout}/>
             )}
         </div>
     );

@@ -3,7 +3,7 @@ import "./Kitchen.css";
 
 let tempNum = 1;
 
-function Kitchen() {
+function Kitchen(logout) {
     const [currentOrders, setCurrentOrders] = useState([]);
     const [officialMenuItems, setOfficialMenuItems] = useState([]);
     const [ingredientNames, setIngredientNames] = useState([]);
@@ -220,6 +220,34 @@ function Kitchen() {
             <div className="Kitchen-Screen">
                 {orderContainers}
             </div>
+            <div className="Control-Buttons">
+                <button className="Exit-Button" onClick={() => logout()}>Log Out</button>
+
+                <div className="Complete-Container">
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex)}>1</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>2</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>3</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>4</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>5</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>6</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>7</button>
+                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>8</button>
+                </div>
+
+                <div className="Navigation-Container">
+                    <button className="Navigation-Button" onClick={() => {
+                        if (orderIndex > 0) setOrderIndex(orderIndex + 1);
+                    }}
+                        >&gt;</button>
+                    <button className="Navigation-Button" onClick={() => {
+                        if(orderIndex + 8 < currentOrders.length) setOrderIndex(orderIndex - 1);
+                    }}
+                        >&lt;</button>
+                </div>
+
+                <button className="Accessibility-Button">Settings</button>
+            </div>
+
         </div>
     )
 }
