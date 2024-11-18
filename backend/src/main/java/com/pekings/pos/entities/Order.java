@@ -48,7 +48,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
 
-    @Column(columnDefinition = "varchar(256) default 'complete'")
+    @Column(nullable = false)
     private String status;
 
     public List<OrderItem> getItems() {
