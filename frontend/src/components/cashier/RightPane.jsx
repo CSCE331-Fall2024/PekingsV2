@@ -21,7 +21,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     const [ingredientNames, setIngredientNames] = useState([]);
 
 
-    // Functions used for Nathan L place orders
+    // Calculates all totals
     function calculateSubtotal(){
         let st = 0;
 
