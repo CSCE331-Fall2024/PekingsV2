@@ -1,15 +1,13 @@
-#spring:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: 291432901585-nbedv42j0p0cgqkq58uhq13r5ol3jr6f.apps.googleusercontent.com
-#            client-secret: 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
-#            scope: profile, email
-#            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-#            client-authentication-method: client_secret_basic
-#            authorization-grant-type: authorization_code
-#        provider:
-#          google:
-#            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 291432901585-nbedv42j0p0cgqkq58uhq13r5ol3jr6f.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com

@@ -1,8 +1,11 @@
 package com.pekings.pos.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pekings.pos.Position;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,8 +33,9 @@ public class Employee {
     @Column(name = "email")
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "position", length = Integer.MAX_VALUE)
-    private String position;
+    private Position position;
 
     @Column(name = "last_clockin")
     private LocalTime lastClockin;
@@ -94,11 +98,11 @@ public class Employee {
         this.pass = pass;
     }
 
-    public String getPosition() {
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
