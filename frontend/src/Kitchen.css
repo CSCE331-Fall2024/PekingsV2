@@ -152,5 +152,22 @@
     font-size: 100px; /* Size of the number */
     color: rgba(0, 0, 0, 0.1); /* Light opacity for the number */
     z-index: 1; /* Ensure it's behind the content */
+}
 
+
+
+.Screen-Popup{
+    width: 100vw;
+    height: 100vh;
+    background-color: lightgray;
+}
+
+.close-button{
+    width: 10%;
+    height: 10%;
+    color: red;
+    font-size: 300%;
+    /*background-color: blue;*/
+    /*margin-left: 5%;*/
+    /*border: 1px solid red;*/
 }
