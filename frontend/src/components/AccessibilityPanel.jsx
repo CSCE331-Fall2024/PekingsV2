@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import './AccessibilityPanel.css';
 
 const AccessibilityPanel = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isHighContrast, setIsHighContrast] = useState(false);
-  const [isMagnifierEnabled, setIsMagnifierEnabled] = useState(false);
+
 
   const toggleHighContrastMode = () => {
     setIsHighContrast((prev) => !prev);
@@ -13,32 +13,6 @@ const AccessibilityPanel = () => {
       appContent.classList.toggle('high-contrast', !isHighContrast);
     }
   };
-
-  const toggleMagnifier = () => {
-    setIsMagnifierEnabled((prev) => !prev);
-    document.body.classList.toggle('magnifier-enabled', !isMagnifierEnabled);
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isMagnifierEnabled) return;
-      const magnifier = document.querySelector('.app-content::after');
-      
-      if (magnifier) {
-        magnifier.style.left = `${e.clientX}px`;
-        magnifier.style.top = `${e.clientY}px`;
-      }
-    };
-
-    if (isMagnifierEnabled) {
-      document.addEventListener('mousemove', handleMouseMove);
-    } 
-    else {
-      document.removeEventListener('mousemove', handleMouseMove);
-    }
-
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, [isMagnifierEnabled]);
 
   return (
     <div className="accessibility-container">
