@@ -22,7 +22,7 @@ function CustomerHero() {
                     // setMenuItems(await response.json());
                     const items = await response.json();
                     // Separate items based on category
-                    const menu = items.filter(item => item.category === "food" || item.category === "drinks");
+                    const menu = items.filter(item => item.category === "food" || item.category === "drink" || item.category === "dessert" );
                     const seasonal = items.filter(item => item.category === "seasonal");
 
                     setMenuItems(menu);
