@@ -8,6 +8,7 @@ function Kitchen(logout) {
     const [officialMenuItems, setOfficialMenuItems] = useState([]);
     const [ingredientNames, setIngredientNames] = useState([]);
     const [orderIndex, setOrderIndex] = useState(0);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     // Gets all the current active orders
     // Fetch incomplete orders
@@ -100,7 +101,7 @@ function Kitchen(logout) {
 
         // Adjusts the screen to show at minimum 8 orders
         if( (currentOrders.length > 8) && (orderIndex + 8 >= currentOrders.length) ){
-            console.log("x");
+            // console.log("x");
             setOrderIndex(orderIndex - 1);
         }
     }
@@ -178,7 +179,7 @@ function Kitchen(logout) {
         )
     }
 
-    function createOrderContainer(order){
+    function createOrderContainer(order, buttonNumber){
         let orderItems = order.items;
 
         let orderItemsContainers = [];
@@ -189,6 +190,7 @@ function Kitchen(logout) {
 
         return (
             <div className="Kitchen-Order">
+                <div className="Background-Number">{buttonNumber}</div>
                 <div className="Order-Header">
                     <div className="Order-Number">ID: {order.order_id}</div>
                     <div className="Order-Timer">{tempNum++}</div>
@@ -208,48 +210,75 @@ function Kitchen(logout) {
 
 
     let orderContainers = [];
-    orderContainers = currentOrders.slice(orderIndex, orderIndex + 8).map(order => createOrderContainer(order));
+    orderContainers = currentOrders.slice(orderIndex, orderIndex + 8).map( (order, index) => createOrderContainer(order, index + 1));
 
     useEffect(() => {
-        orderContainers = currentOrders.slice(orderIndex, orderIndex + 8).map(order => createOrderContainer(order));
-        // console.log("Updated currentOrders:", currentOrders);
-    }, [orderIndex]);
+        orderContainers = currentOrders.slice(orderIndex, orderIndex + 8).map((order, index) => {
+            return createOrderContainer(order, index + 1);  // Pass the correct button number (index + 1)
+        });
+    }, [orderIndex, currentOrders]);
+
+    const handlePopupOpen = () => {
+        setIsPopupOpen(true);
+    };
+
+    const handlePopupClose = () => {
+        setIsPopupOpen(false);
+    };
 
     return (
-        <div className="Screen-Container">
-            <div className="Kitchen-Screen">
-                {orderContainers}
-            </div>
-            <div className="Control-Buttons">
-                <button className="Exit-Button" onClick={() => logout()}>Log Out</button>
+        <div>
+            {isPopupOpen && (
+                <div className="Screen-Popup">
+                    <button className="close-button" onClick={handlePopupClose}>X</button>
 
-                <div className="Complete-Container">
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex)}>1</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>2</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>3</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>4</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>5</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>6</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>7</button>
-                    <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>8</button>
+                    <div className="Settings-Container">
+                        <button className="High-Contrast">High-Contrast</button>
+                        <button className="Translate">Translate</button>
+                    </div>
                 </div>
+            )}
+            {!isPopupOpen && (
+                <div className="Screen-Container">
+                    <div className="Kitchen-Screen">
+                        {orderContainers}
+                    </div>
+                    <div className="Control-Buttons">
+                        <button className="Exit-Button" onClick={() => logout()}>Log Out</button>
 
-                <div className="Navigation-Container">
-                    <button className="Navigation-Button" onClick={() => {
-                        if (orderIndex > 0) setOrderIndex(orderIndex + 1);
-                    }}
-                        >&gt;</button>
-                    <button className="Navigation-Button" onClick={() => {
-                        if(orderIndex + 8 < currentOrders.length) setOrderIndex(orderIndex - 1);
-                    }}
-                        >&lt;</button>
+                        <div className="Complete-Container">
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex)}>1</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>2</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>3</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>4</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>5</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>6</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>7</button>
+                            <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>8</button>
+                        </div>
+
+                        <div className="Navigation-Container">
+                            <button className="Navigation-Button" onClick={() => {
+                                if (orderIndex + 8 < currentOrders.length) {
+                                    setOrderIndex(orderIndex + 1);
+                                }
+                            }}
+                            >&gt;</button>
+                            <button className="Navigation-Button" onClick={() => {
+                                if (orderIndex > 0) {
+                                    setOrderIndex(orderIndex - 1);
+                                }
+                            }}
+                            >&lt;</button>
+                        </div>
+
+                        <button className="Accessibility-Button" onClick={() => handlePopupOpen()}>Settings</button>
+                    </div>
                 </div>
-
-                <button className="Accessibility-Button">Settings</button>
-            </div>
-
-        </div>
-    )
+            )
+            }
+</div>
+)
 }
 
 export default Kitchen;
