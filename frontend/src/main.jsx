@@ -10,8 +10,8 @@ import Kitchen from './Kitchen.jsx'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        {/*<App />*/}
-        <Kitchen />
+        <App />
+        {/*<Kitchen />*/}
         {/*<Cashier employee={{*/}
         {/*    "id": 1,*/}
         {/*    "username": "ThomasC",*/}

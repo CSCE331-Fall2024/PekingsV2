@@ -22,7 +22,7 @@ function CustomerHero() {
                     // setMenuItems(await response.json());
                     const items = await response.json();
                     // Separate items based on category
-                    const menu = items.filter(item => item.category === "food" || item.category === "drinks");
+                    const menu = items.filter(item => item.category === "food" || item.category === "drink" || item.category === "dessert" );
                     const seasonal = items.filter(item => item.category === "seasonal");
 
                     setMenuItems(menu);
@@ -68,7 +68,7 @@ function CustomerHero() {
                 <div className='video-section'>
                     <div className='video-container'>
                         <video autoPlay loop muted className='background-video'>
-                            <source src="/videos/seasonal.mp4" type="video/mp4" />
+                            <source src="/videos/foodstock.mp4" type="video/mp4" />
                         </video>
                         <div className='video-overlay'>
                             <h2 className="season-title">Special Seasonal Items:</h2>

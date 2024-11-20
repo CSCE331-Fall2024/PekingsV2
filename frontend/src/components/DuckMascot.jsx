@@ -78,6 +78,7 @@ const DuckMascot = forwardRef((props, ref) => {
                             ing.amount || 1
                         ])
                     ),
+
                     originalPrice: Number(item.price)
                 };
 
@@ -257,6 +258,7 @@ const DuckMascot = forwardRef((props, ref) => {
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
                 payment_method: "credit-card",
+                status: "incomplete",
                 items: items,
             };
 
@@ -346,7 +348,7 @@ const DuckMascot = forwardRef((props, ref) => {
                                         </button>
                                     </div>
 
-                                    {expandedItems[item.id] && (
+                                    {item.category !== 'drink' && item.category !== 'dessert' && expandedItems[item.id] && ( //will change
                                         <div className="ingredients-list">
                                             <p className="ingredients-title">Ingredients:</p>
                                             {item.ingredients.map((ingredient, idx) => {
