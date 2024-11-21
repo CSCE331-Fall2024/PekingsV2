@@ -1,15 +1,25 @@
-#spring:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: 291432901585-nbedv42j0p0cgqkq58uhq13r5ol3jr6f.apps.googleusercontent.com
-#            client-secret: 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
-#            scope: profile, email
-#            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-#            client-authentication-method: client_secret_basic
-#            authorization-grant-type: authorization_code
-#        provider:
-#          google:
-#            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 735953498338-k6a4ti2qvqh8lobbj93t4gkki3ms8949.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+logging:
+  level:
+    org.springframework.security: DEBUG

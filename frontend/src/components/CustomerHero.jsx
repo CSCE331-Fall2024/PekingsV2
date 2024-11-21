@@ -8,6 +8,7 @@ function CustomerHero() {
 
     const [menuItems, setMenuItems] = useState([])
     const [seasonItems, setSeasonItems] = useState([])
+
     useEffect(() => {
         const fetchItems = async () => {
             try {

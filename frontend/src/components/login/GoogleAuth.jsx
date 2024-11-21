@@ -3,11 +3,11 @@ import Login from "./Login.jsx";
 import {useAuth} from "./AuthProvider.jsx";
 
 function GoogleAuth() {
-    const { isSignedIn } = useAuth();
+    // const { isSignedIn } = useAuth();
 
     return (
         <div>
-            {isSignedIn ? <Logout></Logout> : <Login></Login>}
+            <Login />
         </div>
     );
 }

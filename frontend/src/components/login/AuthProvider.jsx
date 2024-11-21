@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        console.log(import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID)
         initClient();
     }, []);
 

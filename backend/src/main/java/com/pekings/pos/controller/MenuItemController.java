@@ -9,6 +9,7 @@ import com.pekings.pos.util.DateUtil;
 import com.pekings.pos.util.SaleItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,11 +38,13 @@ public class MenuItemController {
     private MenuIngredientRepository menuIngredientRepository;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('USER')")
     public List<MenuItem> getAllMenuItems() {
         return menuItemRepository.findAll().stream().sorted(Comparator.comparingInt(MenuItem::getId)).toList();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public MenuItem getMenuItem(@PathVariable("id") int id) {
         return menuItemRepository.findById(id).orElse(null);
     }

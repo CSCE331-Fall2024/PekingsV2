@@ -1,29 +1,16 @@
-import { GoogleLogin } from 'react-google-login'
+import {useEffect, useState} from "react";
 
 const clientId = import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID
 
 function Login() {
-
-    const onSuccess = (res) => {
-        console.log("LOGIN SUCCESS! Current user: ", res.profileObj)
-    }
-
-    const onFailure = (res) => {
-        console.log("LOGIN FAILED! res: ", res)
-    }
+    const handleLogin = () => {
+        // Redirect to the backend's OAuth2 login endpoint
+        window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    };
 
     return (
-        <div id="signInButton">
-            <GoogleLogin
-                clientId={clientId}
-                buttonText="Login"
-                onSuccess={onSuccess}
-                onFailure={onFailure}
-                cookiePolicy={'single_host_origin'}
-                isSignedIn={true}
-            />
-        </div>
-    )
+        <button onClick={handleLogin}>Login</button>
+    );
 }
 
 export default Login
