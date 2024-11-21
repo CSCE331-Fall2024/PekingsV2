@@ -9,19 +9,21 @@ import {AuthProvider} from "./components/login/AuthProvider.jsx";
 
 
 createRoot(document.getElementById('root')).render(
-    <AuthProvider>
+    <StrictMode>
+        {/*<AuthProvider>*/}
 
-            <App />
-            {/*<Cashier employee={{
-            "id": 1,
-            "username": "ThomasC",
-            "pass": "CC137",
-            "email": null,
-            "position": "employee",
-            "lastClockin": "00:00:00",
-            "isClockedin": false,
-            "pin": null
-        }}/>*/}
-            {/*<Display/>*/}
-    </AuthProvider>
+        <App />
+        {/*<Cashier employee={{
+        "id": 1,
+        "username": "ThomasC",
+        "pass": "CC137",
+        "email": null,
+        "position": "employee",
+        "lastClockin": "00:00:00",
+        "isClockedin": false,
+        "pin": null
+    }}/>*/}
+        {/*<Display/>*/}
+        {/*</AuthProvider>*/}
+    </StrictMode>
 )

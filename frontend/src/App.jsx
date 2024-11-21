@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -36,19 +36,18 @@ const App = () => {
     }
   }, []);
 
-
   return (
-    <div className = "empty">
-      <Router>
+      <div className="empty">
+        <Router>
           <Navbar/>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/MenuBoard" element={<MenuBoard />} />
-          <Route path="/Careers" element={<Career />} />
-          <Route path="/sign-up" element={<GoogleAuth />} />
-        </Routes>
-      </Router>
-    </div>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/MenuBoard" element={<MenuBoard/>}/>
+            <Route path="/Careers" element={<Career/>}/>
+            <Route path="/sign-up" element={<GoogleAuth/>}/>
+          </Routes>
+        </Router>
+      </div>
   );
 };
 

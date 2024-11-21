@@ -1,4 +1,4 @@
-package com.pekings.pos;
+package com.pekings.pos.util;
 
 public enum Position {
 
