@@ -49,7 +49,7 @@ const App = () => {
                           setNavbarVisibility={setIsVisible}/>}/> {/* No idea where the sign-up path comes from*/}
                   </Routes>
               </div>
-                  {/*<AccessibilityPanel/>*/}
+              {isVisible ? (<AccessibilityPanel/>) : (<div/>)}
           </Router>
       </div>
 );

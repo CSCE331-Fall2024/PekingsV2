@@ -4,7 +4,7 @@ import AccessibilityPanel from './components/AccessibilityPanel';
 
 let tempNum = 1;
 
-function Kitchen(logout) {
+function Kitchen({logout}) {
     const [currentOrders, setCurrentOrders] = useState([]);
     const [officialMenuItems, setOfficialMenuItems] = useState([]);
     const [ingredientNames, setIngredientNames] = useState([]);
@@ -254,17 +254,39 @@ function Kitchen(logout) {
         setIsPopupOpen(false);
     };
 
+
+    const toggleHighContrastMode = () => {
+        const appContent = document.querySelector('.app-content');
+        if (appContent) {
+            const isHighContrastMode = appContent.classList.contains('high-contrast');
+            appContent.classList.toggle('high-contrast', !isHighContrastMode);
+        }
+    };
+
     return (
         <div>
             {isPopupOpen && (
                 <div className="Screen-Popup">
-                    <button className="close-button" onClick={handlePopupClose}>X</button>
-
-                    <div className="Settings-Container">
-                        <button className="High-Contrast">High-Contrast</button>
-                        <button className="Translate">Translate</button>
+                    <button className="close-button" onClick={() => handlePopupClose()}>X</button>
+                    <div className="accessibility-panel-kitchen">
+                        <div className="accessibility-row">
+                            <label className="accessibility-label">
+                                High Contrast
+                                <button onClick={toggleHighContrastMode}
+                                        className="accessibility-toggle-button"
+                                        aria-pressed={isHighContrast}
+                                >
+                                    <div
+                                        className="accessibility-toggle-knob"
+                                        style={{
+                                            '--toggle-knob-position': isHighContrast ? '26px' : '2px',
+                                            '--toggle-background': isHighContrast ? '#4CAF50' : '#e2e2e2',
+                                        }}
+                                    />
+                                </button>
+                            </label>
+                        </div>
                     </div>
-                    <AccessibilityPanel className="Accessibility"/>
                 </div>
             )}
             {!isPopupOpen && (

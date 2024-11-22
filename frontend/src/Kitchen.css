@@ -167,4 +167,18 @@
     height: 10%;
     color: red;
     font-size: 300%;
+    background-color: transparent;
 }
+
+.accessibility-panel-kitchen{
+    position: absolute;
+    bottom: 40%;
+    right: 40%;
+    background-color: white;
+    padding: 18px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    border: 1px solid #e2e2e2;
+}
+
