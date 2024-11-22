@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import "./Kitchen.css";
+import AccessibilityPanel from './components/AccessibilityPanel';
 
 let tempNum = 1;
 
@@ -236,6 +237,7 @@ function Kitchen(logout) {
                         <button className="High-Contrast">High-Contrast</button>
                         <button className="Translate">Translate</button>
                     </div>
+                    <AccessibilityPanel className="Accessibility"/>
                 </div>
             )}
             {!isPopupOpen && (
@@ -277,8 +279,8 @@ function Kitchen(logout) {
                 </div>
             )
             }
-</div>
-)
+        </div>
+    )
 }
 
 export default Kitchen;
