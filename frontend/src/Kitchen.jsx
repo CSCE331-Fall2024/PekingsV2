@@ -108,11 +108,11 @@ function Kitchen(logout) {
                 },
             });
 
-            if(response.ok) {
-                console.log("x");
-            }
+            // if(response.ok) {
+            //     console.log("x");
+            // }
         }
-        handleCompletion()
+        handleCompletion();
 
 
         setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
