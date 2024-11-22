@@ -17,7 +17,7 @@ function MenuSect() {
                 });
                 if (response.ok) {
                     const items = await response.json();
-                    const menu = items.filter(item => item.category === "food" || item.category === "drinks");
+                    const menu = items.filter(item => item.category === "food" || item.category === "drink" || item.category === "dessert");
                     const seasonal = items.filter(item => item.category === "seasonal");
                     setMenuItems(menu);
                     setSeasonItems(seasonal);
