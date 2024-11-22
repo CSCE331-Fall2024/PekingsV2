@@ -97,12 +97,28 @@ function Kitchen(logout) {
         fetchIngredients();
     }, []);
 
-    function completeOrder(OrderNumber) {
+    function completeOrder (OrderNumber) {
+        let apiText = "api/orders/update/status/" + currentOrders[OrderNumber].order_id + "?status=complete"
+        // console.log(apiText);
+        const handleCompletion = async () => {
+            const response = await fetch(apiText, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if(response.ok) {
+                console.log("x");
+            }
+        }
+        handleCompletion()
+
+
         setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
 
         // Adjusts the screen to show at minimum 8 orders
         if( (currentOrders.length > 8) && (orderIndex + 8 >= currentOrders.length) ){
-            // console.log("x");
             setOrderIndex(orderIndex - 1);
         }
     }
