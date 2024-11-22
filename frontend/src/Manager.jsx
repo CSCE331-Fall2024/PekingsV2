@@ -6,6 +6,11 @@ function Manager({ selectedSection }) {
     const [menuItems, setMenuItems] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [editIdx, setEditIdx] = useState(-1);
+    const [inputValueName, setInputValueName] = useState('');
+    const [inputValueAmount, setInputValueAmount] = useState('');
+    const [inputValuePrice, setInputValuePrice] = useState('');
+    const [inputMenuName, setInputMenuName] = useState('');
+    const [inputMenuPrice, setInputMenuPrice] = useState('');
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -126,19 +131,110 @@ function Manager({ selectedSection }) {
     //             }
     //         ]
     //         }[]);
-    useEffect(() => {
-        const addInventoryItem = async () => {
-            const invResponse = await fetch("/api/inventory/add", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-        }
-    },[]);
+    // get inventory mapped array...already at top "inventory"
+    // setInventory will add to last element.
+    // add will be used to add to new database section.
+    // Use Postman to get layout of inventory items
+    // Create popup that opens to list that follows.
+    // Popup opens a textbox that lets you input all except ID as that will get randomized
+    //
 
+
+
+    const addToInventory = async () => {
+        //Replace this inv object with arbitrary object values
+        // Make a function that will return an object with user defined values except ID.
+        // set inv equal to what the function returns
+        let amountt = parseInt(inputValueAmount);
+        let pricee = parseInt(inputValuePrice);
+        let batch = amountt * pricee;
+
+        const mItems = {
+            id: parseInt(inventory[inventory.length-1].id) + 1,
+            name: inputValueName,
+            servingPrice: inputValuePrice,
+            amount: inputValueAmount,
+            priceBatch: batch,
+        };
+        setMenuItems([...menuItems, mItems]);
+
+        const invResponse = await fetch("/api/inventory/add", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(mItems)
+        });
+
+    };
+    const addToMenu = async () => {
+        //Replace this inv object with arbitrary object values
+        // Make a function that will return an object with user defined values except ID.
+        // set inv equal to what the function returns
+
+        const menu = {
+            id: parseInt(inventory[inventory.length-1].id) + 1,
+            name: inputValueName,
+            servingPrice: inputValuePrice,
+            amount: inputValueAmount,
+            priceBatch: batch,
+        };
+        setInventory([...inventory, inv]);
+
+        const menuResponse = await fetch("/api/inventory/add", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(menu)
+        });
+
+    };
+    // const deleteInventory = async () => {
+    //
+    //     //Function call to return inventory id
+    //
+    //
+    //     useEffect(() => {
+    //         const deleteInventoryItem = async () => {
+    //             const invDelRespone = await fetch("/api/inventory/delete", {
+    //                 method: "DELETE",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 },
+    //                 body: JSON.stringify(deleteInventoryItem),
+    //             });
+    //         }
+    //     },[]);
+    // };
+
+
+    const handleChange = (event) => {
+        setInputValueName(event.target.value);
+        setInputMenuName(event.target.value);
+
+    };
+    const handleChange2 = (event) => {
+        setInputValueAmount(event.target.value);
+    };
+    const handleChange3 = (event) => {
+        setInputValuePrice(event.target.value);
+        setInputMenuPrice(event.target.value);
+    };
+    const handleButton = () => {
+        addToInventory();
+        setInputValueName("");
+        setInputValueAmount("");
+        setInputValuePrice("");
+    }
+    const handleButtonMenu = () => {
+        addToMenu();
+        setInputMenuName("");
+        setInputValuePrice("");
+    }
 
     return (
+
         <div className="managerRoot">
             <div className="main-content">
                 <h1>{selectedSection}</h1>
@@ -146,17 +242,14 @@ function Manager({ selectedSection }) {
 
                 {/* Conditional Rendering for Table Layout */}
                 {selectedSection === "Inventory" && (
-                    <div className="add button">
-                        <button onClick={() => }>Add Item</button>
-                    </div>
                     <table className="data-table">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Ingredient</th>
                             <th>Quantity</th>
-                            {/*<th>Unit Price</th>*/}
-                            {/*<th>Batch Price</th>*/}
+                            <th>Unit Price</th>
+                            <th>Batch Price</th>
                             {/*<th>Actions</th>*/}
                         </tr>
                         </thead>
@@ -166,13 +259,22 @@ function Manager({ selectedSection }) {
                                 <td>{item.id}</td>
                                 <td>{item.name}</td>
                                 <td>{item.amount}</td>
-                                {/*<td>${item.servingPrice}</td>*/}
-                                {/*<td>${item.priceBatch}</td>*/}
+                                <td>${item.servingPrice}</td>
+                                <td>${item.priceBatch}</td>
                                 {/*<td>{item.actions}</td>*/}
                             </tr>
                         ))}
                         </tbody>
                     </table>
+                )}
+                {selectedSection === "Inventory" && (
+                    <div className="add-button">
+                        <input type="text" placeholder="Enter item Name" value={inputValueName} onChange={handleChange}/>
+                        <input type="text" placeholder="Enter Stock Amount" value={inputValueAmount} onChange={handleChange2}/>
+                        <input type="text" placeholder="Enter item servingPrice" value={inputValuePrice} onChange={handleChange3}/>
+                        <button onClick={handleButton}> Add Item
+                        </button>
+                    </div>
                 )}
 
                 {selectedSection === "Menu Items" && (
@@ -193,14 +295,15 @@ function Manager({ selectedSection }) {
                         </tbody>
                     </table>
                 )}
-                {/*"id": 1,*/}
-                {/*"username": "ThomasC",*/}
-                {/*"pass": "CC137",*/}
-                {/*"email": null,*/}
-                {/*"position": "employee",*/}
-                {/*"lastClockin": "00:00:00",*/}
-                {/*"isClockedin": false,*/}
-                {/*"pin": null*/}
+                {selectedSection === "Menu Items" && (
+                    <div className="add-button">
+                        <input type="text" placeholder="Enter item Name" value={inputMenuName} onChange={handleChangeMenu}/>
+                        <input type="text" placeholder="Enter Stock Amount" value={inputMenuPrice} onChange={handleChangeMenu2}/>
+                        <button onClick={handleButtonMenu}> Add Item
+                        </button>
+                    </div>
+                )}
+
                 {selectedSection === "Employees" && (
                     <table className="data-table">
                         <thead>

@@ -1,8 +1,8 @@
 .managerRoot {
     display: flex;
     flex-direction: column;
-    width: 100%;         /* Takes remaining width after sidebar */
-    height: 100%;        /* Full height of fixed container */
+    width: 100vw;         /* Takes remaining width after sidebar */
+    height: 100vh;        /* Full height of fixed container */
     background: #124e66;
     color: black;
 }
@@ -58,5 +58,24 @@
     width: 80%;
 }
 .data-table .invButton_M:hover {
+    background-color: #34495e;
+}
+
+.main-content .add-button {
+    display: flex;
+    justify-content: flex-end;
+    /*background: red;*/
+    color: red;
+    font-size: 16px;
+    text-align: center;
+}
+.add-button button {
+    padding: 10px 20px;
+    width: 20%;
+    height: 20%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.add-button button:hover {
     background-color: #34495e;
 }
