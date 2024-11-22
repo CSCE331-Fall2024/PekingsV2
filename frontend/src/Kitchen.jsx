@@ -67,6 +67,12 @@ function Kitchen(logout) {
         };
 
         fetchItems();
+
+        const interval = setInterval(fetchItems, 1000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
     useEffect(() => {
@@ -95,6 +101,11 @@ function Kitchen(logout) {
         }
 
         fetchIngredients();
+        const interval = setInterval(fetchIngredients, 1000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
     function completeOrder (OrderNumber) {

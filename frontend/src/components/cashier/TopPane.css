@@ -9,18 +9,9 @@
     font-size: 25px;
 }
 
-.memoBtn{
-    position: relative;
-    width: 17%;
-    height: 100%;
-    background-color:#8BA2F6;
-    border-color: transparent;
-    color: black;
-}
-
 .drinksBtn{
     position: relative;
-    width: 21%;
+    width: 25%;
     height: 100%;
     background-color:#C8E8F5;
     border-color: transparent;
@@ -30,7 +21,7 @@
 
 .mainMenuBtn{
     position: relative;
-    width: 41%;
+    width: 50%;
     height: 100%;
     background-color:#9EDDF7;
     border-color: transparent;
@@ -40,7 +31,7 @@
 
 .seasonalBtn{
     position: relative;
-    width: 21%;
+    width: 25%;
     height: 100%;
     background-color:#C8E8F5;
     border-color: transparent;

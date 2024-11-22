@@ -26,18 +26,24 @@ function LogIn({setNavbarVisibility}){
 
                 if (response.ok) {
                     const employeeList = await response.json();
-
-                    setEmployees(employeeList)
+                    setEmployees(employeeList);
                 } else {
                     console.error("Failed to fetch employees:", response.status);
                 }
             } catch (error) {
-                console.error("Error fetching employess:", error);
+                console.error("Error fetching employees:", error);
             }
         };
 
+        // Call the fetchItems initially
         fetchItems();
-    }, []);
+
+        // Set up an interval to call fetchItems every 5 seconds
+        const intervalId = setInterval(fetchItems, 5000); // 5000ms = 5 seconds
+
+        // Clean up the interval on component unmount
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array ensures this effect runs only once on mount
 
     const [currentScreen, setCurrentScreen] = useState('login');
 

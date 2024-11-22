@@ -176,6 +176,11 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         fetchIngredients();
+        const interval = setInterval(fetchIngredients, 1000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
     const processPayment = (paymentType) => {
