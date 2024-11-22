@@ -254,8 +254,11 @@ function Kitchen({logout}) {
         setIsPopupOpen(false);
     };
 
+    const [isHighContrast, setIsHighContrast] = useState(false);
+
 
     const toggleHighContrastMode = () => {
+        setIsHighContrast((prev) => !prev);
         const appContent = document.querySelector('.app-content');
         if (appContent) {
             const isHighContrastMode = appContent.classList.contains('high-contrast');
