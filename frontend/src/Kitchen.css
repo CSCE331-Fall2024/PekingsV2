@@ -182,3 +182,11 @@
     border: 1px solid #e2e2e2;
 }
 
+.Orders-Empty{
+    width: 100%;
+    height: 100%;
+    font-size: 400%;
+    color: darkgray;
+    text-align: center;
+    padding-top: 25%;
+}

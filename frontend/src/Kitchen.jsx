@@ -298,7 +298,12 @@ function Kitchen({logout, setIsTranslateVisible}) {
             {!isPopupOpen && (
                 <div className="Screen-Container">
                     <div className="Kitchen-Screen">
-                        {orderContainers}
+                        { (currentOrders.length > 0) && (
+                            {orderContainers}
+                        )}
+                        { (currentOrders.length === 0) && (
+                            <div className="Orders-Empty">No Orders</div>
+                        )}
                     </div>
                     <div className="Control-Buttons">
                         <button className="Exit-Button" onClick={() => logout()}>Log Out</button>
