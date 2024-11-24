@@ -66,7 +66,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
 
     // Reinsert try statements when fixed
-    const handleOrder = async (orderUse, paymentType) => {
+    const handleOrder = async (orderUse, paymentType, employee) => {
         try {
             let orderItems = orderUse.orderItems;
             let items = [];
@@ -106,7 +106,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
                 }
             }
-
 
 
             // creating the order object
@@ -205,7 +204,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         if(placeOrder){
-            handleOrder(order, paymentType);
+            handleOrder(order, paymentType, employee);
+
 
             centerChange('menu');
 

@@ -7,12 +7,13 @@ import Kitchen from '../../Kitchen.jsx'
 
 
 function LogIn({setNavbarVisibility, setIsTranslateVisible}){
-    let currentEmployee = {};
+    // let currentEmployee = {};
 
     // State to hold username and password input values
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [employees, setEmployees] = useState([]);
+    const [currentEmployee, setCurrentEmployee] = useState({});
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -61,13 +62,13 @@ function LogIn({setNavbarVisibility, setIsTranslateVisible}){
                 setIsTranslateVisible(false);
                 if(employees[i].position === "employee"){
                     setCurrentScreen('employee');
-                    currentEmployee = employees[i];
+                    setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "manager"){
                     setCurrentScreen('manager');
-                    currentEmployee = employees[i];
+                    setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "kitchen"){
                     setCurrentScreen('kitchen');
-                    currentEmployee = employees[i];
+                    setCurrentEmployee(employees[i]);
                 }
                 break;
             }

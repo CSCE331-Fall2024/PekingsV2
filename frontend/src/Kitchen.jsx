@@ -11,6 +11,7 @@ function Kitchen({logout, setIsTranslateVisible}) {
     const [orderIndex, setOrderIndex] = useState(0);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+
     // Gets all the current active orders
     // Fetch incomplete orders
     const fetchIncompleteOrders = async () => {
@@ -298,11 +299,10 @@ function Kitchen({logout, setIsTranslateVisible}) {
             {!isPopupOpen && (
                 <div className="Screen-Container">
                     <div className="Kitchen-Screen">
-                        { (currentOrders.length > 0) && (
-                            {orderContainers}
-                        )}
-                        { (currentOrders.length === 0) && (
-                            <div className="Orders-Empty">No Orders</div>
+                        {currentOrders.length > 0 ? (
+                            orderContainers // Directly render the orderContainers when there are orders
+                        ) : (
+                            <div className="Orders-Empty">No Orders</div> // Show "No Orders" when there are no orders
                         )}
                     </div>
                     <div className="Control-Buttons">
