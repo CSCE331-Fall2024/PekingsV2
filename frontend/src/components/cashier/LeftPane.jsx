@@ -1,10 +1,10 @@
 import React from 'react';
 import './LeftPane.css';
 
-function LeftRect({ logout, centerChange, addScreen , handleCancel}) {
+function LeftRect({ logout, centerChange, addScreen , handleCancel, handleAccessibility}) {
     return (
         <div className="leftRectangle">
-            <button className="logo-cash">
+            <button className="logo-cash" onClick={() => handleAccessibility(true)}>
                 <img className="logoButton" src="/images/pekingslogo.png" alt="Logo" />
             </button>
             <button className="exit" onClick={() => logout()}>Exit</button>

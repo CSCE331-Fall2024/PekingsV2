@@ -40,9 +40,9 @@ const App = () => {
           <Router>
               {isVisible ? (<Navbar/>) : (<div/>)}
               <div className="app-content">
-                  <div id="google_translate_element"></div>
+                  {isVisible ? (<div id="google_translate_element"></div>) : (<div/>)}
                   <Routes>
-                      <Route path="/" element={<Home/>}/>
+                  <Route path="/" element={<Home/>}/>
                       <Route path="/MenuBoard" element={<MenuBoard/>}/>
                       <Route path="/Careers" element={<Career/>}/>
                       <Route path="/sign-up" element={<LogIn
