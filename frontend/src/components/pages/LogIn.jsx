@@ -3,15 +3,17 @@ import './LogIn.css';
 
 import Cashier from '../../Cashier.jsx'
 import Display from '../../Display.jsx'
+import Kitchen from '../../Kitchen.jsx'
 
 
-function LogIn(){
-    let currentEmployee = {};
+function LogIn({setNavbarVisibility, setIsTranslateVisible}){
+    // let currentEmployee = {};
 
     // State to hold username and password input values
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [employees, setEmployees] = useState([]);
+    const [currentEmployee, setCurrentEmployee] = useState({});
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -25,37 +27,48 @@ function LogIn(){
 
                 if (response.ok) {
                     const employeeList = await response.json();
-
-                    setEmployees(employeeList)
+                    setEmployees(employeeList);
                 } else {
                     console.error("Failed to fetch employees:", response.status);
                 }
             } catch (error) {
-                console.error("Error fetching employess:", error);
+                console.error("Error fetching employees:", error);
             }
         };
 
+        // Call the fetchItems initially
         fetchItems();
-    }, []);
+
+        // Set up an interval to call fetchItems every 5 seconds
+        const intervalId = setInterval(fetchItems, 5000); // 5000ms = 5 seconds
+
+        // Clean up the interval on component unmount
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array ensures this effect runs only once on mount
 
     const [currentScreen, setCurrentScreen] = useState('login');
 
     function logout(){
         setCurrentScreen('login');
+        setNavbarVisibility(true);
+        setIsTranslateVisible(true);
     }
 
     // Handler for form submission (for simplicity, just logging the values)
     const handleLogin = () => {
         for(let i = 0; i < employees.length; i++){
             if( (employees[i].username.toLowerCase() === username.toLowerCase()) && (employees[i].pass === password) ){
-                console.log(employees[i].position);
+                setNavbarVisibility(false);
+                setIsTranslateVisible(false);
                 if(employees[i].position === "employee"){
                     setCurrentScreen('employee');
-                    currentEmployee = employees[i];
+                    setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "manager"){
                     setCurrentScreen('manager');
-                }else{
-                    console.log(employees[i].position);
+                    setCurrentEmployee(employees[i]);
+                }else if(employees[i].position === "kitchen"){
+                    setCurrentScreen('kitchen');
+                    setCurrentEmployee(employees[i]);
                 }
                 break;
             }
@@ -69,6 +82,24 @@ function LogIn(){
         setUsername("");
         setPassword("");
     };
+
+    const handleKeyPress = (event) => {
+        // Check if the pressed key is "Enter"
+        if (event.key === "Enter") {
+            // Call the function you want to run here
+            handleLogin();
+        }
+    };
+
+    useEffect(() => {
+        // Add event listener for keydown event
+        window.addEventListener("keydown", handleKeyPress);
+
+        // Cleanup event listener when the component is unmounted
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, [username, password, employees]);
 
     return (
         <div>
@@ -99,11 +130,15 @@ function LogIn(){
             )}
 
             {currentScreen === 'employee' && (
-                <Cashier logout={logout} employee={currentEmployee} />
+                <Cashier logout={logout} employee={currentEmployee} setIsTranslateVisible={setIsTranslateVisible}/>
             )}
 
             {currentScreen === 'manager' && (
-                <Display logout={logout} />
+                <Display logout={logout} setIsTranslateVisible={setIsTranslateVisible}/>
+            )}
+
+            {currentScreen === 'kitchen' && (
+                <Kitchen logout={logout} setIsTranslateVisible={setIsTranslateVisible}/>
             )}
         </div>
     );
