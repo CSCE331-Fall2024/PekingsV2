@@ -7,7 +7,6 @@ import Career from './components/pages/Careers';
 import LogIn from './components/pages/LogIn';
 import MenuBoard from './components/pages/MenuBoard';
 import AccessibilityPanel from './components/AccessibilityPanel';
-// import Magnifier from 'react-magnifier';
 
 const App = () => {
   const googleTranslateElementInit = () => {
@@ -20,33 +19,39 @@ const App = () => {
     );
   };
 
-  useEffect(() => {
-    // Check if the Google Translate script already exists
-    if (!window.googleTranslateElementInit && !document.getElementById("google_translate_script")) {
-      const addScript = document.createElement("script");
-      addScript.setAttribute("id", "google_translate_script");
-      addScript.setAttribute(
-        "src",
-        "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-      );
-      document.body.appendChild(addScript);
-      window.googleTranslateElementInit = googleTranslateElementInit; // Attach your initialization function
-    }
-  }, []);
-
   const [isVisible, setIsVisible] = useState(true);
+  const [isTranslateVisible, setIsTranslateVisible] = useState(true);
+
+  useEffect(() => {
+      // Check if the Google Translate script already exists
+      if (!window.googleTranslateElementInit && !document.getElementById("google_translate_script")) {
+          const addScript = document.createElement("script");
+          addScript.setAttribute("id", "google_translate_script");
+          addScript.setAttribute(
+              "src",
+              "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          );
+          document.body.appendChild(addScript);
+          window.googleTranslateElementInit = googleTranslateElementInit; // Attach your initialization function
+      }
+  }, [isVisible]);
+
+
   return (
       <div className = "empty">
           <Router>
               {isVisible ? (<Navbar/>) : (<div/>)}
               <div className="app-content">
-                  {isVisible ? (<div id="google_translate_element"></div>) : (<div/>)}
+                  <div id="google_translate_element"
+                       style={{ display: isTranslateVisible ? 'block' : 'none' }}
+                  ></div>
                   <Routes>
                   <Route path="/" element={<Home/>}/>
                       <Route path="/MenuBoard" element={<MenuBoard/>}/>
                       <Route path="/Careers" element={<Career/>}/>
                       <Route path="/sign-up" element={<LogIn
-                          setNavbarVisibility={setIsVisible}/>}/> {/* No idea where the sign-up path comes from*/}
+                          setNavbarVisibility={setIsVisible}
+                          setIsTranslateVisible={setIsTranslateVisible}/>}/> {/* No idea where the sign-up path comes from*/}
                   </Routes>
               </div>
               {isVisible ? (<AccessibilityPanel/>) : (<div/>)}

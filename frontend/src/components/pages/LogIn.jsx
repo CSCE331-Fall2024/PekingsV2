@@ -6,7 +6,7 @@ import Display from '../../Display.jsx'
 import Kitchen from '../../Kitchen.jsx'
 
 
-function LogIn({setNavbarVisibility}){
+function LogIn({setNavbarVisibility, setIsTranslateVisible}){
     let currentEmployee = {};
 
     // State to hold username and password input values
@@ -50,6 +50,7 @@ function LogIn({setNavbarVisibility}){
     function logout(){
         setCurrentScreen('login');
         setNavbarVisibility(true);
+        setIsTranslateVisible(true);
     }
 
     // Handler for form submission (for simplicity, just logging the values)
@@ -57,6 +58,7 @@ function LogIn({setNavbarVisibility}){
         for(let i = 0; i < employees.length; i++){
             if( (employees[i].username.toLowerCase() === username.toLowerCase()) && (employees[i].pass === password) ){
                 setNavbarVisibility(false);
+                setIsTranslateVisible(false);
                 if(employees[i].position === "employee"){
                     setCurrentScreen('employee');
                     currentEmployee = employees[i];
@@ -127,15 +129,15 @@ function LogIn({setNavbarVisibility}){
             )}
 
             {currentScreen === 'employee' && (
-                <Cashier logout={logout} employee={currentEmployee} />
+                <Cashier logout={logout} employee={currentEmployee} setIsTranslateVisible={setIsTranslateVisible}/>
             )}
 
             {currentScreen === 'manager' && (
-                <Display logout={logout} />
+                <Display logout={logout} setIsTranslateVisible={setIsTranslateVisible}/>
             )}
 
             {currentScreen === 'kitchen' && (
-                <Kitchen logout={logout}/>
+                <Kitchen logout={logout} setIsTranslateVisible={setIsTranslateVisible}/>
             )}
         </div>
     );

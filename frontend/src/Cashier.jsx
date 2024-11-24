@@ -15,7 +15,7 @@ function createOrder(orderID) {
     };
 }
 
-const Cashier = ({logout, employee}) => {
+const Cashier = ({logout, employee, setIsTranslateVisible}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
@@ -84,10 +84,13 @@ const Cashier = ({logout, employee}) => {
 
     const handlePopupOpen = () => {
         setIsPopupOpen(true);
+        setIsTranslateVisible(true);
+        window.scrollTo(0, 0);
     };
 
     const handlePopupClose = () => {
         setIsPopupOpen(false);
+        setIsTranslateVisible(false);
     };
 
     const [isHighContrast, setIsHighContrast] = useState(false);

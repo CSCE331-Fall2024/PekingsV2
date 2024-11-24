@@ -4,7 +4,7 @@ import AccessibilityPanel from './components/AccessibilityPanel';
 
 let tempNum = 1;
 
-function Kitchen({logout}) {
+function Kitchen({logout, setIsTranslateVisible}) {
     const [currentOrders, setCurrentOrders] = useState([]);
     const [officialMenuItems, setOfficialMenuItems] = useState([]);
     const [ingredientNames, setIngredientNames] = useState([]);
@@ -248,10 +248,13 @@ function Kitchen({logout}) {
 
     const handlePopupOpen = () => {
         setIsPopupOpen(true);
+        setIsTranslateVisible(true);
+        window.scrollTo(0, 0);
     };
 
     const handlePopupClose = () => {
         setIsPopupOpen(false);
+        setIsTranslateVisible(false);
     };
 
     const [isHighContrast, setIsHighContrast] = useState(false);
