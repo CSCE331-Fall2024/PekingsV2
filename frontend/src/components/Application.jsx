@@ -1,6 +1,43 @@
 import React, { useState } from 'react';
 import '../App.css';
 import './Application.css';
+/**
+ * The `Application` component provides a form for users to apply for positions at PeKings.
+ * It includes fields for personal details, position, and reasons for applying.
+ * The component simulates a hiring decision and manages the submission of successful candidates to a backend API.
+ *
+ * @component
+ * @returns {JSX.Element} A React functional component that renders the application form and dialogs for hire/reject feedback.
+ *
+ * @example
+ * // Basic usage
+ * <Application />
+ *
+ * @state {string} name - The applicant's name.
+ * @state {string} position - The job position selected by the applicant.
+ * @state {string} gender - The applicant's gender.
+ * @state {string} race - The applicant's race.
+ * @state {string} reason - The applicant's reason for applying.
+ * @state {boolean} isHired - Whether the applicant has been hired or not (randomized).
+ * @state {string} username - The applicant's chosen username for successful hiring.
+ * @state {string} password - The applicant's chosen password for successful hiring.
+ * @state {boolean} showPassword - Controls the visibility of the password input.
+ * @state {boolean} showRejectDialog - Toggles the visibility of the rejection feedback dialog.
+ * @state {string} rejectFeedback - The feedback message provided by the rejected applicant.
+ * @state {boolean} showHireDialog - Toggles the visibility of the hire success dialog.
+ *
+ * @methods
+ * @method handleSubmit - Simulates a hiring decision and shows the appropriate dialog (hire or reject).
+ * @method handleEmployeeAdd - Submits the newly hired employee's data to the backend API and provides success feedback.
+ * @method handleCloseDialog - Resets the form fields and closes any open dialogs.
+ *
+ * @throws Will display an alert if the backend API call fails during employee addition.
+ *
+ * @example
+ * // Form submission
+ * <Application />
+ * <button onClick={handleSubmit}>Submit Application</button>
+ */
 
 const Application = () => {
 
@@ -127,8 +164,9 @@ const Application = () => {
                                 onChange={(e) => setPosition(e.target.value)}
                             >
                                 <option value="">Select a position</option>
-                                <option value="Employee">Employee</option>
-                                <option value="Manager">Manager</option>
+                                <option value="employee">Cashier</option>
+                                <option value="manager">Manager</option>
+                                <option value="kitchen">Kitchen</option>
                             </select>
                         </div>
 
