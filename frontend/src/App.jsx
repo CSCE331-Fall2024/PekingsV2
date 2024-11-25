@@ -8,6 +8,33 @@ import LogIn from './components/pages/LogIn';
 import MenuBoard from './components/pages/MenuBoard';
 import AccessibilityPanel from './components/AccessibilityPanel';
 
+/**
+ * The `App` component serves as the main application container and routing configuration.
+ * Manages global application state, routing, and integration of Google Translate.
+ *
+ * @component
+ * @returns {JSX.Element} The primary application structure with routing and global components
+ *
+ * @state
+ * @state {boolean} isVisible - Controls visibility of Navbar and AccessibilityPanel
+ * @state {boolean} isTranslateVisible - Manages Google Translate element visibility
+ *
+ * @methods
+ * @method googleTranslateElementInit - Initializes Google Translate functionality
+ *
+ * @effects
+ * @effect Dynamically loads Google Translate script on component mount
+ *
+ * @example
+ * <App />
+ *
+ * @remarks
+ * - Implements React Router for navigation
+ * - Dynamically loads translation services
+ * - Supports conditional rendering of global components
+ * - Provides routes for Home, Menu Board, Careers, and Log In
+ */
+
 const App = () => {
   const googleTranslateElementInit = () => {
     new window.google.translate.TranslateElement(

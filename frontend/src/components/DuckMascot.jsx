@@ -1,6 +1,93 @@
-// new stuff
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import './DuckMascot.css';
+
+/**
+ * The `DuckMascot` component represents an interactive ordering system mascot for PeKings.
+ * It allows users to add menu items to their order, customize ingredients, apply promo codes, and place an order.
+ * The mascot toggles visibility, displays an order summary, and provides real-time price calculations and feedback.
+ *
+ * @component
+ * @returns {JSX.Element} A React functional component that renders the Duck Mascot, an order summary, and interactive features.
+ *
+ * @example
+ * // Basic usage
+ * <DuckMascot ref={duckRef} />
+ *
+ * @state {boolean} isOpen - Toggles the visibility of the mascot's order summary box.
+ * @state {Array<Object>} orderItems - Stores the list of items added to the order.
+ * @state {Object} expandedItems - Tracks which items have their ingredient details expanded.
+ * @state {string} promoCode - The promo code entered by the user.
+ * @state {string} appliedPromo - The currently applied promo code.
+ * @state {string} promoError - Displays any error related to promo code validation.
+ * @state {Object} ingredientNames - Maps ingredient IDs to their names for displaying details.
+ * @state {Object} ingredientInventory - Tracks the current inventory for each ingredient.
+ *
+ * @constant {number} TAX_RATE - The tax percentage applied to the total order price.
+ * @constant {number} INGREDIENT_PRICE - The cost for each additional ingredient.
+ * @constant {number} PROMO_DISCOUNT - The discount percentage applied for valid promo codes.
+ * @constant {Array<string>} VALID_PROMO_CODES - List of acceptable promo codes.
+ *
+ * @function fetchIngredientName
+ * Fetches the name and inventory for a specific ingredient by its ID.
+ *
+ * @function toggleDuck
+ * Toggles the visibility of the Duck Mascot's speech bubble/order summary.
+ *
+ * @function toggleIngredients
+ * Expands or collapses the ingredient list for a specific menu item.
+ *
+ * @function handleIngredientChange
+ * Adds or removes ingredients from an item's customization.
+ *
+ * @function calculateItemIngredientTotal
+ * Calculates the additional cost of customized ingredients for a menu item.
+ *
+ * @function calculateItemPrice
+ * Computes the total price for a menu item, including base price and extras.
+ *
+ * @function calculateSubtotal
+ * Calculates the total price for all items before tax, discount, and promo codes.
+ *
+ * @function calculateDiscount
+ * Determines the total discount based on the applied promo code.
+ *
+ * @function calculateTax
+ * Computes the tax based on the subtotal and tax rate.
+ *
+ * @function calculateTotal
+ * Calculates the final price after applying tax and discounts.
+ *
+ * @function handlePromoSubmit
+ * Validates and applies a promo code, updating the total price if valid.
+ *
+ * @function checkInventoryAvailability
+ * Ensures all ingredients in the order are available in sufficient quantities.
+ *
+ * @function handleOrder
+ * Submits the final order to the backend, validates inventory, and updates state.
+ *
+ * @function removeItem
+ * Removes an item from the order list by its index.
+ *
+ * @function addItem
+ * Adds a new item to the order, with default configurations.
+ *
+ * @throws Will display an alert if the backend API call for order submission fails.
+ *
+ * @example
+ * // Adding items to the order
+ * <DuckMascot ref={duckRef} />
+ * duckRef.current.addItem({
+ *   menuItemId: 1,
+ *   name: "Peking Duck",
+ *   price: 25.0,
+ *   ingredients: [{ id: 24, name: "Chinese 5 Spice", count: 1 }],
+ * });
+ *
+ * @example
+ * // Placing an order
+ * <button onClick={handleOrder}>Place Order</button>
+ */
 
 const TAX_RATE = 0.0825;
 const INGREDIENT_PRICE = 0.50;

@@ -7,6 +7,27 @@ import App from './App.jsx'
 import Cashier from './Cashier.jsx'
 import Kitchen from './Kitchen.jsx'
 
+/**
+ * The main entry point for rendering the React application.
+ * Uses React's StrictMode and renders the primary App component.
+ *
+ * @module Main
+ * @requires react
+ * @requires react-dom/client
+ *
+ * @example
+ * // Renders the application to the DOM
+ * createRoot(document.getElementById('root')).render(
+ *   <StrictMode>
+ *     <App />
+ *   </StrictMode>
+ * )
+ *
+ * @remarks
+ * - Utilizes React 18's createRoot for rendering
+ * - Wrapped in StrictMode for additional development checks
+ * - Currently configured to render primary App component
+ */
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>

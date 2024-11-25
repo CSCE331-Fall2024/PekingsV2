@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: App.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: App.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from 'react';
+import Navbar from './components/Navbar';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/pages/Home';
+import Career from './components/pages/Careers';
+import LogIn from './components/pages/LogIn';
+import MenuBoard from './components/pages/MenuBoard';
+import AccessibilityPanel from './components/AccessibilityPanel';
+
+/**
+ * The `App` component serves as the main application container and routing configuration.
+ * Manages global application state, routing, and integration of Google Translate.
+ *
+ * @component
+ * @returns {JSX.Element} The primary application structure with routing and global components
+ *
+ * @state
+ * @state {boolean} isVisible - Controls visibility of Navbar and AccessibilityPanel
+ * @state {boolean} isTranslateVisible - Manages Google Translate element visibility
+ *
+ * @methods
+ * @method googleTranslateElementInit - Initializes Google Translate functionality
+ *
+ * @effects
+ * @effect Dynamically loads Google Translate script on component mount
+ *
+ * @example
+ * &lt;App />
+ *
+ * @remarks
+ * - Implements React Router for navigation
+ * - Dynamically loads translation services
+ * - Supports conditional rendering of global components
+ * - Provides routes for Home, Menu Board, Careers, and Log In
+ */
+
+const App = () => {
+  const googleTranslateElementInit = () => {
+    new window.google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        autoDisplay: false
+      },
+      "google_translate_element"
+    );
+  };
+
+  const [isVisible, setIsVisible] = useState(true);
+  const [isTranslateVisible, setIsTranslateVisible] = useState(true);
+
+  useEffect(() => {
+      // Check if the Google Translate script already exists
+      if (!window.googleTranslateElementInit &amp;&amp; !document.getElementById("google_translate_script")) {
+          const addScript = document.createElement("script");
+          addScript.setAttribute("id", "google_translate_script");
+          addScript.setAttribute(
+              "src",
+              "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          );
+          document.body.appendChild(addScript);
+          window.googleTranslateElementInit = googleTranslateElementInit; // Attach your initialization function
+      }
+  }, [isVisible]);
+
+
+  return (
+      &lt;div className = "empty">
+          &lt;Router>
+              {isVisible ? (&lt;Navbar/>) : (&lt;div/>)}
+              &lt;div className="app-content">
+                  &lt;div id="google_translate_element"
+                       style={{ display: isTranslateVisible ? 'block' : 'none' }}
+                  >&lt;/div>
+                  &lt;Routes>
+                  &lt;Route path="/" element={&lt;Home/>}/>
+                      &lt;Route path="/MenuBoard" element={&lt;MenuBoard/>}/>
+                      &lt;Route path="/Careers" element={&lt;Career/>}/>
+                      &lt;Route path="/sign-up" element={&lt;LogIn
+                          setNavbarVisibility={setIsVisible}
+                          setIsTranslateVisible={setIsTranslateVisible}/>}/> {/* No idea where the sign-up path comes from*/}
+                  &lt;/Routes>
+              &lt;/div>
+              {isVisible ? (&lt;AccessibilityPanel/>) : (&lt;div/>)}
+          &lt;/Router>
+      &lt;/div>
+);
+};
+
+export default App;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Main.html">Main</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Career">Career</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#MenuBoard">MenuBoard</a></li><li><a href="global.html#MenuGrid">MenuGrid</a></li><li><a href="global.html#MenuSect">MenuSect</a></li><li><a href="global.html#SIZES">SIZES</a></li><li><a href="global.html#addItemAddsanewitemtotheorder,withdefaultconfigurations.">addItemAdds a new item to the order, with default configurations.</a></li><li><a href="global.html#googleTranslateElementInit-InitializesGoogleTranslatefunctionality">googleTranslateElementInit - Initializes Google Translate functionality</a></li><li><a href="global.html#handleAddToOrder-AddsselectedmenuitemstotheDuckMascot'sorder">handleAddToOrder - Adds selected menu items to the DuckMascot's order</a></li><li><a href="global.html#handleCloseDialog-Resetstheformfieldsandclosesanyopendialogs.">handleCloseDialog - Resets the form fields and closes any open dialogs.</a></li><li><a href="global.html#showButton-Adaptsbuttondisplaybasedonscreenwidth">showButton - Adapts button display based on screen width</a></li><li><a href="global.html#toggleHighContrastMode-Switcheshighcontrastmodeon/off-Applies'high-contrast'classtoappcontent-Updatesstatetoreflectcurrentmode">toggleHighContrastMode - Switches high contrast mode on/off- Applies 'high-contrast' class to app content- Updates state to reflect current mode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 13:19:53 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
