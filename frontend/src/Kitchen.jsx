@@ -227,7 +227,7 @@ function Kitchen({logout, setIsTranslateVisible}) {
         const textStyle = {
             color: minutes < 3
                 ? 'lightgreen'            // Less than 3 minutes: light green
-                : minutes >= 3 && minutes <= 5
+                : minutes >= 3 && minutes < 5
                     ? 'yellow'              // Between 3 and 5 minutes (inclusive): yellow
                     : 'red',               // More than 5 minutes: red
         };
