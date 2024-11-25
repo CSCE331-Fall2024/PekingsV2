@@ -47,6 +47,11 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
         };
 
         fetchItems();
+        const interval = setInterval(fetchItems, 10000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);  // Add an empty dependency array to fetch items once on mount
 
     const [employees, setEmployees] = useState([]);
@@ -74,6 +79,12 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
         };
 
         fetchItems();
+
+        const interval = setInterval(fetchItems, 10000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
 

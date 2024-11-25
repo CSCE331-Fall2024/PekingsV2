@@ -7,6 +7,7 @@ import com.pekings.pos.repository.MenuItemRepository;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
 import com.pekings.pos.util.DateUtil;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
@@ -63,13 +65,11 @@ public class OrderController {
         return orderRepository.findByCustomerId(id);
     }
 
-    @PatchMapping("/update")
-    public Order updateOrder(@RequestBody Order order) {
-
-        if (order.getId() == null)
-            return null;
-
-        return orderRepository.save(order);
+    @PatchMapping("/update/status/{id}")
+    public Order updateOrderStatus(@PathVariable("id") int id, @RequestParam(value = "status") String newStatus) {
+        Order order = getOrder(id);
+        order.setStatus(newStatus);
+        return order;
     }
 
     /**

@@ -15,7 +15,7 @@ function createOrder(orderID) {
     };
 }
 
-const Cashier = ({logout, employee}) => {
+const Cashier = ({logout, employee, setIsTranslateVisible}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
@@ -80,13 +80,63 @@ const Cashier = ({logout, employee}) => {
         }
     }
 
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    const handlePopupOpen = () => {
+        setIsPopupOpen(true);
+        setIsTranslateVisible(true);
+        window.scrollTo(0, 0);
+    };
+
+    const handlePopupClose = () => {
+        setIsPopupOpen(false);
+        setIsTranslateVisible(false);
+    };
+
+    const [isHighContrast, setIsHighContrast] = useState(false);
+
+
+    const toggleHighContrastMode = () => {
+        setIsHighContrast((prev) => !prev);
+        const appContent = document.querySelector('.app-content');
+        if (appContent) {
+            const isHighContrastMode = appContent.classList.contains('high-contrast');
+            appContent.classList.toggle('high-contrast', !isHighContrastMode);
+        }
+    };
+
 
     return (
         <div>
+            {isPopupOpen && (
+                <div className="Screen-Popup">
+                    <button className="close-button" onClick={() => handlePopupClose()}>X</button>
+                    <div className="accessibility-panel-kitchen">
+                        <div className="accessibility-row">
+                            <label className="accessibility-label">
+                                High Contrast
+                                <button onClick={toggleHighContrastMode}
+                                        className="accessibility-toggle-button"
+                                        aria-pressed={isHighContrast}
+                                >
+                                    <div
+                                        className="accessibility-toggle-knob"
+                                        style={{
+                                            '--toggle-knob-position': isHighContrast ? '26px' : '2px',
+                                            '--toggle-background': isHighContrast ? '#4CAF50' : '#e2e2e2',
+                                        }}
+                                    />
+                                </button>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {!isPopupOpen && (
             <div className="screens-container">
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
-                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
+                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} handleAccessibility={setIsPopupOpen} />
                         <CenterScreen center={order.currentCenter}
                                       order = {order}
                                       centerChange={handleCenterChange}
@@ -107,6 +157,7 @@ const Cashier = ({logout, employee}) => {
                     </div>
                 ))}
             </div>
+                )}
         </div>
     );
 };

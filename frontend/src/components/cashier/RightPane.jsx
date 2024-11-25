@@ -21,7 +21,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     const [ingredientNames, setIngredientNames] = useState([]);
 
 
-    // Functions used for Nathan L place orders
+    // Calculates all totals
     function calculateSubtotal(){
         let st = 0;
 
@@ -31,7 +31,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
             // For Nathan
             let ingredients = menuItem.ingredients;
-            let noIngredients = true;
+            let noIngredients = (ingredients.length !== 0);
             for(let j = 0; j < ingredients.length; j++){
                 if(ingredients[j].amount > 0){
                     noIngredients = false;
@@ -66,7 +66,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
 
     // Reinsert try statements when fixed
-    const handleOrder = async (orderUse, paymentType) => {
+    const handleOrder = async (orderUse, paymentType, employee) => {
         try {
             let orderItems = orderUse.orderItems;
             let items = [];
@@ -108,7 +108,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             }
 
 
-
             // creating the order object
             const order = {
                 customer: {
@@ -119,11 +118,11 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 },
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
-                // items: [],
                 items: items,
-                // extras: [], // Fabio is changing this, don't worry about it rn
-                payment_method: paymentType
+                payment_method: paymentType,
+                status: "incomplete"
             };
+            // console.log(order);
 
 
             const response = await fetch('/api/orders/add', {
@@ -176,6 +175,11 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         fetchIngredients();
+        const interval = setInterval(fetchIngredients, 1000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
     const processPayment = (paymentType) => {
@@ -200,7 +204,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         if(placeOrder){
-            handleOrder(order, paymentType);
+            handleOrder(order, paymentType, employee);
+
 
             centerChange('menu');
 
@@ -234,19 +239,21 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
     function orderItemDisplay(item) {
         let name = item.menuItem.name;
-        let price = item.menuItem.price;
+        let price = parseFloat(item.menuItem.price);
         let ingredients = item.menuItem.ingredients;
 
         const handleDecrease = (ingredient) => {
             if(ingredient.amount > 0){
                 ingredient.amount--;
+                price -= 0.5;
             }
         }
 
         const handleIncrease = (ingredient) => {
             // Leave code for max extras
             // if(ingredient.amount < 2){
-                ingredient.amount++;
+            ingredient.amount++;
+            price += 0.5;
             // }
         }
 
@@ -273,7 +280,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
                         </div>
                         <button className="changeIngredientAmount-Less"
-                                onClick={() => handleIncrease(ingredient)}>&gt;</button>
+                                onClick={() => handleIncrease(ingredient)}>&gt;
+                        </button>
                     </div>
                 </div>
             ));
@@ -283,7 +291,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                     <div className="orderItemRow">
                         <button className="orderItemRowText">
                             <div className="orderItemsText">{name}</div>
-                            <div className="orderItemsPrice">${price}</div>
+                            <div className="orderItemsPrice">${price.toFixed(2)}</div>
                         </button>
                         <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}>
                             <img src={editButtonImage}
@@ -308,7 +316,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             <div className="orderItemRow">
                     <button className="orderItemRowText">
                         <div className="orderItemsText">{name}</div>
-                        <div className="orderItemsPrice">${price}</div>
+                        <div className="orderItemsPrice">${price.toFixed(2)}</div>
                     </button>
                     <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}></button>
                     <button className="orderItemX" onClick={removeItem(item)}>X</button>
