@@ -130,7 +130,7 @@ function LogIn({setNavbarVisibility, setIsTranslateVisible}){
             )}
 
             {currentScreen === 'employee' && (
-                <Cashier logout={logout} employee={currentEmployee} setIsTranslateVisible={setIsTranslateVisible}/>
+                <Cashier logout={logout} employee={currentEmployee} setIsTranslateVisible={setIsTranslateVisible} switchToManager={() => setCurrentScreen('manager')}/>
             )}
 
             {currentScreen === 'manager' && (

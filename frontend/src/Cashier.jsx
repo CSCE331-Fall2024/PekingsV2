@@ -15,12 +15,13 @@ function createOrder(orderID) {
     };
 }
 
-const Cashier = ({logout, employee, setIsTranslateVisible}) => {
+const Cashier = ({logout, employee, setIsTranslateVisible, switchToManager}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
     const [processOrder, setProcessFunc] = useState([]); // A function to be passed into rightPane and set there
     const [discount, setDiscount] = useState(0);
+    const [isManagerLogoutOpen, setIsManagerLogoutOpen] = useState(false);
 
     function getLastActive(){
         let lastActive = -1;
@@ -105,10 +106,18 @@ const Cashier = ({logout, employee, setIsTranslateVisible}) => {
         }
     };
 
+    function handleLogout(){
+        if(employee.position === "manager"){
+            setIsManagerLogoutOpen(true);
+        }else{
+            logout();
+        }
+    }
+
 
     return (
         <div>
-            {isPopupOpen && (
+            { (isPopupOpen && !isManagerLogoutOpen) && (
                 <div className="Screen-Popup">
                     <button className="close-button" onClick={() => handlePopupClose()}>X</button>
                     <div className="accessibility-panel-kitchen">
@@ -132,11 +141,11 @@ const Cashier = ({logout, employee, setIsTranslateVisible}) => {
                     </div>
                 </div>
             )}
-            {!isPopupOpen && (
+            { (!isPopupOpen && !isManagerLogoutOpen) && (
             <div className="screens-container">
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
-                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} handleAccessibility={handlePopupOpen} />
+                        <LeftRect logout={handleLogout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} handleAccessibility={handlePopupOpen} />
                         <CenterScreen center={order.currentCenter}
                                       order = {order}
                                       centerChange={handleCenterChange}
@@ -157,7 +166,16 @@ const Cashier = ({logout, employee, setIsTranslateVisible}) => {
                     </div>
                 ))}
             </div>
-                )}
+            )}
+            { (isManagerLogoutOpen && !isPopupOpen) && (
+                <div className="Screen-Popup">
+                    <button className="close-button" onClick={() => setIsManagerLogoutOpen(false)}>X</button>
+                    <div className="logout-options">
+                        <button className="logout-option logout" onClick={() => logout()}>Logout</button>
+                        <button className="logout-option manager" onClick={() => switchToManager()}>Manager</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
