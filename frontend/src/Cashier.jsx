@@ -168,11 +168,11 @@ const Cashier = ({logout, employee, setIsTranslateVisible, switchToManager}) => 
             </div>
             )}
             { (isManagerLogoutOpen && !isPopupOpen) && (
-                <div>
+                <div className="Screen-Popup">
                     <button className="close-button" onClick={() => setIsManagerLogoutOpen(false)}>X</button>
                     <div className="logout-options">
-                        <button className="logout-option" onClick={() => logout()}>Logout</button>
-                        <button className="logout-option" onClick={() => switchToManager()}>Manager</button>
+                        <button className="logout-option logout" onClick={() => logout()}>Logout</button>
+                        <button className="logout-option manager" onClick={() => switchToManager()}>Manager</button>
                     </div>
                 </div>
             )}
