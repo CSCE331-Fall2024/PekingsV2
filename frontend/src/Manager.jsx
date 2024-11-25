@@ -6,11 +6,21 @@ function Manager({ selectedSection }) {
     const [menuItems, setMenuItems] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [editIdx, setEditIdx] = useState(-1);
+    const [editFormData, setEditFormData] = useState([]);
+    const [originalFormData, setOriginalFormData] = useState([]);
+    const [originalMenuItems, setOriginalMenuItems] = useState([]);
+
     const [inputValueName, setInputValueName] = useState('');
     const [inputValueAmount, setInputValueAmount] = useState('');
     const [inputValuePrice, setInputValuePrice] = useState('');
+    const [invID, setInvID] = useState('');
+    const [menuItemID, setMenuItemID] = useState('');
     const [inputMenuName, setInputMenuName] = useState('');
+    const [inputMenuActive, setInputMenuActive] = useState('');
+    const [inputMenuIngredients, setInputMenuIngredients] = useState('');
+    const [menuActive, setMenuActive] = useState(false);
     const [inputMenuPrice, setInputMenuPrice] = useState('');
+
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -88,59 +98,54 @@ function Manager({ selectedSection }) {
     }*/
 
 
-    // const handleEditClick = (index) => {
-    //     setEditIdx(index);
-    // };
-    //
-    // const handleInputChange = (e, field, index) => {
-    //     const updatedInventory = inventory.map((item, idx) => {
-    //         if (idx === index) {
-    //             return { ...item, [field]: e.target.value };
-    //         }
-    //         return item;
-    //     });
-    //     setInventory(updatedInventory);
-    // };
-    //
-    // const handleSave = () => {
-    //     setEditIdx(-1);
-    // };
-    //
-    // const handleCancel = () => {
-    //     setEditIdx(-1);
-    // };
-    // useEffect(() => {
-    //     const addInventory = async () => {
-    //         {
-    //             "customer": { "id": 503 },
-    //             "employee": { "id": 3 },
-    //             "time": "2024-11-13T02:47:03.484Z",
-    //             "price": 10.63,
-    //             "payment_method": "credit_card",
-    //             "items": [
-    //             {
-    //                 "menuItem": { "id": 6 },
-    //                 "extras": [
-    //                     {
-    //                         "ingredient": {
-    //                             "id": 5
-    //                         },
-    //                         "amount": -1
-    //                     }
-    //                 ]
-    //             }
-    //         ]
-    //         }[]);
-    // get inventory mapped array...already at top "inventory"
-    // setInventory will add to last element.
-    // add will be used to add to new database section.
-    // Use Postman to get layout of inventory items
-    // Create popup that opens to list that follows.
-    // Popup opens a textbox that lets you input all except ID as that will get randomized
-    //
+    // Edit for Inventory
+    const handleEditClick = (index) => {
+        setEditIdx(index);
+        setOriginalFormData(inventory);
+    };
+
+    const handleInputChange = (e, field, index) => {
+        const updatedInventory = inventory.map((item, idx) => {
+            if (idx === index) {
+                return {...item, [field]: e.target.value};
+            }
+            return item;
+        });
+        setInventory(updatedInventory);
+    };
+    const handleSave = () => {
+        setEditIdx(-1);
+        updateInventory();
+    };
+    const handleCancel = () => {
+        setEditIdx(-1);
+        setInventory(originalFormData);
+    };
 
 
+    // Edit for Menu
+    const handleEditClickMenu = (index) => {
+        setEditIdx(index);
+        setOriginalMenuItems(menuItems); };
+    // Function to handle input change for Menu Items
+    const handleInputChangeMenu = (e, field, index) => {
+        const updatedMenuItems = menuItems.map((item, idx) => {
+            if (idx === index)
+            {
+                return {...item, [field]: e.target.value}; }
+            return item; });
+        setMenuItems(updatedMenuItems);
+    };
 
+    // Function to handle saving the edited row for Menu Items
+    const handleSaveMenu = () => {
+        setEditIdx(-1);
+    };
+    // Function to handle canceling the edit for Menu Items
+    const handleCancelMenu = () => {
+        setEditIdx(-1);
+        setMenuItems(originalMenuItems);
+    };
     const addToInventory = async () => {
         //Replace this inv object with arbitrary object values
         // Make a function that will return an object with user defined values except ID.
@@ -149,21 +154,21 @@ function Manager({ selectedSection }) {
         let pricee = parseInt(inputValuePrice);
         let batch = amountt * pricee;
 
-        const mItems = {
+        const inv = {
             id: parseInt(inventory[inventory.length-1].id) + 1,
             name: inputValueName,
             servingPrice: inputValuePrice,
             amount: inputValueAmount,
             priceBatch: batch,
         };
-        setMenuItems([...menuItems, mItems]);
+        setInventory([...inventory, inv]);
 
         const invResponse = await fetch("/api/inventory/add", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(mItems)
+            body: JSON.stringify(inv)
         });
 
     };
@@ -173,15 +178,20 @@ function Manager({ selectedSection }) {
         // set inv equal to what the function returns
 
         const menu = {
-            id: parseInt(inventory[inventory.length-1].id) + 1,
-            name: inputValueName,
-            servingPrice: inputValuePrice,
-            amount: inputValueAmount,
-            priceBatch: batch,
+            name: inputMenuName,
+            price: inputMenuPrice,
+            active: inputMenuActive,
+            ingredients: [
+                {
+                    ingredient: inputMenuIngredients,
+                    amount: -1,
+                    menu_item: 3
+                }
+            ]
         };
-        setInventory([...inventory, inv]);
+        setMenuItems([...menuItems, menu]);
 
-        const menuResponse = await fetch("/api/inventory/add", {
+        const menuResponse = await fetch("/api/menuitem/add", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -190,48 +200,100 @@ function Manager({ selectedSection }) {
         });
 
     };
-    // const deleteInventory = async () => {
-    //
-    //     //Function call to return inventory id
-    //
-    //
-    //     useEffect(() => {
-    //         const deleteInventoryItem = async () => {
-    //             const invDelRespone = await fetch("/api/inventory/delete", {
-    //                 method: "DELETE",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(deleteInventoryItem),
-    //             });
-    //         }
-    //     },[]);
-    // };
+    const updateInventory = async () => {
 
+        const inv = await inventory.json();
 
+        const invResponse = await fetch("/api/inventory/update", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(inv)
+        });
+
+    };
+    const deleteInventory = async () => {
+
+        const invResponse = await fetch("/api/inventory/delete", {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(invID)
+        });
+        inventory.splice(Number(invID), 1);
+        setInventory([...inventory]);
+    };
+
+    const deleteMenuItem = async () => {
+
+        const menuResponse = await fetch("/api/menuitem/delete", {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(menuItemID)
+        });
+
+        menuItems.splice(Number(menuItemID), 1);
+        setMenuItems([...menuItems]);
+    };
+
+    // Text Boxes
     const handleChange = (event) => {
         setInputValueName(event.target.value);
-        setInputMenuName(event.target.value);
-
     };
     const handleChange2 = (event) => {
         setInputValueAmount(event.target.value);
     };
     const handleChange3 = (event) => {
         setInputValuePrice(event.target.value);
+    };
+    const handleChange4 = (event) => {
+        setInvID(event.target.value);
+    };
+    const handleChangeMenu = (event) => {
+        setInputMenuName(event.target.value);
+    };
+    const handleChangeMenu2 = (event) => {
         setInputMenuPrice(event.target.value);
     };
+    const handleChangeMenu3 = (event) => {
+        setInputMenuActive(event.target.value);
+        if(inputMenuActive === "true"){
+            setMenuActive(true);
+        }
+    };
+    const handleChangeMenu4 = (event) => {
+        setInputMenuIngredients(event.target.value);
+    };
+    const handleChangeMenu5 = (event) => {
+        setMenuItemID(event.target.value);
+    }
+
+    //Add and Delete Buttons
     const handleButton = () => {
         addToInventory();
         setInputValueName("");
         setInputValueAmount("");
         setInputValuePrice("");
+    };
+    const handleInvDelButton = () => {
+        deleteInventory();
+        setInvID("");
+    }
+    const handleMenuDelButton = () => {
+        deleteMenuItem();
+        setMenuItemID("");
     }
     const handleButtonMenu = () => {
         addToMenu();
         setInputMenuName("");
-        setInputValuePrice("");
-    }
+        setInputMenuActive("");
+        setInputMenuPrice("");
+        setInputMenuIngredients("");
+    };
 
     return (
 
@@ -250,18 +312,36 @@ function Manager({ selectedSection }) {
                             <th>Quantity</th>
                             <th>Unit Price</th>
                             <th>Batch Price</th>
-                            {/*<th>Actions</th>*/}
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {inventory.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.id}</td>
-                                <td>{item.name}</td>
-                                <td>{item.amount}</td>
-                                <td>${item.servingPrice}</td>
-                                <td>${item.priceBatch}</td>
-                                {/*<td>{item.actions}</td>*/}
+                                {editIdx === index ? (
+                                    <>
+                                        <td>{item.id}</td>
+                                        <td><input type="text" value={item.name} onChange={(e) => handleInputChange(e, 'name', index)} /></td>
+                                        <td><input type="text" value={item.amount} onChange={(e) => handleInputChange(e, 'amount', index)} /></td>
+                                        <td><input type="text" value={item.servingPrice} onChange={(e) => handleInputChange(e, 'servingPrice', index)} /></td>
+                                        <td>{item.priceBatch}</td>
+                                        <td>
+                                            <button onClick={handleSave}>Save</button>
+                                            <button onClick={handleCancel}>Cancel</button>
+                                        </td>
+                                    </>
+                                ) : (
+                                    <>
+                                        <td>{item.id}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.amount}</td>
+                                        <td>${item.servingPrice}</td>
+                                        <td>${item.priceBatch}</td>
+                                        <td>
+                                            <button onClick={() => handleEditClick(index)}>Edit</button>
+                                        </td>
+                                    </>
+                                )}
                             </tr>
                         ))}
                         </tbody>
@@ -276,20 +356,47 @@ function Manager({ selectedSection }) {
                         </button>
                     </div>
                 )}
-
+                {selectedSection === "Inventory" && (
+                    <div className="add-button">
+                        <input type="text" placeholder="Enter item ID" value={invID} onChange={handleChange4}/>
+                        <button onClick={handleInvDelButton}> DELETE Item
+                        </button>
+                    </div>
+                )}
                 {selectedSection === "Menu Items" && (
                     <table className="data-table">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Menu Item</th>
                             <th>Price</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {menuItems.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.name}</td>
-                                <td>${item.price}</td>
+                                {editIdx === index ? (
+                                    <>
+                                        <td>{item.id}</td>
+                                        <td><input type="text" value={item.name}
+                                                   onChange={(e) => handleInputChangeMenu(e, 'name', index)}/></td>
+                                        <td><input type="text" value={item.price}
+                                                   onChange={(e) => handleInputChangeMenu(e, 'price', index)}/></td>
+                                        <td>
+                                            <button onClick={handleSaveMenu}>Save</button>
+                                            <button onClick={handleCancelMenu}>Cancel</button>
+                                        </td>
+                                    </>
+                                ) : (
+                                    <>
+                                    <td>{item.id}</td>
+                                        <td>{item.name}</td>
+                                        <td>${item.price}</td>
+                                        <td> <button onClick={() => handleEditClickMenu(index)}>Edit</button>
+                                        </td>
+                                    </>
+                                )}
                             </tr>
                         ))}
                         </tbody>
@@ -297,16 +404,28 @@ function Manager({ selectedSection }) {
                 )}
                 {selectedSection === "Menu Items" && (
                     <div className="add-button">
-                        <input type="text" placeholder="Enter item Name" value={inputMenuName} onChange={handleChangeMenu}/>
-                        <input type="text" placeholder="Enter Stock Amount" value={inputMenuPrice} onChange={handleChangeMenu2}/>
-                        <button onClick={handleButtonMenu}> Add Item
+                        <input type="text" placeholder="Enter item Name" value={inputMenuName}
+                               onChange={handleChangeMenu}/>
+                        <input type="text" placeholder="Enter Price" value={inputMenuPrice}
+                               onChange={handleChangeMenu2}/>
+                        <input type="text" placeholder="set Active true/false" value={inputMenuActive}
+                               onChange={handleChangeMenu3}/>
+                        <input type="text" placeholder="ID Of Ingredient" value={inputMenuIngredients}
+                               onChange={handleChangeMenu4}/>
+                        <button onClick={handleButtonMenu}>Add Item</button>
+                    </div>
+                )}
+                {selectedSection === "Menu Items" && (
+                    <div className="add-button">
+                        <input type="text" placeholder="Enter item ID" value={menuItemID} onChange={handleChangeMenu5}/>
+                        <button onClick={handleMenuDelButton}> DELETE Item
                         </button>
                     </div>
                 )}
 
                 {selectedSection === "Employees" && (
                     <table className="data-table">
-                        <thead>
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>User</th>
