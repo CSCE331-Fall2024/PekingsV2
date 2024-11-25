@@ -65,6 +65,7 @@ function LogIn({setNavbarVisibility, setIsTranslateVisible}){
                     setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "manager"){
                     setCurrentScreen('manager');
+                    // setCurrentScreen('employee');
                     setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "kitchen"){
                     setCurrentScreen('kitchen');
@@ -130,7 +131,7 @@ function LogIn({setNavbarVisibility, setIsTranslateVisible}){
             )}
 
             {currentScreen === 'employee' && (
-                <Cashier logout={logout} employee={currentEmployee} setIsTranslateVisible={setIsTranslateVisible}/>
+                <Cashier logout={logout} employee={currentEmployee} setIsTranslateVisible={setIsTranslateVisible} switchToManager={() => setCurrentScreen('manager')}/>
             )}
 
             {currentScreen === 'manager' && (
