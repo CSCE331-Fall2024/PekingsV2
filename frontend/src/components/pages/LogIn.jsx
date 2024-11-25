@@ -64,8 +64,7 @@ function LogIn({setNavbarVisibility, setIsTranslateVisible}){
                     setCurrentScreen('employee');
                     setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "manager"){
-                    // setCurrentScreen('manager');
-                    setCurrentScreen('employee');
+                    setCurrentScreen('manager');
                     setCurrentEmployee(employees[i]);
                 }else if(employees[i].position === "kitchen"){
                     setCurrentScreen('kitchen');
