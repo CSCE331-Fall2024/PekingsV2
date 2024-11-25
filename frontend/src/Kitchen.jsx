@@ -200,12 +200,18 @@ function Kitchen({logout, setIsTranslateVisible}) {
             }
         }
 
-        return (
-            <div className="Item-Container">
-                {officialItem.name}
-                <div className="Ingredients-Container">{ingredients}</div>
-            </div>
-        )
+        if(officialItem.category === "drink"){
+            return (
+                <div className="Item-Container-Drink">{officialItem.name}</div>
+            )
+        }else{
+            return (
+                <div className="Item-Container">
+                    {officialItem.name}
+                    <div className="Ingredients-Container">{ingredients}</div>
+                </div>
+            )
+        }
     }
 
     function createOrderContainer(order, buttonNumber){

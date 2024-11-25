@@ -55,6 +55,13 @@
     padding-top: 2%;
 }
 
+.Item-Container-Drink{
+    width: 100%;
+    height: auto;
+    padding-top: 2%;
+    background-color: yellow;
+}
+
 .Ingredient-Single-Container {
     display: flex;
     flex-direction: row;
