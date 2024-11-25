@@ -53,7 +53,7 @@ public class MenuItemController {
     }
 
     @GetMapping("/top")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public List<SaleItem> getTopMenuItemsPeriodic(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {
