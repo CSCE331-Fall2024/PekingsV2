@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import "./Kitchen.css";
 import AccessibilityPanel from './components/AccessibilityPanel';
 
-let tempNum = 1;
-
 function Kitchen({logout, setIsTranslateVisible}) {
     const [currentOrders, setCurrentOrders] = useState([]);
     const [officialMenuItems, setOfficialMenuItems] = useState([]);
@@ -216,6 +214,23 @@ function Kitchen({logout, setIsTranslateVisible}) {
 
     function createOrderContainer(order, buttonNumber){
         let orderItems = order.items;
+        const orderTime = new Date(order.time);
+        const currentTime = new Date();
+
+        const diffInMilliseconds = currentTime - orderTime;
+        const diffInSeconds = Math.floor(diffInMilliseconds / 1000); // Total seconds
+        const minutes = Math.floor(diffInSeconds / 60);  // Extract minutes
+        const seconds = diffInSeconds % 60;  // Extract remaining seconds
+
+        const timeText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        const textStyle = {
+            color: minutes < 3
+                ? 'lightgreen'            // Less than 3 minutes: light green
+                : minutes >= 3 && minutes <= 5
+                    ? 'yellow'              // Between 3 and 5 minutes (inclusive): yellow
+                    : 'red',               // More than 5 minutes: red
+        };
 
         let orderItemsContainers = [];
         for (let i = 0; i < orderItems.length; i++) {
@@ -228,7 +243,7 @@ function Kitchen({logout, setIsTranslateVisible}) {
                 <div className="Background-Number">{buttonNumber}</div>
                 <div className="Order-Header">
                     <div className="Order-Number">ID: {order.order_id}</div>
-                    <div className="Order-Timer">{tempNum++}</div>
+                    <div className="Order-Timer" style={textStyle}>{timeText}</div>
                 </div>
 
                 <div className="Order-Container">
