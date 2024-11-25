@@ -38,13 +38,11 @@ public class MenuItemController {
     private MenuIngredientRepository menuIngredientRepository;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('USER')")
     public List<MenuItem> getAllMenuItems() {
         return menuItemRepository.findAll().stream().sorted(Comparator.comparingInt(MenuItem::getId)).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
     public MenuItem getMenuItem(@PathVariable("id") int id) {
         return menuItemRepository.findById(id).orElse(null);
     }
@@ -55,6 +53,7 @@ public class MenuItemController {
     }
 
     @GetMapping("/top")
+    @PreAuthorize("hasAuthority('manager')")
     public List<SaleItem> getTopMenuItemsPeriodic(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {

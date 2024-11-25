@@ -28,7 +28,6 @@ public class EmployeeController {
     private OrderRepository orderRepository;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }

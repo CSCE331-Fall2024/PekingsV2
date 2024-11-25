@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
-import { Button } from './Button';
+import { useState } from 'react';
 import {Link} from 'react-router-dom';
 
 import './Navbar.css';
-import Login from "./login/Login.jsx";
-import {gapi} from "gapi-script";
-import Logout from "./login/Logout.jsx";
-import GoogleAuth from "./login/GoogleAuth.jsx";
+import { useAuth0 } from '@auth0/auth0-react';
+import {Button} from "./Button.jsx";
+import centerScreen from "./cashier/CenterScreen.jsx";
 
 // const mobileMenuIcon = document.querySelector('.mobile-menu-icon');
 // const navbarLinks = document.querySelector('.navbar-links');
@@ -18,26 +16,27 @@ import GoogleAuth from "./login/GoogleAuth.jsx";
 
 function Navbar() {
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true)
+  const { isAuthenticated, loginWithPopup, logout } = useAuth0();
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false)
 
-    //like media from css
-    const showButton = () => {
-        if (window.innerWidth <= 960) {
-          setButton(false);
-        } else {
-          setButton(true);
-        }
-      };
+
+    // //like media from css
+    // const showButton = () => {
+    //     if (window.innerWidth <= 960) {
+    //       setButton(false);
+    //     } else {
+    //       setButton(true);
+    //     }
+    //   };
     
     //   useEffect(() => {
     //     showButton();
     //   }, []);
       
       //whenever I resize I want showButton to work for me
-      window.addEventListener('resize', showButton);
+      // window.addEventListener('resize', showButton);
 
   return (
     <>
@@ -74,18 +73,13 @@ function Navbar() {
                 Careers
               </Link>
             </li>
-
-            <li>
-              <Link
-                to='/log-in'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Log in
-              </Link>
-            </li>
           </ul>
-          {button && <GoogleAuth />}
+            {isAuthenticated ? (
+                <Button buttonStyle="btn--outline" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                >Logout</Button>
+            ) : (
+                <Button buttonStyle="btn--outline" onClick={() => loginWithPopup()}>Login</Button>
+            )}
         </div>
     </nav>
     </>
