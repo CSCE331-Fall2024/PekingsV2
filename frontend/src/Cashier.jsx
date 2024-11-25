@@ -136,7 +136,7 @@ const Cashier = ({logout, employee, setIsTranslateVisible}) => {
             <div className="screens-container">
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
-                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} handleAccessibility={setIsPopupOpen} />
+                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} handleAccessibility={handlePopupOpen} />
                         <CenterScreen center={order.currentCenter}
                                       order = {order}
                                       centerChange={handleCenterChange}

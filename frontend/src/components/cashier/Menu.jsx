@@ -31,15 +31,22 @@ function Menu({seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList})
 
 
     for(let i= 0; i < mainMenuItems.length; i++){
-        menuItemBtns1.push(ButtonComponent(mainMenuItems[i]));
+        if(mainMenuItems[i].ingredients.length > 0) {
+            menuItemBtns1.push(ButtonComponent(mainMenuItems[i]));
+        }
     }
 
     for(let i= 0; i < seasonalItems.length; i++){
-        menuItemBtns2.push(ButtonComponent(seasonalItems[i]));
+        if(seasonalItems[i].ingredients.length > 0){
+            menuItemBtns2.push(ButtonComponent(seasonalItems[i]));
+        }
+
     }
 
     for(let i= 0; i < drinks.length; i++){
-        menuItemBtns3.push(ButtonComponent(drinks[i]));
+        if(drinks[i].ingredients.length > 0){
+            menuItemBtns3.push(ButtonComponent(drinks[i]));
+        }
     }
 
     return (
