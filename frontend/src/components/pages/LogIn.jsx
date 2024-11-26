@@ -5,10 +5,47 @@ import Cashier from '../../Cashier.jsx'
 import Display from '../../Display.jsx'
 import Kitchen from '../../Kitchen.jsx'
 
-
+/**
+ * The `LogIn` component manages the login screen for employees, allowing them to authenticate
+ * and navigate to different sections based on their role (cashier, manager, or kitchen).
+ * It fetches the employee list from an API, verifies login credentials, and renders the
+ * appropriate screen (employee, manager, or kitchen) after successful login.
+ *
+ * @component
+ * @returns {JSX.Element} A login interface that authenticates employees and redirects them to
+ * different sections based on their role.
+ *
+ * @state
+ * @state {string} username - The username input value entered by the user.
+ * @state {string} password - The password input value entered by the user.
+ * @state {Array<Object>} employees - A list of employee objects fetched from the server.
+ * @state {Object} currentEmployee - The employee object representing the logged-in user.
+ * @state {string} currentScreen - The current screen to display, such as 'login', 'employee',
+ *                                'manager', or 'kitchen'.
+ *
+ * @methods
+ * @method logout - Logs out the current employee and resets the application state to the login screen. Meant to be sent
+ * to components as their logout functions.
+ * @method handleLogin - Handles the form submission, checks the employee credentials, and navigates
+ *                       to the appropriate screen based on the employee's role.
+ * @method handleKeyPress - Listens for the "Enter" key press and triggers the login process.
+ *
+ * @effects
+ * @effect Fetches employee data from the backend API and stores it in the component state.
+ * - The employee data is periodically refreshed every 5 seconds.
+ * @effect Dynamically switches between the login screen, employee dashboard, manager dashboard,
+ *         and kitchen screen based on the logged-in user's role.
+ *
+ * @example
+ * // Rendered in main App component
+ * <LogIn setNavbarVisibility={setNavbarVisibility} setIsTranslateVisible={setIsTranslateVisible} />
+ *
+ * @remarks
+ * - Handles both login and role-based navigation for employees.
+ * - Supports dynamic employee login with real-time data fetching.
+ * - Implements basic client-side login functionality with username and password matching.
+ */
 function LogIn({setNavbarVisibility, setIsTranslateVisible}){
-    // let currentEmployee = {};
-
     // State to hold username and password input values
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
