@@ -85,7 +85,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                     const items = await response.json();
 
 
-                    const list1 = items.filter(item => (item.category === "food") && (item.active));
+                    const list1 = items.filter(item => ( (item.category === "food") || (item.category === "dessert") ) && (item.active));
                     const list2 = items.filter(item => (item.category === "seasonal") && (item.active));
                     const list3 = items.filter(item => (item.category === "drink") && (item.active));
 

@@ -315,7 +315,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         let ingredientsRows = [];
-        if(item.menuItem.category !== "drink"){
+        if( (item.menuItem.category !== "drink") && (item.menuItem.category !== "dessert")){
             ingredientsRows = ingredients.map((ingredient, index) => (
                 <div className="ingredient-row" key={index}>
                     <div className="ingredient-name">{findIngredientName(ingredient)}</div>
