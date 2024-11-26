@@ -2,6 +2,24 @@ import React, { useEffect, useState, useRef } from 'react';
 import editButtonImage from './Images/Edit-Btn.png';
 import './RightPane.css';
 
+/**
+ * Compares two arrays to check if they are equal in terms of length and elements.
+ * This function performs a shallow comparison, meaning it only compares the array elements
+ * by their value (i.e., it does not handle deep comparison for objects or arrays within arrays).
+ *
+ * @param {Array} arr1 - The first array to compare.
+ * @param {Array} arr2 - The second array to compare.
+ * @returns {boolean} `true` if the arrays are equal (have the same length and identical elements),
+ *                    otherwise `false`.
+ *
+ * @example
+ * // Example usage:
+ * const array1 = [1, 2, 3];
+ * const array2 = [1, 2, 3];
+ * const array3 = [4, 5, 6];
+ * console.log(areArraysEqual(array1, array2)); // true
+ * console.log(areArraysEqual(array1, array3)); // false
+ */
 // Compare arrays
 const areArraysEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) return false;
@@ -11,6 +29,37 @@ const areArraysEqual = (arr1, arr2) => {
     return true;
 };
 
+/**
+ * The `RightPane` component displays the details of the current order, including items,
+ * prices, and the subtotal, tax, and total amounts. It allows users to review and modify
+ * the order, and process the payment by placing the order to the server.
+ *
+ * @component
+ * @param {Object} props - The props passed to the component.
+ * @param {Object} props.order - The current order object, which includes ordered items.
+ * @param {function} props.centerChange - A function to change the view/screen (e.g., to 'payment').
+ * @param {function} props.setProcessFunction - A function to set additional processing functions.
+ * @param {Array} props.processFunctions - An array of functions to handle the order process.
+ * @param {number} props.discount - The discount percentage applied to the order.
+ * @param {Object} props.employee - The employee object who is handling the current order.
+ *
+ * @returns {JSX.Element} The order summary pane, which displays the ordered items, totals, and payment option.
+ *
+ * @example
+ * // Example usage:
+ * <RightPane
+ *   order={orderData}
+ *   centerChange={handleScreenChange}
+ *   setProcessFunction={setProcessFunction}
+ *   processFunctions={processFunctions}
+ *   discount={0.1}
+ *   employee={employeeData}
+ * />
+ *
+ * @remarks
+ * - The component handles order item display and modifications (such as adjusting ingredients).
+ * - It calculates and displays the subtotal, tax, and total of the current order.
+ */
 // eslint-disable-next-line react/prop-types
 function RightPane({ order, centerChange, setProcessFunction, processFunctions, discount, employee}) {
     const [subtotal, setSubtotal] = useState(0);
@@ -266,7 +315,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         let ingredientsRows = [];
-        if(item.menuItem.category !== "drink"){
+        if( (item.menuItem.category !== "drink") && (item.menuItem.category !== "dessert")){
             ingredientsRows = ingredients.map((ingredient, index) => (
                 <div className="ingredient-row" key={index}>
                     <div className="ingredient-name">{findIngredientName(ingredient)}</div>

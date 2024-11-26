@@ -3,9 +3,63 @@ import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
 
-
-// const pin = "1234";
-
+/**
+ * The `CenterScreen` component manages the central user interface in a POS system,
+ * including displaying menus, handling order and payment processes, and providing manager options.
+ *
+ * It also supports alternate orders, PIN-based authentication for managers, and discount/refund functionalities.
+ *
+ * @component
+ * @param {object} props - Component properties.
+ * @param {string} props.center - Current screen being displayed (e.g., 'menu', 'previous', 'payment').
+ * @param {object} props.order - The current order object, which contains details of the order.
+ * @param {function} props.centerChange - A function to change the screen displayed in the center.
+ * @param {Array} props.menuItemList - A list of menu items that are part of the current order.
+ * @param {Array} props.alternateOrders - List of previous orders that can be viewed or edited.
+ * @param {function} props.handlePreviousBtnClick - Function to handle the selection of a previous order.
+ * @param {function} props.processOrder - Function to process the current order.
+ * @param {function} props.setDiscount - Function to apply a discount to the current order.
+ * @param {function} props.addScreen - Function to add a new screen or order.
+ * @param {object} props.employee - The current logged-in employee, including details like position and PIN.
+ *
+ * @state
+ * @state {Array} menuItems - List of menu items categorized as 'food', fetched from the server.
+ * @state {Array} seasonalItems - List of seasonal menu items, fetched from the server.
+ * @state {Array} drinks - List of drink menu items, fetched from the server.
+ * @state {Array} employees - List of employees, fetched from the server for authentication purposes.
+ * @state {string} currentMenu - Tracks the active menu or screen ('main', 'previous', 'payment', 'manager').
+ * @state {string} inputValue - Tracks the current value entered in the PIN input field.
+ * @state {string} placeHolderText - Text displayed in the PIN input field, used for feedback.
+ * @state {Array} alternateOrderButtons - Dynamically generated list of buttons for previous orders.
+ *
+ * @methods
+ * @method handleButtonClick - Handles the PIN input for employee authentication, checking if the PIN matches an employee.
+ * @method handleClear - Clears the PIN input field and resets the placeholder text.
+ * @method handlePaymentProcess - Processes the current order based on the selected payment type (cash or card).
+ * @method handleMenuChange - Changes the current menu (e.g., 'main', 'previous', 'payment', 'manager').
+ * @method setDiscountAmount - Sets the discount amount for the current order.
+ * @method handleRefund - Handles the refund process for an order if it has been paid.
+ * @method handleManagerOptionsClick - Displays manager options or asks for manager authentication based on employee position.
+ *
+ * @example
+ * <CenterScreen
+ *   center="menu"
+ *   order={currentOrder}
+ *   centerChange={changeScreen}
+ *   menuItemList={menuList}
+ *   alternateOrders={previousOrders}
+ *   handlePreviousBtnClick={viewPreviousOrder}
+ *   processOrder={processPayment}
+ *   setDiscount={applyDiscount}
+ *   addScreen={addNewOrder}
+ *   employee={currentEmployee}
+ * />
+ *
+ * @remarks
+ * - Fetches menu data and employee information from the backend server on mount and refreshes every 10 seconds.
+ * - Supports order processing with payment options (credit card, cash) and discounts.
+ * - Allows managers to apply discounts and refunds, and view previous orders.
+ */
 // Memoize the CenterScreen component to avoid unnecessary re-renders
 // eslint-disable-next-line react/display-name,react/prop-types
 const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
@@ -31,7 +85,7 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
                     const items = await response.json();
 
 
-                    const list1 = items.filter(item => (item.category === "food") && (item.active));
+                    const list1 = items.filter(item => ( (item.category === "food") || (item.category === "dessert") ) && (item.active));
                     const list2 = items.filter(item => (item.category === "seasonal") && (item.active));
                     const list3 = items.filter(item => (item.category === "drink") && (item.active));
 
