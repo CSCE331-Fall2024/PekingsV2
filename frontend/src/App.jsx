@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
+import { useEffect } from "react";
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/pages/Home';
@@ -7,6 +8,7 @@ import Career from './components/pages/Careers';
 import LogIn from './components/pages/LogIn';
 import MenuBoard from './components/pages/MenuBoard';
 import AccessibilityPanel from './components/AccessibilityPanel';
+import Cashier from "./Cashier";
 
 /**
  * The `App` component serves as the main application container and routing configuration.
@@ -79,6 +81,7 @@ const App = () => {
                       <Route path="/sign-up" element={<LogIn
                           setNavbarVisibility={setIsVisible}
                           setIsTranslateVisible={setIsTranslateVisible}/>}/> {/* No idea where the sign-up path comes from*/}
+                      <Route path="/Cashier" element={<Cashier />} />
                   </Routes>
               </div>
               {isVisible ? (<AccessibilityPanel/>) : (<div/>)}

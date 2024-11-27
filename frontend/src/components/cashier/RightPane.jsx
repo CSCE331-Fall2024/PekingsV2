@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import editButtonImage from './Images/Edit-Btn.png';
 import './RightPane.css';
+import {useAuth0} from "@auth0/auth0-react";
 
 /**
  * Compares two arrays to check if they are equal in terms of length and elements.
@@ -68,7 +69,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     const [orderItemsRows, setOrderItemsRows] = useState([]);
     const [orderItemsChecker, setOrderItemsChecker] = useState([]);
     const [ingredientNames, setIngredientNames] = useState([]);
-
+    const { getAccessTokenSilently } = useAuth0();
 
     // Calculates all totals
     function calculateSubtotal(){
@@ -173,10 +174,12 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             };
             // console.log(order);
 
-
+            const token = getAccessTokenSilently();
+            console.log(token)
             const response = await fetch('/api/orders/add', {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(order)

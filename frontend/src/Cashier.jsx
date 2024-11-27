@@ -65,6 +65,9 @@ const Cashier = ({logout, employee, setIsTranslateVisible, switchToManager}) => 
     const [discount, setDiscount] = useState(0);
     const [isManagerLogoutOpen, setIsManagerLogoutOpen] = useState(false);
 
+    const location = useLocation();
+    const employee = location.state.employee
+
     function getLastActive(){
         let lastActive = -1;
         for(let i = 0; i < screens.length; i++){
@@ -187,7 +190,7 @@ const Cashier = ({logout, employee, setIsTranslateVisible, switchToManager}) => 
             <div className="screens-container">
                 {screens.map((order, index) => (
                     <div className="cashierScreen" key={index} style={{display: index === activeScreenIndex ? 'flex' : 'none'}}>
-                        <LeftRect logout={handleLogout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel} handleAccessibility={handlePopupOpen} />
+                        <LeftRect logout={logout} centerChange={handleCenterChange} addScreen={addScreen} handleCancel={handleCancel}/>
                         <CenterScreen center={order.currentCenter}
                                       order = {order}
                                       centerChange={handleCenterChange}

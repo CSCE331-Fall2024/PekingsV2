@@ -37,11 +37,13 @@ function CustomerHero() {
 
     const [menuItems, setMenuItems] = useState([])
     const [seasonItems, setSeasonItems] = useState([])
+
     useEffect(() => {
         const fetchItems = async () => {
             try {
                 const response = await fetch("/api/menuitem/all", {
                     method: "GET",
+                    credentials: 'include',
                     headers: {
                         "Content-Type": "application/json",
                     },

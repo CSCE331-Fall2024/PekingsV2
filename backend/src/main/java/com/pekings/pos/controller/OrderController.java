@@ -10,6 +10,7 @@ import com.pekings.pos.util.DateUtil;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -69,7 +70,7 @@ public class OrderController {
     public Order updateOrderStatus(@PathVariable("id") int id, @RequestParam(value = "status") String newStatus) {
         Order order = getOrder(id);
         order.setStatus(newStatus);
-        return order;
+        return orderRepository.save(order);
     }
 
     /**
