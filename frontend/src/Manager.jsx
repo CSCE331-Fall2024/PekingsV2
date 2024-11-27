@@ -2,28 +2,43 @@ import React, { useState, useEffect } from 'react';
 import './Manager.css';
 
 function Manager({ selectedSection }) {
-    const [inventory, setInventory] = useState([]);
-    const [menuItems, setMenuItems] = useState([]);
-    const [employees, setEmployees] = useState([]);
-    const [editIdx, setEditIdx] = useState(-1);
-    const [editFormData, setEditFormData] = useState([]);
-    const [originalFormData, setOriginalFormData] = useState([]);
-    const [originalMenuItems, setOriginalMenuItems] = useState([]);
 
+    //Inventory
+    const [inventory, setInventory] = useState([]);
+    const [editIdx, setEditIdx] = useState(-1);
+    const [originalFormData, setOriginalFormData] = useState([]);
+    const [editInvValueID, setEditInvValueID] = useState(-1);
     const [inputValueName, setInputValueName] = useState('');
     const [inputValueAmount, setInputValueAmount] = useState('');
     const [inputValuePrice, setInputValuePrice] = useState('');
     const [invID, setInvID] = useState('');
+
+    //Menu
+    const [menuItems, setMenuItems] = useState([]);
+    const [originalMenuItems, setOriginalMenuItems] = useState([]);
+    const [editMenuValueID, setEditMenuValueID] = useState(-1);
     const [menuItemID, setMenuItemID] = useState('');
     const [inputMenuName, setInputMenuName] = useState('');
-    const [inputMenuActive, setInputMenuActive] = useState('');
+    const [inputMenuCategory, setInputMenuCategory] = useState("");
     const [inputMenuIngredients, setInputMenuIngredients] = useState('');
-    const [menuActive, setMenuActive] = useState(false);
     const [inputMenuPrice, setInputMenuPrice] = useState('');
 
+    //Employee
+    const [employees, setEmployees]= useState([]);
+    const [editEmployeeValueID, setEditEmployeeValueID] = useState(-1);
+    const [inputEmployeeUsername, setInputEmployeeUsername] = useState('');
+    const [inputEmployeePass, setInputEmployeePass] = useState('');
+    const [inputEmployeeEmail, setInputEmployeeEmail] = useState('');
+    const [inputEmployeePosition, setInputEmployeePosition] = useState('');
+    const [inputEmployeeClockin, setInputEmployeeClockin] = useState('00:00:00');
+    const [inputEmployeeClockedIn, setInputEmployeeClockedIn] = useState(false);
+    const [inputEmployeePin, setInputEmployeePin] = useState('0000');
+    const [originalEmployees, setOriginalEmployees] = useState([]);
 
-    useEffect(() => {
-        const fetchItems = async () => {
+
+
+
+    const fetchItems = async () => {
             try {
                 const response = await fetch("/api/menuitem/all", {
                     method: "GET",
@@ -45,9 +60,10 @@ function Manager({ selectedSection }) {
                 console.error("Error fetching items:", error);
             }
     };
+    useEffect(() => {
         fetchItems();
     }, []);
-    useEffect(() => {
+
         const fetchItems2 = async () => {
             try {
                 const invResponse = await fetch("/api/inventory/all", {
@@ -67,9 +83,10 @@ function Manager({ selectedSection }) {
                 console.error("Error fetching items:", error);
             }
         };
+    useEffect(() => {
         fetchItems2();
     },[]);
-    useEffect(() => {
+
         const fetchItems3 = async () => {
             try {
                 const empResponse = await fetch("/api/employee/all", {
@@ -89,6 +106,7 @@ function Manager({ selectedSection }) {
                 console.error("Error fetching items:", error);
             }
         };
+    useEffect(() => {
         fetchItems3();
     },[]);
 
@@ -102,6 +120,7 @@ function Manager({ selectedSection }) {
     const handleEditClick = (index) => {
         setEditIdx(index);
         setOriginalFormData(inventory);
+        setEditInvValueID(inventory.at(index).id);
     };
 
     const handleInputChange = (e, field, index) => {
@@ -122,11 +141,17 @@ function Manager({ selectedSection }) {
         setInventory(originalFormData);
     };
 
-
     // Edit for Menu
     const handleEditClickMenu = (index) => {
         setEditIdx(index);
-        setOriginalMenuItems(menuItems); };
+        setOriginalMenuItems(menuItems);
+        setInputMenuName(menuItems.at(index).name);
+        setInputMenuPrice(menuItems.at(index).price);
+        setEditMenuValueID(menuItems.at(index).id);
+        setInputMenuCategory(menuItems.at(index).category);
+        setInputMenuIngredients(menuItems.at(index).ingredients.at(0).ingredient);
+
+    };
     // Function to handle input change for Menu Items
     const handleInputChangeMenu = (e, field, index) => {
         const updatedMenuItems = menuItems.map((item, idx) => {
@@ -140,12 +165,60 @@ function Manager({ selectedSection }) {
     // Function to handle saving the edited row for Menu Items
     const handleSaveMenu = () => {
         setEditIdx(-1);
+        updateMenuItem();
+        setEditMenuValueID(-1);
+        setInputMenuName("");
+        setInputMenuPrice("");
+        setInputMenuCategory("");
+        setInputMenuIngredients("");
     };
     // Function to handle canceling the edit for Menu Items
     const handleCancelMenu = () => {
         setEditIdx(-1);
         setMenuItems(originalMenuItems);
     };
+
+    const handleEditClickEmployee = (index) => {
+        setEditIdx(index);
+        setOriginalEmployees(employees); // Backup original state
+        const employee = employees.at(index);
+        setEditEmployeeValueID(employee.id);
+        setInputEmployeeUsername(employee.username);
+        setInputEmployeePass(employee.pass);
+        setInputEmployeeEmail(employee.email || '');
+        setInputEmployeePosition(employee.position);
+        setInputEmployeeClockin(employee.lastClockin);
+        setInputEmployeeClockedIn(employee.isClockedin);
+        setInputEmployeePin(employee.pin);
+    };
+
+
+    const handleSaveEmployee = () => {
+        setEditIdx(-1);
+        updateEmployee();
+        resetEmployeeInputs();
+    };
+
+    const handleCancelEmployee = () => {
+        setEditIdx(-1);
+        setEmployees(originalEmployees); // Restore original state
+        resetEmployeeInputs();
+    };
+
+
+    const resetEmployeeInputs = () => {
+        setEditEmployeeValueID(-1);
+        setInputEmployeeUsername('');
+        setInputEmployeePass('');
+        setInputEmployeeEmail('');
+        setInputEmployeePosition('');
+        setInputEmployeeClockin('00:00:00');
+        setInputEmployeeClockedIn(false);
+        setInputEmployeePin('0000');
+    };
+
+
+
     const addToInventory = async () => {
         //Replace this inv object with arbitrary object values
         // Make a function that will return an object with user defined values except ID.
@@ -155,66 +228,135 @@ function Manager({ selectedSection }) {
         let batch = amountt * pricee;
 
         const inv = {
-            id: parseInt(inventory[inventory.length-1].id) + 1,
             name: inputValueName,
             servingPrice: inputValuePrice,
             amount: inputValueAmount,
             priceBatch: batch,
         };
-        setInventory([...inventory, inv]);
 
-        const invResponse = await fetch("/api/inventory/add", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(inv)
-        });
+        try {
+            const invResponse = await fetch("/api/inventory/add", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(inv)
+            });
+
+            if (!invResponse.ok) {
+                const error = await invResponse.json();
+                console.error("Error adding inventory item:", error);
+                alert("Failed to add inventory item. See console for details.");
+            } else {
+                const data = await invResponse.json();
+                console.log("Inventory item added successfully:", data);
+                alert("Inventory item added successfully!");
+                fetchItems2();
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            alert("Network error while adding inventory item.");
+        }
 
     };
     const addToMenu = async () => {
-        //Replace this inv object with arbitrary object values
-        // Make a function that will return an object with user defined values except ID.
-        // set inv equal to what the function returns
-
         const menu = {
-            name: inputMenuName,
-            price: inputMenuPrice,
-            active: inputMenuActive,
+            name: inputMenuName,           // Menu item name from input
+            price: inputMenuPrice,         // Menu item price from input
+            active: false,                 // Default active state
+            category: inputMenuCategory,   // Corrected "category" to "category"
+            image: null,                   // Optional field for image
             ingredients: [
                 {
-                    ingredient: inputMenuIngredients,
-                    amount: -1,
-                    menu_item: 3
+                    ingredient: {id: inputMenuIngredients},
+                    amount: 1
                 }
             ]
-        };
-        setMenuItems([...menuItems, menu]);
+        }
+        try {
+            const menuResponse = await fetch("/api/menuitem/add", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(menu)
+            });
 
-        const menuResponse = await fetch("/api/menuitem/add", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(menu)
-        });
+            if (!menuResponse.ok) {
+                const error = await menuResponse.json();
+                console.error("Error adding menu item:", error);
+                alert("Failed to add menu item. See console for details.");
+            } else {
+                const data = await menuResponse.json();
+                console.log("Menu item added successfully:", data);
+                alert("Menu item added successfully!");
 
+                fetchItems();
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            alert("Network error while adding menu item.");
+        }
     };
+    // Add Employee
+    const addEmployee = async () => {
+        const employee = {
+            username: inputEmployeeUsername,
+            pass: inputEmployeePass,
+            email: inputEmployeeEmail || null, // Email is nullable
+            position: inputEmployeePosition,
+            lastClockin: inputEmployeeClockin, // Default to "00:00:00"
+            isClockedin: inputEmployeeClockedIn,
+            pin: inputEmployeePin,
+        };
+
+        try {
+            const employeeResponse = await fetch("/api/employee/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(employee),
+            });
+
+            if (!employeeResponse.ok) {
+                const error = await employeeResponse.json();
+                console.error("Error adding employee:", error);
+                alert("Failed to add employee. See console for details.");
+            } else {
+                const data = await employeeResponse.json();
+                console.log("Employee added successfully:", data);
+                alert("Employee added successfully!");
+                fetchItems3(); // Refresh employee list
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            alert("Network error while adding employee.");
+        }
+    };
+
+
     const updateInventory = async () => {
-
-        const inv = await inventory.json();
-
+        let amountt = parseInt(inputValueAmount);
+        let pricee = parseInt(inputValuePrice);
+        let batch = amountt * pricee;
+        const editedInventory = {
+            id: editInvValueID,
+            name: inputValueName,
+            amount: inputValueAmount,
+            servingPrice: inputValuePrice,
+            priceBatch: batch
+        }
         const invResponse = await fetch("/api/inventory/update", {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(inv)
+            body: JSON.stringify(editedInventory)
         });
 
     };
     const deleteInventory = async () => {
-
         const invResponse = await fetch("/api/inventory/delete", {
             method: 'DELETE',
             headers: {
@@ -222,8 +364,46 @@ function Manager({ selectedSection }) {
             },
             body: JSON.stringify(invID)
         });
-        inventory.splice(Number(invID), 1);
-        setInventory([...inventory]);
+        fetchItems2();
+    };
+    const updateMenuItem = async () => {
+        const editedMenu = {
+            id: editMenuValueID,
+            name: inputMenuName,           // Menu item name from input
+            price: inputMenuPrice,         // Menu item price from input
+            active: false,                 // Default active state
+            category: inputMenuCategory,   // Corrected "category" to "category"
+            image: null,                   // Optional field for image
+            ingredients: [
+                {
+                    ingredient: {id: inputMenuIngredients},
+                    amount: 1
+                }
+            ]
+        }
+        try {
+            const menuResponse = await fetch("/api/menuitem/update", {
+                method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editedMenu)
+            });
+
+            if (!menuResponse.ok) {
+                const error = await menuResponse.json();
+                console.error("Error updating menu item:", error);
+                alert("Failed to update menu item. See console for details.");
+            } else {
+                const data = await menuResponse.json();
+                console.log("Menu item updated successfully:", data);
+                alert("Menu item updated successfully!");
+                fetchItems();
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            alert("Network error while updating menu item.");
+        }
     };
 
     const deleteMenuItem = async () => {
@@ -235,10 +415,72 @@ function Manager({ selectedSection }) {
             },
             body: JSON.stringify(menuItemID)
         });
-
-        menuItems.splice(Number(menuItemID), 1);
-        setMenuItems([...menuItems]);
+        fetchItems();
     };
+
+// Update Employee
+    const updateEmployee = async () => {
+        const editedEmployee = {
+            id: editEmployeeValueID,
+            username: inputEmployeeUsername,
+            pass: inputEmployeePass,
+            email: inputEmployeeEmail || null,
+            position: inputEmployeePosition,
+            lastClockin: inputEmployeeClockin,
+            isClockedin: inputEmployeeClockedIn,
+            pin: inputEmployeePin,
+        };
+
+        try {
+            const employeeResponse = await fetch("/api/employee/update", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editedEmployee),
+            });
+
+            if (!employeeResponse.ok) {
+                const error = await employeeResponse.json();
+                console.error("Error updating employee:", error);
+                alert("Failed to update employee. See console for details.");
+            } else {
+                const data = await employeeResponse.json();
+                console.log("Employee updated successfully:", data);
+                alert("Employee updated successfully!");
+                fetchItems3(); // Refresh employee list
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            alert("Network error while updating employee.");
+        }
+    };
+
+
+// Delete Employee
+    const deleteEmployee = async (id) => {
+        try {
+            const employeeResponse = await fetch("/api/employee/delete", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id }),
+            });
+
+            if (!employeeResponse.ok) {
+                console.error("Failed to delete employee");
+            } else {
+                alert("Employee deleted successfully!");
+                fetchItems3(); // Refresh employee list
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            alert("Network error while deleting employee.");
+        }
+    };
+
+
 
     // Text Boxes
     const handleChange = (event) => {
@@ -260,10 +502,7 @@ function Manager({ selectedSection }) {
         setInputMenuPrice(event.target.value);
     };
     const handleChangeMenu3 = (event) => {
-        setInputMenuActive(event.target.value);
-        if(inputMenuActive === "true"){
-            setMenuActive(true);
-        }
+        setInputMenuCategory(event.target.value);
     };
     const handleChangeMenu4 = (event) => {
         setInputMenuIngredients(event.target.value);
@@ -281,19 +520,20 @@ function Manager({ selectedSection }) {
     };
     const handleInvDelButton = () => {
         deleteInventory();
-        setInvID("");
+        setInvID('');
     }
     const handleMenuDelButton = () => {
         deleteMenuItem();
-        setMenuItemID("");
+        setMenuItemID('');
     }
     const handleButtonMenu = () => {
         addToMenu();
         setInputMenuName("");
-        setInputMenuActive("");
+        setInputMenuCategory("");
         setInputMenuPrice("");
         setInputMenuIngredients("");
     };
+
 
     return (
 
@@ -408,9 +648,9 @@ function Manager({ selectedSection }) {
                                onChange={handleChangeMenu}/>
                         <input type="text" placeholder="Enter Price" value={inputMenuPrice}
                                onChange={handleChangeMenu2}/>
-                        <input type="text" placeholder="set Active true/false" value={inputMenuActive}
+                        <input type="text" placeholder="Enter Category" value={inputMenuCategory}
                                onChange={handleChangeMenu3}/>
-                        <input type="text" placeholder="ID Of Ingredient" value={inputMenuIngredients}
+                        <input type="text" placeholder="ID of Ingredient" value={inputMenuIngredients}
                                onChange={handleChangeMenu4}/>
                         <button onClick={handleButtonMenu}>Add Item</button>
                     </div>
@@ -425,26 +665,89 @@ function Manager({ selectedSection }) {
 
                 {selectedSection === "Employees" && (
                     <table className="data-table">
-                    <thead>
+                        <thead>
                         <tr>
                             <th>ID</th>
-                            <th>User</th>
-                            <th>Pass</th>
+                            <th>Username</th>
+                            <th>Password</th>
                             <th>Position</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {employees.map((employee, index) => (
                             <tr key={index}>
-                                <td>{employee.id}</td>
-                                <td>{employee.username}</td>
-                                <td>{employee.pass}</td>
-                                <td>{employee.position}</td>
+                                {editIdx === index ? (
+                                    <>
+                                        <td>{employee.id}</td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                value={inputEmployeeUsername}
+                                                onChange={(e) => setInputEmployeeUsername(e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                value={inputEmployeePass}
+                                                onChange={(e) => setInputEmployeePass(e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                value={inputEmployeePosition}
+                                                onChange={(e) => setInputEmployeePosition(e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <button onClick={handleSaveEmployee}>Save</button>
+                                            <button onClick={handleCancelEmployee}>Cancel</button>
+                                        </td>
+                                    </>
+                                ) : (
+                                    <>
+                                        <td>{employee.id}</td>
+                                        <td>{employee.username}</td>
+                                        <td>{employee.pass}</td>
+                                        <td>{employee.position}</td>
+                                        <td>
+                                            <button onClick={() => handleEditClickEmployee(index)}>Edit</button>
+                                            <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
+                                        </td>
+                                    </>
+                                )}
                             </tr>
                         ))}
                         </tbody>
                     </table>
                 )}
+
+                {selectedSection === "Employees" && (
+                    <div className="add-button">
+                        <input type="text" placeholder="Enter Username" value={inputEmployeeUsername} onChange={(e) => setInputEmployeeUsername(e.target.value)}/>
+                        <input
+                            type="text"
+                            placeholder="Enter Password"
+                            value={inputEmployeePass}
+                            onChange={(e) => setInputEmployeePass(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Enter Position"
+                            value={inputEmployeePosition}
+                            onChange={(e) => setInputEmployeePosition(e.target.value)}
+                        />
+                        <button onClick={addEmployee}>Add Employee</button>
+                    </div>
+                )}
+                {/*{selectedSection === "Statistics" && (*/}
+                {/*    <div className="add-button">*/}
+
+                {/*    </div>*/}
+                {/*)}*/}
+
             </div>
         </div>
     );
