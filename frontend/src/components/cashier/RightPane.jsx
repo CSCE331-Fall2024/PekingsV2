@@ -174,8 +174,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             };
             // console.log(order);
 
-            const token = getAccessTokenSilently();
-            console.log(token)
+            const token = await getAccessTokenSilently();
+            console.log('Token:', token, typeof token);
             const response = await fetch('/api/orders/add', {
                 method: 'POST',
                 headers: {

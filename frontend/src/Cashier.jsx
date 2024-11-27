@@ -3,6 +3,7 @@ import './Cashier.css';
 import LeftRect from './components/cashier/LeftPane.jsx';
 import CenterScreen from './components/cashier/CenterScreen.jsx';
 import RightPane from './components/cashier/RightPane.jsx';
+import {useLocation} from "react-router-dom";
 
 function createOrder(orderID) {
     return {
@@ -57,7 +58,7 @@ function createOrder(orderID) {
  * - Supports both cashier and manager functionalities, including different logout options for each role.
  * - Includes an accessibility panel for toggling high contrast mode to aid users with visual impairments.
  */
-const Cashier = ({logout, employee, setIsTranslateVisible, switchToManager}) => {
+const Cashier = ({logout, setIsTranslateVisible, switchToManager}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
@@ -71,7 +72,7 @@ const Cashier = ({logout, employee, setIsTranslateVisible, switchToManager}) => 
     function getLastActive(){
         let lastActive = -1;
         for(let i = 0; i < screens.length; i++){
-            if(screens[i].status){
+            if(screens[i].status) {
                 lastActive = screens[i].id;
             }
         }
