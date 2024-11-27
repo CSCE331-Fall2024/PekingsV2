@@ -13,6 +13,7 @@
     "@auth0/auth0-react": "^2.2.4",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.8",
     "@okta/okta-auth-js": "^7.8.1",
     "@okta/okta-react": "^6.9.0",

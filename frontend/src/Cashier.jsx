@@ -3,6 +3,7 @@ import './Cashier.css';
 import LeftRect from './components/cashier/LeftPane.jsx';
 import CenterScreen from './components/cashier/CenterScreen.jsx';
 import RightPane from './components/cashier/RightPane.jsx';
+import {useLocation} from "react-router-dom";
 
 function createOrder(orderID) {
     return {
@@ -15,12 +16,15 @@ function createOrder(orderID) {
     };
 }
 
-const Cashier = ({logout, employee}) => {
+const Cashier = ({logout}) => {
     const [orderNum, setOrderNum] = useState(1);
     const [screens, setScreens] = useState([createOrder(1)]); // Track screens created
     const [activeScreenIndex, setActiveScreenIndex] = useState(0); // Index of the currently active screen
     const [processOrder, setProcessFunc] = useState([]); // A function to be passed into rightPane and set there
     const [discount, setDiscount] = useState(0);
+
+    const location = useLocation();
+    const employee = location.state.employee
 
     function getLastActive(){
         let lastActive = -1;

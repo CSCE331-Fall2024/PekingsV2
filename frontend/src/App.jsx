@@ -7,7 +7,7 @@ import Career from './components/pages/Careers';
 import MenuBoard from './components/pages/MenuBoard';
 
 import AccessibilityPanel from './components/AccessibilityPanel';
-import LogIn from "./components/pages/LogIn.jsx";
+import Cashier from "./Cashier.jsx";
 // import Magnifier from 'react-magnifier';
 
 const App = () => {
@@ -35,7 +35,6 @@ const App = () => {
     }
   }, []);
 
-
   return (
     <div className = "empty">
       <Router>
@@ -46,6 +45,7 @@ const App = () => {
             <Route path='/' element={<Home />} />
             <Route path="/MenuBoard" element={<MenuBoard />} />
             <Route path="/Careers" element={<Career />} />
+            <Route path="/Cashier" element={<Cashier />} />
           </Routes>
         </div>
         <AccessibilityPanel/>

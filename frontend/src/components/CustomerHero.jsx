@@ -12,7 +12,7 @@ function CustomerHero() {
     useEffect(() => {
         const fetchItems = async () => {
             try {
-                const response = await fetch("/api/menuitem/top", {
+                const response = await fetch("/api/menuitem/all", {
                     method: "GET",
                     credentials: 'include',
                     headers: {
@@ -23,8 +23,6 @@ function CustomerHero() {
                 if (response.ok) {
                     // setMenuItems(await response.json());
                     const items = await response.json();
-                    console.log(items);
-                    console.log(items);
                     // Separate items based on category
                     const menu = items.filter(item => item.category === "food" || item.category === "drink" || item.category === "dessert" );
                     const seasonal = items.filter(item => item.category === "seasonal");
