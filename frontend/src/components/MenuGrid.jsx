@@ -2,6 +2,35 @@
 import React from 'react';
 import './MenuGrid.css';
 
+/**
+ * The `MenuGrid` component renders a grid of menu items for the PeKings restaurant application.
+ * It displays menu items with images, names, and prices, allowing users to add items to their order.
+ *
+ * @component
+ * @param {Object} props - Component properties
+ * @param {Array<Object>} props.items - List of menu items to display
+ * @param {Function} [props.onAddToOrder] - Optional callback function to add an item to the order
+ * 
+ * @returns {JSX.Element} A grid of clickable menu item buttons
+ *
+ * @example
+ * <MenuGrid 
+ *   items={[
+ *     { 
+ *       name: "Peking Duck", 
+ *       price: 25.00, 
+ *       image: "/images/peking-duck.jpg" 
+ *     }
+ *   ]} 
+ *   onAddToOrder={handleAddItem} 
+ * />
+ *
+ * @remarks
+ * - Uses a default placeholder image if no image is provided
+ * - Formats price to two decimal places
+ * - Supports optional click handler for adding items to order
+ */
+
 //I LOVE HASHMAP!!
 const MenuGrid = ({ items, onAddToOrder }) => {
     return (

@@ -18,3 +18,15 @@
 /*    min-height: 100vh;*/
 /*    width: 100%;*/
 /*}*/
+
+html, body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+
+.Kitchen, .Cashier {
+    width: 100vw;
+    height: 100vh;
+    overflow: auto; /* Allow vertical scrolling if needed */
+    box-sizing: border-box; /* Prevent the width/height from including padding/border */
+}

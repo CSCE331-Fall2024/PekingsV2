@@ -1,6 +1,31 @@
 import React, { useState} from 'react';
 import './AccessibilityPanel.css';
 
+/**
+ * The `AccessibilityPanel` component provides user-friendly accessibility options.
+ * Currently supports a high contrast mode toggle for improved visual accessibility.
+ *
+ * @component
+ * @returns {JSX.Element} An accessibility control panel with toggle functionality
+ *
+ * @state
+ * @state {boolean} isPanelOpen - Controls visibility of accessibility options
+ * @state {boolean} isHighContrast - Tracks high contrast mode state
+ *
+ * @methods
+ * @method toggleHighContrastMode - Switches high contrast mode on/off
+ * - Applies 'high-contrast' class to app content
+ * - Updates state to reflect current mode
+ *
+ * @example
+ * <AccessibilityPanel />
+ *
+ * @remarks
+ * - Provides a button to toggle accessibility options
+ * - Implements high contrast mode for improved readability
+ * - Uses CSS class manipulation for visual changes
+ */
+
 const AccessibilityPanel = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isHighContrast, setIsHighContrast] = useState(false);

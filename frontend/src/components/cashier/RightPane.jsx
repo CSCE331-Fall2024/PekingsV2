@@ -3,6 +3,24 @@ import editButtonImage from './Images/Edit-Btn.png';
 import './RightPane.css';
 import {useAuth0} from "@auth0/auth0-react";
 
+/**
+ * Compares two arrays to check if they are equal in terms of length and elements.
+ * This function performs a shallow comparison, meaning it only compares the array elements
+ * by their value (i.e., it does not handle deep comparison for objects or arrays within arrays).
+ *
+ * @param {Array} arr1 - The first array to compare.
+ * @param {Array} arr2 - The second array to compare.
+ * @returns {boolean} `true` if the arrays are equal (have the same length and identical elements),
+ *                    otherwise `false`.
+ *
+ * @example
+ * // Example usage:
+ * const array1 = [1, 2, 3];
+ * const array2 = [1, 2, 3];
+ * const array3 = [4, 5, 6];
+ * console.log(areArraysEqual(array1, array2)); // true
+ * console.log(areArraysEqual(array1, array3)); // false
+ */
 // Compare arrays
 const areArraysEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) return false;
@@ -12,6 +30,37 @@ const areArraysEqual = (arr1, arr2) => {
     return true;
 };
 
+/**
+ * The `RightPane` component displays the details of the current order, including items,
+ * prices, and the subtotal, tax, and total amounts. It allows users to review and modify
+ * the order, and process the payment by placing the order to the server.
+ *
+ * @component
+ * @param {Object} props - The props passed to the component.
+ * @param {Object} props.order - The current order object, which includes ordered items.
+ * @param {function} props.centerChange - A function to change the view/screen (e.g., to 'payment').
+ * @param {function} props.setProcessFunction - A function to set additional processing functions.
+ * @param {Array} props.processFunctions - An array of functions to handle the order process.
+ * @param {number} props.discount - The discount percentage applied to the order.
+ * @param {Object} props.employee - The employee object who is handling the current order.
+ *
+ * @returns {JSX.Element} The order summary pane, which displays the ordered items, totals, and payment option.
+ *
+ * @example
+ * // Example usage:
+ * <RightPane
+ *   order={orderData}
+ *   centerChange={handleScreenChange}
+ *   setProcessFunction={setProcessFunction}
+ *   processFunctions={processFunctions}
+ *   discount={0.1}
+ *   employee={employeeData}
+ * />
+ *
+ * @remarks
+ * - The component handles order item display and modifications (such as adjusting ingredients).
+ * - It calculates and displays the subtotal, tax, and total of the current order.
+ */
 // eslint-disable-next-line react/prop-types
 function RightPane({ order, centerChange, setProcessFunction, processFunctions, discount, employee}) {
     const [subtotal, setSubtotal] = useState(0);
@@ -22,7 +71,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
     const [ingredientNames, setIngredientNames] = useState([]);
     const { getAccessTokenSilently } = useAuth0();
 
-    // Functions used for Nathan L place orders
+    // Calculates all totals
     function calculateSubtotal(){
         let st = 0;
 
@@ -32,7 +81,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
             // For Nathan
             let ingredients = menuItem.ingredients;
-            let noIngredients = true;
+            let noIngredients = (ingredients.length !== 0);
             for(let j = 0; j < ingredients.length; j++){
                 if(ingredients[j].amount > 0){
                     noIngredients = false;
@@ -67,7 +116,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
 
     // Reinsert try statements when fixed
-    const handleOrder = async (orderUse, paymentType) => {
+    const handleOrder = async (orderUse, paymentType, employee) => {
         try {
             let orderItems = orderUse.orderItems;
             let items = [];
@@ -109,7 +158,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             }
 
 
-
             // creating the order object
             const order = {
                 customer: {
@@ -120,11 +168,11 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 },
                 time: new Date().toISOString(),
                 price: Number(calculateTotal().toFixed(2)),
-                // items: [],
                 items: items,
-                // extras: [], // Fabio is changing this, don't worry about it rn
-                payment_method: paymentType
+                payment_method: paymentType,
+                status: "incomplete"
             };
+            // console.log(order);
 
             const token = getAccessTokenSilently();
             console.log(token)
@@ -179,6 +227,11 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         fetchIngredients();
+        const interval = setInterval(fetchIngredients, 1000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
     }, []);
 
     const processPayment = (paymentType) => {
@@ -203,7 +256,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         if(placeOrder){
-            handleOrder(order, paymentType);
+            handleOrder(order, paymentType, employee);
+
 
             centerChange('menu');
 
@@ -237,19 +291,21 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
     function orderItemDisplay(item) {
         let name = item.menuItem.name;
-        let price = item.menuItem.price;
+        let price = parseFloat(item.menuItem.price);
         let ingredients = item.menuItem.ingredients;
 
         const handleDecrease = (ingredient) => {
             if(ingredient.amount > 0){
                 ingredient.amount--;
+                price -= 0.5;
             }
         }
 
         const handleIncrease = (ingredient) => {
             // Leave code for max extras
             // if(ingredient.amount < 2){
-                ingredient.amount++;
+            ingredient.amount++;
+            price += 0.5;
             // }
         }
 
@@ -262,7 +318,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
         }
 
         let ingredientsRows = [];
-        if(item.menuItem.category !== "drink"){
+        if( (item.menuItem.category !== "drink") && (item.menuItem.category !== "dessert")){
             ingredientsRows = ingredients.map((ingredient, index) => (
                 <div className="ingredient-row" key={index}>
                     <div className="ingredient-name">{findIngredientName(ingredient)}</div>
@@ -276,7 +332,8 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
 
                         </div>
                         <button className="changeIngredientAmount-Less"
-                                onClick={() => handleIncrease(ingredient)}>&gt;</button>
+                                onClick={() => handleIncrease(ingredient)}>&gt;
+                        </button>
                     </div>
                 </div>
             ));
@@ -286,7 +343,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                     <div className="orderItemRow">
                         <button className="orderItemRowText">
                             <div className="orderItemsText">{name}</div>
-                            <div className="orderItemsPrice">${price}</div>
+                            <div className="orderItemsPrice">${price.toFixed(2)}</div>
                         </button>
                         <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}>
                             <img src={editButtonImage}
@@ -311,7 +368,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             <div className="orderItemRow">
                     <button className="orderItemRowText">
                         <div className="orderItemsText">{name}</div>
-                        <div className="orderItemsPrice">${price}</div>
+                        <div className="orderItemsPrice">${price.toFixed(2)}</div>
                     </button>
                     <button className="editBtn" onClick={() => item.editStatus = !item.editStatus}></button>
                     <button className="orderItemX" onClick={removeItem(item)}>X</button>

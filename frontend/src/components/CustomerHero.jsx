@@ -4,6 +4,35 @@ import './CustomerHero.css';
 import DuckMascot from './DuckMascot';
 import MenuGrid from './MenuGrid';
 
+/**
+ * The `CustomerHero` component serves as the main landing page for the PeKings restaurant application.
+ * It manages menu item fetching, displays promotional videos, and renders menu grids for different item categories.
+ *
+ * @component
+ * @returns {JSX.Element} A comprehensive hero section with videos, menu items, and interactive ordering
+ *
+ * @state
+ * @state {Array<Object>} menuItems - Regular menu items (food, drink, dessert)
+ * @state {Array<Object>} seasonItems - Seasonal menu items
+ *
+ * @methods
+ * @method handleAddToOrder - Adds selected menu items to the DuckMascot's order
+ *
+ * @effects
+ * @effect Fetches menu items from backend API on component mount
+ * - Separates items into regular menu and seasonal categories
+ * - Handles potential fetch errors by logging to console
+ *
+ * @example
+ * // Rendered in main App component
+ * <CustomerHero />
+ *
+ * @remarks
+ * - Utilizes DuckMascot for interactive ordering
+ * - Displays background videos and menu grids
+ * - Supports dynamic menu item rendering
+ */
+
 function CustomerHero() {
 
     const [menuItems, setMenuItems] = useState([])

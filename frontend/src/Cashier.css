@@ -14,3 +14,26 @@
 .scrollable-container {
     scrollbar-width: none; /* Hide scrollbar in Firefox */
 }
+
+.logout-options{
+    width: 100%;
+    height: 90%;
+    gap: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout-option{
+    width: 30%;
+    height: 50%;
+    font-size: 300%;
+}
+
+.logout{
+    background-color: darkred;
+}
+
+.manager{
+    background-color: #124E66;
+}

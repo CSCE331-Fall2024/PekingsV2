@@ -16,6 +16,31 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from "./Button.jsx";
 import BasicMenu from "./EmployeeMenu.jsx";
 
+/**
+ * The `Navbar` component renders the site's navigation menu with responsive design.
+ * Supports mobile menu toggling and adaptive button display based on screen width.
+ *
+ * @component
+ * @returns {JSX.Element} A responsive navigation bar with menu items and login option
+ *
+ * @state
+ * @state {boolean} click - Controls mobile menu open/close state
+ * @state {boolean} button - Determines button visibility based on screen width
+ *
+ * @methods
+ * @method handleClick - Toggles mobile menu visibility
+ * @method closeMobileMenu - Closes mobile menu
+ * @method showButton - Adapts button display based on screen width
+ *
+ * @example
+ * <Navbar />
+ *
+ * @remarks
+ * - Includes responsive design for mobile and desktop
+ * - Provides navigation links to Home, Menu Board, and Careers
+ * - Implements dynamic button rendering based on screen size
+ */
+
 // const mobileMenuIcon = document.querySelector('.mobile-menu-icon');
 // const navbarLinks = document.querySelector('.navbar-links');
 
