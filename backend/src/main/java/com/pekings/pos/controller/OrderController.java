@@ -7,6 +7,7 @@ import com.pekings.pos.repository.MenuItemRepository;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
 import com.pekings.pos.util.DateUtil;
+import com.pekings.pos.util.SaleHistoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,6 +48,11 @@ public class OrderController {
     @GetMapping("/past/{amount}")
     public List<Order> getPreviousOrder(@PathVariable("amount") int amount) {
         return orderRepository.findByTimeRange(DateUtil.startOfData(), Instant.now(), Pageable.ofSize(amount));
+    }
+
+    @GetMapping("/past/day")
+    public List<SaleHistoryItem> getDailyRevenue() {
+        return orderRepository.getRevenueAndOrdersPeriodic(DateUtil.startOfDay(Instant.now()), Instant.now());
     }
 
     @GetMapping("/status/{status}")

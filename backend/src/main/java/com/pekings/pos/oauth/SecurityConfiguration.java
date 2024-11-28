@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                 "/api/menuitem/delete",
 
                 "/api/orders/delete",
-                "/api/orders/customer/**"
+                "/api/orders/customer/**",
+                "/api/orders/past/day"
         };
 
         CASHIER_REQUESTS = new String[] {
