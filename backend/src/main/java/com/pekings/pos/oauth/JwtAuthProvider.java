@@ -28,13 +28,16 @@ public class JwtAuthProvider implements AuthenticationManager {
 
         Collection<GrantedAuthority> authorities = new ArrayList<>(token.getAuthorities());
 
-        List<String> permissions = jwt.getClaimAsStringList("https://auth.pekings.ceedric.dev/roles");
+        List<String> roles = jwt.getClaimAsStringList("https://auth.pekings.ceedric.dev/roles");
 
-        if (permissions.contains("manager")) {
+        if (roles.contains("manager")) {
             authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
             authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
-        } else if (permissions.contains("cashier")) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_KITCHEN"));
+        } else if (roles.contains("cashier")) {
             authorities.add(new SimpleGrantedAuthority("ROLE_CASHIER"));
+        } else if (roles.contains("kitchen")) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_KITCHEN"));
         }
 
         return new JwtAuthenticationToken(jwt, authorities);
