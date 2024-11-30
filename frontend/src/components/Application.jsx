@@ -55,6 +55,9 @@ const Application = () => {
     const [rejectFeedback, setRejectFeedback] = useState('');
     const [showHireDialog, setShowHireDialog] = useState(false);
 
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+
     const handleSubmit = () => {
         // Close any open dialogs first
         setShowHireDialog(false);
@@ -71,10 +74,20 @@ const Application = () => {
         }
     };
 
+    const validateEmail = (emailToValidate) => {
+        // Regex to validate Gmail addresses
+        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        return gmailRegex.test(emailToValidate);
+    };
+
     const handleEmployeeAdd = async () => {
+
+        if (!validateEmail(email)) {
+            setEmailError('Please enter a valid Gmail address');
+            return;
+        }
+
         try {
-            // email uses username
-            const email = `${username}@gmail.com`;
 
             // employee obj
             const employee = {
@@ -126,7 +139,9 @@ const Application = () => {
         setReason('');
         setUsername('');
         setPassword('');
+        setEmail('');
         setRejectFeedback('');
+        setEmailError('');
     };
 
     return (
@@ -244,6 +259,27 @@ const Application = () => {
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
+                            </div>
+
+                            {/* Email Input */}
+                            <div>
+                                <label htmlFor="email" className="form-label">Email (Gmail only)</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    className="input-field-cc"
+                                    placeholder="Enter your Gmail address"
+                                    value={email}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        setEmailError(''); // Clear any previous error
+                                    }}
+                                />
+                                {emailError && (
+                                    <p className="error-message" style={{color: 'red', fontSize: '0.8em'}}>
+                                        {emailError}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Password submission */}
