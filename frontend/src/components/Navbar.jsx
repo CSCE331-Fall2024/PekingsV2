@@ -103,8 +103,8 @@ function Navbar() {
     <>
     <nav className="navbar">
         <div className="navbar-container">
-            <Link to = "/" className = "navbar-logo">
-                <img src = "/images/pekingslogo.png"></img>
+            <Link to="/" className="navbar-logo" aria-label="PeKings Home">
+                <img src="/images/pekingslogo.png" alt="PeKings Home Logo"></img>
             </Link>
             <div className='menu-icon' onClick={handleClick}>
                 <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
