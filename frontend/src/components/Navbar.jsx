@@ -1,15 +1,5 @@
 import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import MuiButton from '@mui/material/Button';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 
 import './Navbar.css';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -51,34 +41,48 @@ import BasicMenu from "./EmployeeMenu.jsx";
 
 function Navbar() {
   const [click, setClick] = useState(false);
-  const { user, isAuthenticated, loginWithPopup, logout } = useAuth0();
-  const [open, setOpen] = useState(false);
+  const { user, isAuthenticated, loginWithPopup, logout, getAccessTokenSilently } = useAuth0();
   const [roles, setRoles] = useState([])
 
-  const toggleDrawer = (newOpen) => () => {
-      setOpen(newOpen);
+  const addRoles = (role) => {
+
+      if (role === "MANAGER") {
+          setRoles(["CASHIER", "MANAGER", "KITCHEN"]);
+      } else {
+          setRoles([...roles, role.toUpperCase()]);
+      }
   };
 
-  useEffect(() => {
-      if (!isAuthenticated)
-          return
-      
-      setRoles(user["https://auth.pekings.ceedric.dev/roles"])
-  }, [isAuthenticated, user])
 
-  const DrawerList = (
-      <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-          <List>
-              {roles.map((text, index) => (
-                  <ListItem key={text} disablePadding>
-                      <ListItemButton>
-                          <ListItemText primary={text} />
-                      </ListItemButton>
-                  </ListItem>
-              ))}
-          </List>
-      </Box>
-  );
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchItems = async () => {
+      try {
+          const response = await fetch(`/api/employee?email=${user["email"]}`, {
+              method: "GET",
+              headers: {
+                  Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                  "Content-Type": "application/json",
+              },
+          });
+
+          if (response.ok) {
+              const employee = await response.json();
+              const role = await employee["position"];
+
+              addRoles(role)
+          } else {
+              console.error("Failed to fetch items:", response.status);
+          }
+      } catch (error) {
+          console.error("Error fetching items:", error);
+      }};
+
+      if (isAuthenticated && Array.isArray(roles) && roles.length === 0) {
+          fetchItems();
+      }
+  }, [isAuthenticated, getAccessTokenSilently, user]);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false)
@@ -125,9 +129,9 @@ function Navbar() {
                 Menu Board
               </Link>
             </li>
-                {isAuthenticated && (roles.includes("manager") || roles.includes("cashier")) ?
+                {isAuthenticated && (roles.includes("MANAGER") || roles.includes("CASHIER")) ?
                     <li className='nav-item'>
-                        <BasicMenu/>
+                        <BasicMenu roles={roles} />
                     </li>
                     :
                     <li className='nav-item'>
