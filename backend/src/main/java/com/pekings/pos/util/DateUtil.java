@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 public class DateUtil {
@@ -37,5 +40,13 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 31);
         return calendar.toInstant();
+    }
+
+    public static Instant startOfDay(Instant instant) {
+        Instant now = Instant.now();
+        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+        LocalDate localDate = zonedDateTime.toLocalDate();
+        ZonedDateTime midnight = localDate.atStartOfDay(ZoneId.systemDefault());
+        return midnight.toInstant();
     }
 }

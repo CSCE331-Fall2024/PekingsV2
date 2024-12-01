@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/DuckMascot.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/DuckMascot.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import './DuckMascot.css';
+
+/**
+ * The `DuckMascot` component represents an interactive ordering system mascot for PeKings.
+ * It allows users to add menu items to their order, customize ingredients, apply promo codes, and place an order.
+ * The mascot toggles visibility, displays an order summary, and provides real-time price calculations and feedback.
+ *
+ * @component
+ * @returns {JSX.Element} A React functional component that renders the Duck Mascot, an order summary, and interactive features.
+ *
+ * @example
+ * // Basic usage
+ * &lt;DuckMascot ref={duckRef} />
+ *
+ * @state {boolean} isOpen - Toggles the visibility of the mascot's order summary box.
+ * @state {Array&lt;Object>} orderItems - Stores the list of items added to the order.
+ * @state {Object} expandedItems - Tracks which items have their ingredient details expanded.
+ * @state {string} promoCode - The promo code entered by the user.
+ * @state {string} appliedPromo - The currently applied promo code.
+ * @state {string} promoError - Displays any error related to promo code validation.
+ * @state {Object} ingredientNames - Maps ingredient IDs to their names for displaying details.
+ * @state {Object} ingredientInventory - Tracks the current inventory for each ingredient.
+ *
+ * @constant {number} TAX_RATE - The tax percentage applied to the total order price.
+ * @constant {number} INGREDIENT_PRICE - The cost for each additional ingredient.
+ * @constant {number} PROMO_DISCOUNT - The discount percentage applied for valid promo codes.
+ * @constant {Array&lt;string>} VALID_PROMO_CODES - List of acceptable promo codes.
+ *
+ * @function fetchIngredientName
+ * Fetches the name and inventory for a specific ingredient by its ID.
+ *
+ * @function toggleDuck
+ * Toggles the visibility of the Duck Mascot's speech bubble/order summary.
+ *
+ * @function toggleIngredients
+ * Expands or collapses the ingredient list for a specific menu item.
+ *
+ * @function handleIngredientChange
+ * Adds or removes ingredients from an item's customization.
+ *
+ * @function calculateItemIngredientTotal
+ * Calculates the additional cost of customized ingredients for a menu item.
+ *
+ * @function calculateItemPrice
+ * Computes the total price for a menu item, including base price and extras.
+ *
+ * @function calculateSubtotal
+ * Calculates the total price for all items before tax, discount, and promo codes.
+ *
+ * @function calculateDiscount
+ * Determines the total discount based on the applied promo code.
+ *
+ * @function calculateTax
+ * Computes the tax based on the subtotal and tax rate.
+ *
+ * @function calculateTotal
+ * Calculates the final price after applying tax and discounts.
+ *
+ * @function handlePromoSubmit
+ * Validates and applies a promo code, updating the total price if valid.
+ *
+ * @function checkInventoryAvailability
+ * Ensures all ingredients in the order are available in sufficient quantities.
+ *
+ * @function handleOrder
+ * Submits the final order to the backend, validates inventory, and updates state.
+ *
+ * @function removeItem
+ * Removes an item from the order list by its index.
+ *
+ * @function addItem
+ * Adds a new item to the order, with default configurations.
+ *
+ * @throws Will display an alert if the backend API call for order submission fails.
+ *
+ * @example
+ * // Adding items to the order
+ * &lt;DuckMascot ref={duckRef} />
+ * duckRef.current.addItem({
+ *   menuItemId: 1,
+ *   name: "Peking Duck",
+ *   price: 25.0,
+ *   ingredients: [{ id: 24, name: "Chinese 5 Spice", count: 1 }],
+ * });
+ *
+ * @example
+ * // Placing an order
+ * &lt;button onClick={handleOrder}>Place Order&lt;/button>
+ */
+
+const TAX_RATE = 0.0825;
+const INGREDIENT_PRICE = 0.50;
+const PROMO_DISCOUNT = 0.20;
+const VALID_PROMO_CODES = ['DUCK20', 'PEKINGS20', 'WELCOME20'];
+
+const DuckMascot = forwardRef((props, ref) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [orderItems, setOrderItems] = useState([]);
+    const [expandedItems, setExpandedItems] = useState({});
+    const [promoCode, setPromoCode] = useState('');
+    const [appliedPromo, setAppliedPromo] = useState(null);
+    const [promoError, setPromoError] = useState('');
+    const [ingredientNames, setIngredientNames] = useState({});
+    const [ingredientInventory, setIngredientInventory] = useState({});
+
+    // Fetch ingredient name for a given ID
+    const fetchIngredientName = async (id) => {
+        try {
+            const response = await fetch(`/api/inventory/${id}`);
+            if (response.ok) {
+                const data = await response.json();
+                setIngredientNames(prev => ({
+                    ...prev,
+                    [id]: data.name
+                }));
+                setIngredientInventory(prev => ({
+                    ...prev,
+                    [id]: data.amount
+                }));
+            }
+        } catch (error) {
+            console.error(`Error fetching ingredient name for ID ${id}:`, error);
+        }
+    };
+
+    //gets ingredient id for each ingredient
+    useEffect(() => {
+        orderItems.forEach(item => {
+            if (item.ingredients) {
+                item.ingredients.forEach(ingredient => {
+                    const ingredientId = ingredient.ingredient || ingredient;
+                    if (!ingredientNames[ingredientId]) {
+                        fetchIngredientName(ingredientId);
+                    }
+                });
+            }
+        });
+    }, [orderItems]);
+
+    // function that handles when a menu item is clicked, will add to the order list
+    useImperativeHandle(ref, () => ({
+        addItem: (item) => {
+            try {
+                const newItem = {
+                    // copies over item property
+                    ...item,
+
+                    // id is the current date to track new
+                    id: Date.now(),
+
+                    // store the original menu item ID
+                    menuItemId: item.id,
+
+                    // copy of ingredients, if not filled in, choose empty list
+                    ingredients: (item.ingredients || []).map(ing => ({
+                        ...ing,
+                        ingredient: ing.ingredient || ing.id || ing
+                    })),
+
+                    // update ingredientCounts to use correct IDs
+                    ingredientCounts: Object.fromEntries(
+                        (item.ingredients || []).map(ing => [
+                            ing.ingredient || ing.id || ing,
+                            ing.amount || 1
+                        ])
+                    ),
+
+                    originalPrice: Number(item.price)
+                };
+
+                //addition of new items to duck mascot thingy
+                setOrderItems(prevItems => [...prevItems, newItem]);
+                setIsOpen(true);
+            }
+            catch (error) {
+                console.error("Error adding item:", error);
+            }
+        }
+    }));
+
+    const toggleDuck = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const toggleIngredients = (itemId) => {
+        setExpandedItems(prev => ({
+            ...prev,
+            [itemId]: !prev[itemId]
+        }));
+    };
+
+    //function to handle addition or removal of ingredients
+    const handleIngredientChange = (itemId, ingredient, action) => {
+        setOrderItems(prevItems => {
+            return prevItems.map(item => {
+                if (item.id === itemId) {
+                    const newCounts = {...item.ingredientCounts};
+                    const currentInventory = ingredientInventory[ingredient] || 0;
+
+                    if (action === 'add') {
+                        if (currentInventory > newCounts[ingredient]) {
+                            newCounts[ingredient] = (newCounts[ingredient] || 0) + 1;
+                        } else {
+                            alert(`Sorry, we don't have enough ${ingredientNames[ingredient]} in stock!`);
+                            return item;
+                        }
+                    }
+                    else if (action === 'remove' &amp;&amp; newCounts[ingredient] > 0) {
+                        newCounts[ingredient] = newCounts[ingredient] - 1;
+                    }
+
+                    return {
+                        ...item,
+                        ingredientCounts: newCounts
+                    };
+                }
+                return item;
+            });
+        });
+    };
+
+    //functions needed for calcs &amp; order functionality
+    //NOTE: use toFixed(2) to make it into a string and round to dollar amount 1 -> 1.00
+
+    const calculateItemIngredientTotal = (item) => {
+        if (!item.ingredientCounts) return 0;
+
+        const originalTotal = item.ingredients.length;
+        const currentTotal = Object.values(item.ingredientCounts)
+            .reduce((sum, count) => sum + count, 0);
+
+        return (currentTotal - originalTotal) * INGREDIENT_PRICE;
+    };
+
+    const calculateItemPrice = (item) => {
+        if (!item.ingredientCounts) return item.originalPrice || 0;
+
+        const allIngredientsZero = item.ingredients.every(
+            ingredient => {
+                const ingredientId = ingredient.ingredient || ingredient;
+                return item.ingredientCounts[ingredientId] === 0;
+            }
+        );
+
+        if (allIngredientsZero)
+            return 0;
+
+        // Use the stored original price instead of the potentially modified price
+        const basePrice = item.originalPrice || 0;
+        const ingredientPrice = calculateItemIngredientTotal(item);
+        return basePrice + ingredientPrice;
+    };
+
+    const removeItem = (index) => {
+        setOrderItems(orderItems.filter((_, i) => i !== index));
+    };
+
+    const calculateSubtotal = () => {
+        return orderItems.reduce((sum, item) => sum + calculateItemPrice(item), 0);
+    };
+
+    const calculateDiscount = () => {
+        return appliedPromo ? calculateSubtotal() * PROMO_DISCOUNT : 0;
+    };
+
+    const calculateTax = () => {
+        return (calculateSubtotal() - calculateDiscount()) * TAX_RATE;
+    };
+
+    const calculateTotal = () => {
+        return calculateSubtotal() - calculateDiscount() + calculateTax();
+    };
+
+    const handlePromoSubmit = (e) => {
+        e.preventDefault();
+        if (VALID_PROMO_CODES.includes(promoCode.toUpperCase())) {
+            setAppliedPromo(promoCode.toUpperCase());
+            setPromoError('');
+        }
+        else {
+            setPromoError('Invalid promo code');
+        }
+        setPromoCode('');
+    };
+
+    const checkInventoryAvailability = () => {
+        // track the total ingredients
+        const totalIngredientUsage = {};
+
+        // calculate amount needed
+        orderItems.forEach(item => {
+            if (item.ingredientCounts) {
+                Object.entries(item.ingredientCounts).forEach(([ingredientId, count]) => {
+                    totalIngredientUsage[ingredientId] = (totalIngredientUsage[ingredientId] || 0) + count;
+                });
+            }
+        });
+
+        // Check if there is enough of an ingredient
+        for (const [ingredientId, needed] of Object.entries(totalIngredientUsage)) {
+            const available = ingredientInventory[ingredientId] || 0;
+            if (needed > available) {
+                return {
+                    available: false,
+                    ingredient: ingredientNames[ingredientId]
+                };
+            }
+        }
+
+        return { available: true };
+    };
+
+    const handleOrder = async () => {
+        try {
+            // Check if ingredients are available
+            const inventoryCheck = checkInventoryAvailability();
+            if (!inventoryCheck.available) {
+                throw new Error(`Not enough ${inventoryCheck.ingredient} in stock to complete this order.`);
+            }
+
+            // format order items array using the stored menuItemId
+            console.log("x");
+            const items = orderItems.map(item => ({
+                menuItem: {
+                    id: Number(item.menuItemId),
+
+                },
+                extras: Object.entries(item.ingredientCounts)
+                    .map(([ingredientId, count]) => ({
+                        ingredient: { id: Number(ingredientId) },
+                        amount: count - 1
+                    })),
+            }));
+            console.log(items);
+
+            // Create the order object
+            const order = {
+                customer: {
+                    id: Math.floor(Math.random() * 1000) + 1,
+                },
+                employee: {
+                    id: 7,
+                },
+                time: new Date().toISOString(),
+                price: Number(calculateTotal().toFixed(2)),
+                payment_method: "credit-card",
+                status: "incomplete",
+                items: items,
+            };
+
+            // Debug log
+            console.log('Sending order:', JSON.stringify(order, null, 2));
+
+            const response = await fetch('/api/orders/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'No error details available' }));
+                throw new Error(`Server responded with ${response.status}: ${errorData.message}`);
+            }
+
+            // Process response data
+            const responseData = await response.json();
+            console.log('Order response:', responseData);
+            orderItems.forEach(item => {
+                if (item.ingredientCounts) {
+                    Object.entries(item.ingredientCounts).forEach(([ingredientId, count]) => {
+                        setIngredientInventory((prev) => ({
+                            ...prev,
+                            [ingredientId]: (prev[ingredientId] || 0) - count,
+                        }));
+                    });
+                }
+            });
+
+            order.items.forEach(item => {
+                item.extras?.forEach((extra) => {
+                    const ingredientId = extra.ingredient.id;
+                    setIngredientInventory((prev) => ({
+                        ...prev,
+                        [ingredientId]: (prev[ingredientId] || 0) - extra.amount,
+                    }));
+                });
+            });
+
+            console.log(orderItems);
+
+            console.log('inventory updated successfully');
+
+            // Clear the order
+            setOrderItems([]);
+            setIsOpen(false);
+            setAppliedPromo(null);
+            setPromoError('');
+            setExpandedItems({});
+
+
+            // yippee it didnt fail
+            alert('Order placed successfully!');
+        } catch (error) {
+            console.error('Error processing order:', error);
+            alert(`Failed to place order: ${error.message}`);
+        }
+    };
+
+
+    return (
+        &lt;div className="duck-mascot-container">
+            {isOpen &amp;&amp; (
+                &lt;div className="speech-box">
+                    &lt;div className="speech-box-header">
+                        &lt;h3>Order Summary&lt;/h3>
+                        &lt;button className="close-button" onClick={toggleDuck}>×&lt;/button>
+                    &lt;/div>
+
+                    &lt;div className="speech-box-content">
+                        {orderItems.length === 0 ? (
+                            &lt;p className="empty-message">Your cart is empty&lt;/p>
+                        ) : (
+                            orderItems.map((item, index) => (
+                                &lt;div key={item.id} className="order-item-container">
+                                    &lt;div className="order-item">
+                                        &lt;button className="item-name-button" onClick={() => toggleIngredients(item.id)}>
+                                            &lt;span>{item.name}&lt;/span>
+                                        &lt;/button>
+                                        &lt;span>${calculateItemPrice(item).toFixed(2)}&lt;/span>
+                                        &lt;button className="remove-item" onClick={() => removeItem(index)}>
+                                            ×
+                                        &lt;/button>
+                                    &lt;/div>
+
+                                    {item.category !== 'drink' &amp;&amp; item.category !== 'dessert' &amp;&amp; expandedItems[item.id] &amp;&amp; ( //will change
+                                        &lt;div className="ingredients-list">
+                                            &lt;p className="ingredients-title">Ingredients:&lt;/p>
+                                            {item.ingredients.map((ingredient, idx) => {
+
+                                                // handles ingredients
+                                                const ingredientId = ingredient.ingredient || ingredient;
+                                                return (
+                                                    &lt;div key={idx} className="ingredient-item">
+                                                        &lt;span className="ingredient-name">
+                                                            {ingredientNames[ingredientId] || `Loading...`}
+                                                            &lt;span className="ingredient-count">
+                                                                × {item.ingredientCounts[ingredientId] || 0}
+                                                            &lt;/span>
+                                                        &lt;/span>
+
+                                                        {/* controls how many ingredients are added or taken away */}
+                                                        &lt;div className="ingredient-controls">
+                                                            &lt;button className="ingredient-button remove"
+                                                                onClick={() => handleIngredientChange(
+                                                                    item.id,
+                                                                    ingredientId,
+                                                                    'remove'
+                                                                )}
+                                                                disabled={!item.ingredientCounts[ingredientId]}>
+                                                                -
+                                                            &lt;/button>
+                                                            &lt;button className="ingredient-button add"
+                                                                onClick={() => handleIngredientChange(
+                                                                    item.id,
+                                                                    ingredientId,
+                                                                    'add'
+                                                                )}>
+                                                                +
+                                                            &lt;/button>
+                                                        &lt;/div>
+                                                    &lt;/div>
+                                                );
+                                            })}
+
+                                            {/*  overall price change in relation to ingredients */}
+                                            {calculateItemIngredientTotal(item) !== 0 &amp;&amp; (
+                                                &lt;p className="ingredient-price-change">
+                                                    Ingredient adjustments:
+                                                    ${calculateItemIngredientTotal(item).toFixed(2)}
+                                                &lt;/p>
+                                            )}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+                            ))
+                        )}
+                    &lt;/div>
+
+                    {/* speech box from duck, modified to handle promo codes */}
+                    &lt;div className="speech-box-footer">
+
+                        {/* if promo isnt applied, promo section is available */}
+                        {!appliedPromo &amp;&amp; (
+                            &lt;form onSubmit={handlePromoSubmit} className="promo-form">
+                                &lt;input
+                                    type="text"
+                                    value={promoCode}
+                                    onChange={(e) => setPromoCode(e.target.value)}
+                                    placeholder="Enter promo code"
+                                    className="promo-input"
+                                />
+                                &lt;button type="submit" className="promo-button">Apply&lt;/button>
+                            &lt;/form>
+                        )}
+
+                        {/* no/incorrect promo */}
+                        {promoError &amp;&amp; &lt;p className="promo-error">{promoError}&lt;/p>}
+
+                        {/* if appliedPromo is true (lol the naming speaks for itself) */}
+                        {appliedPromo &amp;&amp; (
+                            &lt;div className="applied-promo">
+                                Promo code {appliedPromo} applied!
+                            &lt;/div>
+                        )}
+
+                        {/* calculation of price at bottom of speech text */}
+                        &lt;div className="price-breakdown">
+                            &lt;div className="price-row">
+                                &lt;span>Subtotal:&lt;/span>
+                                &lt;span>${calculateSubtotal().toFixed(2)}&lt;/span>
+                            &lt;/div>
+                            {appliedPromo &amp;&amp; (
+                                &lt;div className="price-row discount">
+                                    &lt;span>Discount (20%):&lt;/span>
+                                    &lt;span>-${calculateDiscount().toFixed(2)}&lt;/span>
+                                &lt;/div>
+                            )}
+                            &lt;div className="price-row">
+                                &lt;span>Tax (8.25%):&lt;/span>
+                                &lt;span>${calculateTax().toFixed(2)}&lt;/span>
+                            &lt;/div>
+                            &lt;div className="price-row total">
+                                &lt;span>Total:&lt;/span>
+                                &lt;span>${calculateTotal().toFixed(2)}&lt;/span>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;button className="order-button" onClick={handleOrder} disabled={orderItems.length === 0}>
+                            Place Order
+                        &lt;/button>
+                    &lt;/div>
+                &lt;/div>
+            )}
+            &lt;img
+                src={isOpen ? '/images/duckopen.png' : '/images/duckidle.png'}
+                alt="Duck Mascot"
+                className="duck-mascot"
+                onClick={toggleDuck}
+            />
+        &lt;/div>
+    );
+});
+
+export default DuckMascot;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Main.html">Main</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Career">Career</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#MenuBoard">MenuBoard</a></li><li><a href="global.html#MenuGrid">MenuGrid</a></li><li><a href="global.html#MenuSect">MenuSect</a></li><li><a href="global.html#SIZES">SIZES</a></li><li><a href="global.html#addItemAddsanewitemtotheorder,withdefaultconfigurations.">addItemAdds a new item to the order, with default configurations.</a></li><li><a href="global.html#googleTranslateElementInit-InitializesGoogleTranslatefunctionality">googleTranslateElementInit - Initializes Google Translate functionality</a></li><li><a href="global.html#handleAddToOrder-AddsselectedmenuitemstotheDuckMascot'sorder">handleAddToOrder - Adds selected menu items to the DuckMascot's order</a></li><li><a href="global.html#handleCloseDialog-Resetstheformfieldsandclosesanyopendialogs.">handleCloseDialog - Resets the form fields and closes any open dialogs.</a></li><li><a href="global.html#showButton-Adaptsbuttondisplaybasedonscreenwidth">showButton - Adapts button display based on screen width</a></li><li><a href="global.html#toggleHighContrastMode-Switcheshighcontrastmodeon/off-Applies'high-contrast'classtoappcontent-Updatesstatetoreflectcurrentmode">toggleHighContrastMode - Switches high contrast mode on/off- Applies 'high-contrast' class to app content- Updates state to reflect current mode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 13:19:53 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

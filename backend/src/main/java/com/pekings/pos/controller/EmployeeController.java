@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -34,6 +35,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Employee getAllEmployees(@PathVariable("id") int id) {
         return employeeRepository.findById(id).orElse(null);
+    }
+
+    @GetMapping
+    public Employee getEmployeeByEmail(@RequestParam("email") String email) {
+        return employeeRepository.findByEmail(email);
     }
 
     @GetMapping("/{id}/orders")

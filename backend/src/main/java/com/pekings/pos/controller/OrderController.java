@@ -7,7 +7,7 @@ import com.pekings.pos.repository.MenuItemRepository;
 import com.pekings.pos.repository.OrderItemRepository;
 import com.pekings.pos.repository.OrderRepository;
 import com.pekings.pos.util.DateUtil;
-import org.aspectj.weaver.ast.Or;
+import com.pekings.pos.util.SaleHistoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,6 +50,11 @@ public class OrderController {
         return orderRepository.findByTimeRange(DateUtil.startOfData(), Instant.now(), Pageable.ofSize(amount));
     }
 
+    @GetMapping("/past/day")
+    public List<SaleHistoryItem> getDailyRevenue() {
+        return orderRepository.getRevenueAndOrdersPeriodic(DateUtil.startOfDay(Instant.now()), Instant.now());
+    }
+
     @GetMapping("/status/{status}")
     public List<Order> getOrdersByStatus(@PathVariable("status") String status) {
         return orderRepository.findByStatus(status);
@@ -69,7 +74,7 @@ public class OrderController {
     public Order updateOrderStatus(@PathVariable("id") int id, @RequestParam(value = "status") String newStatus) {
         Order order = getOrder(id);
         order.setStatus(newStatus);
-        return order;
+        return orderRepository.save(order);
     }
 
     /**

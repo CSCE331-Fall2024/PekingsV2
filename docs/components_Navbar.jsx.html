@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Navbar.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Navbar.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react';
+import { Button } from './Button';
+import {Link} from 'react-router-dom';
+
+import './Navbar.css';
+
+/**
+ * The `Navbar` component renders the site's navigation menu with responsive design.
+ * Supports mobile menu toggling and adaptive button display based on screen width.
+ *
+ * @component
+ * @returns {JSX.Element} A responsive navigation bar with menu items and login option
+ *
+ * @state
+ * @state {boolean} click - Controls mobile menu open/close state
+ * @state {boolean} button - Determines button visibility based on screen width
+ *
+ * @methods
+ * @method handleClick - Toggles mobile menu visibility
+ * @method closeMobileMenu - Closes mobile menu
+ * @method showButton - Adapts button display based on screen width
+ *
+ * @example
+ * &lt;Navbar />
+ *
+ * @remarks
+ * - Includes responsive design for mobile and desktop
+ * - Provides navigation links to Home, Menu Board, and Careers
+ * - Implements dynamic button rendering based on screen size
+ */
+
+// const mobileMenuIcon = document.querySelector('.mobile-menu-icon');
+// const navbarLinks = document.querySelector('.navbar-links');
+
+// // Toggle the mobile menu visibility
+// mobileMenuIcon.addEventListener('click', () => {
+//     navbarLinks.classList.toggle('active');
+// });
+
+function Navbar() {
+  const [click, setClick] = useState(false);
+  const [button, setButton] = useState(true)
+
+  const handleClick = () => setClick(!click);
+  const closeMobileMenu = () => setClick(false)
+
+    //like media from css
+    const showButton = () => {
+        if (window.innerWidth &lt;= 960) {
+          setButton(false);
+        } else {
+          setButton(true);
+        }
+      };
+    
+    //   useEffect(() => {
+    //     showButton();
+    //   }, []);
+      
+      //whenever I resize I want showButton to work for me
+      window.addEventListener('resize', showButton);
+    
+
+  return (
+    &lt;>
+    &lt;nav className="navbar">
+        &lt;div className="navbar-container">
+            &lt;Link to = "/" className = "navbar-logo">
+                &lt;img src = "/images/pekingslogo.png">&lt;/img>
+            &lt;/Link>
+            &lt;div className='menu-icon' onClick={handleClick}>
+                &lt;i className={click ? 'fas fa-times' : 'fas fa-bars'} />
+            &lt;/div>
+            &lt;ul className={click ? 'nav-menu active' : 'nav-menu'}>
+            &lt;li className='nav-item'>
+              &lt;Link to='/' className='nav-links' onClick={closeMobileMenu}>
+                Home
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className='nav-item'>
+              &lt;Link
+                to='/MenuBoard'
+                className='nav-links'
+                onClick={closeMobileMenu}
+                // could also be menu board if needed
+              >  
+                Menu Board
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className='nav-item'>
+              &lt;Link
+                to='/Careers'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                Careers
+              &lt;/Link>
+            &lt;/li>
+
+            &lt;li>
+              &lt;Link
+                to='/log-in'
+                className='nav-links-mobile'
+                onClick={closeMobileMenu}
+              >
+                Log in
+              &lt;/Link>
+            &lt;/li>
+          &lt;/ul>
+          {button &amp;&amp; &lt;Button buttonStyle='btn--outline'>Log in&lt;/Button>}
+        &lt;/div>
+    &lt;/nav>
+    &lt;/>
+  );
+}
+
+export default Navbar;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Main.html">Main</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Career">Career</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#MenuBoard">MenuBoard</a></li><li><a href="global.html#MenuGrid">MenuGrid</a></li><li><a href="global.html#MenuSect">MenuSect</a></li><li><a href="global.html#SIZES">SIZES</a></li><li><a href="global.html#addItemAddsanewitemtotheorder,withdefaultconfigurations.">addItemAdds a new item to the order, with default configurations.</a></li><li><a href="global.html#googleTranslateElementInit-InitializesGoogleTranslatefunctionality">googleTranslateElementInit - Initializes Google Translate functionality</a></li><li><a href="global.html#handleAddToOrder-AddsselectedmenuitemstotheDuckMascot'sorder">handleAddToOrder - Adds selected menu items to the DuckMascot's order</a></li><li><a href="global.html#handleCloseDialog-Resetstheformfieldsandclosesanyopendialogs.">handleCloseDialog - Resets the form fields and closes any open dialogs.</a></li><li><a href="global.html#showButton-Adaptsbuttondisplaybasedonscreenwidth">showButton - Adapts button display based on screen width</a></li><li><a href="global.html#toggleHighContrastMode-Switcheshighcontrastmodeon/off-Applies'high-contrast'classtoappcontent-Updatesstatetoreflectcurrentmode">toggleHighContrastMode - Switches high contrast mode on/off- Applies 'high-contrast' class to app content- Updates state to reflect current mode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 13:19:53 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

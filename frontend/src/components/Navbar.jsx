@@ -1,8 +1,45 @@
-import React, {useState} from 'react';
-import { Button } from './Button';
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import MuiButton from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 import './Navbar.css';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Button } from "./Button.jsx";
+import BasicMenu from "./EmployeeMenu.jsx";
+
+/**
+ * The `Navbar` component renders the site's navigation menu with responsive design.
+ * Supports mobile menu toggling and adaptive button display based on screen width.
+ *
+ * @component
+ * @returns {JSX.Element} A responsive navigation bar with menu items and login option
+ *
+ * @state
+ * @state {boolean} click - Controls mobile menu open/close state
+ * @state {boolean} button - Determines button visibility based on screen width
+ *
+ * @methods
+ * @method handleClick - Toggles mobile menu visibility
+ * @method closeMobileMenu - Closes mobile menu
+ * @method showButton - Adapts button display based on screen width
+ *
+ * @example
+ * <Navbar />
+ *
+ * @remarks
+ * - Includes responsive design for mobile and desktop
+ * - Provides navigation links to Home, Menu Board, and Careers
+ * - Implements dynamic button rendering based on screen size
+ */
 
 // const mobileMenuIcon = document.querySelector('.mobile-menu-icon');
 // const navbarLinks = document.querySelector('.navbar-links');
@@ -14,34 +51,60 @@ import './Navbar.css';
 
 function Navbar() {
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true)
+  const { user, isAuthenticated, loginWithPopup, logout } = useAuth0();
+  const [open, setOpen] = useState(false);
+  const [roles, setRoles] = useState([])
+
+  const toggleDrawer = (newOpen) => () => {
+      setOpen(newOpen);
+  };
+
+  useEffect(() => {
+      if (!isAuthenticated)
+          return
+      
+      setRoles(user["https://auth.pekings.ceedric.dev/roles"])
+  }, [isAuthenticated, user])
+
+  const DrawerList = (
+      <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+          <List>
+              {roles.map((text, index) => (
+                  <ListItem key={text} disablePadding>
+                      <ListItemButton>
+                          <ListItemText primary={text} />
+                      </ListItemButton>
+                  </ListItem>
+              ))}
+          </List>
+      </Box>
+  );
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false)
 
-    //like media from css
-    const showButton = () => {
-        if (window.innerWidth <= 960) {
-          setButton(false);
-        } else {
-          setButton(true);
-        }
-      };
+    // //like media from css
+    // const showButton = () => {
+    //     if (window.innerWidth <= 960) {
+    //       setButton(false);
+    //     } else {
+    //       setButton(true);
+    //     }
+    //   };
     
     //   useEffect(() => {
     //     showButton();
     //   }, []);
       
       //whenever I resize I want showButton to work for me
-      window.addEventListener('resize', showButton);
-    
+      // window.addEventListener('resize', showButton);
 
   return (
     <>
     <nav className="navbar">
         <div className="navbar-container">
-            <Link to = "/" className = "navbar-logo">
-                <img src = "/images/pekingslogo.png"></img>
+            <Link to="/" className="navbar-logo" aria-label="PeKings Home">
+                <img src="/images/pekingslogo.png" alt="PeKings Home Logo"></img>
             </Link>
             <div className='menu-icon' onClick={handleClick}>
                 <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
@@ -58,31 +121,32 @@ function Navbar() {
                 className='nav-links'
                 onClick={closeMobileMenu}
                 // could also be menu board if needed
-              >  
+              >
                 Menu Board
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link
-                to='/Careers'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                Careers
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to='/log-in'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Log in
-              </Link>
-            </li>
-          </ul>
-          {button && <Button buttonStyle='btn--outline'>Log in</Button>}
+                {isAuthenticated && (roles.includes("manager") || roles.includes("cashier")) ?
+                    <li className='nav-item'>
+                        <BasicMenu/>
+                    </li>
+                    :
+                    <li className='nav-item'>
+                        <Link
+                            to='/Careers'
+                            className='nav-links'
+                            onClick={closeMobileMenu}
+                        >
+                            Careers
+                        </Link>
+                    </li>}
+            </ul>
+            {isAuthenticated ? (
+                <Button buttonStyle="btn--outline"
+                        onClick={() => logout({logoutParams: {returnTo: window.location.origin}})}
+                >Logout</Button>
+            ) : (
+                <Button buttonStyle="btn--outline" onClick={() => loginWithPopup()}>Login</Button>
+            )}
         </div>
     </nav>
     </>
