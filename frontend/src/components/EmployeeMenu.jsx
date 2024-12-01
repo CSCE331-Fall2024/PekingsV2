@@ -5,35 +5,27 @@ import MenuItem from '@mui/material/MenuItem';
 import {Link, useNavigate} from "react-router-dom";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {useAuth0} from "@auth0/auth0-react";
-import {useEffect} from "react";
 import Cashier from "../Cashier.jsx";
 import Manager from "../Manager.jsx";
 
-export default function BasicMenu() {
+export default function BasicMenu(roles) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [roles, setRoles] = React.useState([]);
-    const { user, isAuthenticated } = useAuth0();
+    const { user } = useAuth0();
     const navigate = useNavigate();
 
-    useEffect(() => {
-       if (!isAuthenticated)
-           return
-
-       setRoles(user["https://auth.pekings.ceedric.dev/roles"])
-    }, [isAuthenticated, user])
+    console.log(roles["roles"])
 
     // Role-based menu items mapping
     const menuItemsByRole = {
-        cashier: [{ label: "Cashier", path: <Cashier /> }],
-        manager: [
+        CASHIER: [{ label: "Cashier", path: <Cashier /> }],
+        MANAGER: [
             { label: "Manager", path: <Manager /> },
-            [{ label: "Cashier", path: <Cashier /> }],
         ]
     };
 
     const getMenuItems = () => {
         const items = [];
-        roles.forEach(role => {
+        roles["roles"].forEach(role => {
             if (menuItemsByRole[role]) {
                 menuItemsByRole[role].forEach(item => {
                     if (Array.isArray(item)) {
