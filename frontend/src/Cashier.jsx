@@ -67,7 +67,13 @@ const Cashier = ({logout, setIsTranslateVisible, switchToManager}) => {
     const [isManagerLogoutOpen, setIsManagerLogoutOpen] = useState(false);
 
     const location = useLocation();
+    console.log(location.state)
     const employee = location.state.employee
+
+    if (!employee) {
+        console.error("Employee data is missing from location.state!");
+        return <div>No employee data provided.</div>;
+    }
 
     function getLastActive(){
         let lastActive = -1;

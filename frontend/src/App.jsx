@@ -9,6 +9,7 @@ import MenuBoard from './components/pages/MenuBoard';
 import AccessibilityPanel from './components/AccessibilityPanel';
 import Cashier from "./Cashier";
 import Kitchen from "./Kitchen.jsx";
+import Manager from "./Manager.jsx";
 
 /**
  * The `App` component serves as the main application container and routing configuration.
@@ -83,6 +84,7 @@ const App = () => {
                           setIsTranslateVisible={setIsTranslateVisible}/>}/> {/* No idea where the sign-up path comes from*/}
                       <Route path="/Cashier" element={<Cashier />} />
                       <Route path="/Kitchen" element={<Kitchen />} />
+                      <Route path="/Manager" element={<Manager />} />
                   </Routes>
               </div>
               {isVisible ? (<AccessibilityPanel/>) : (<div/>)}

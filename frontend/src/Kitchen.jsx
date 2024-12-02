@@ -16,7 +16,7 @@ function Kitchen({logout, setIsTranslateVisible}) {
     // Fetch incomplete orders
     const fetchIncompleteOrders = async () => {
         try {
-            const token = getAccessTokenSilently()
+            const token = await getAccessTokenSilently()
             const response = await fetch('/api/orders/status/incomplete', {
                 method: 'GET',
                 headers: {
@@ -115,9 +115,11 @@ function Kitchen({logout, setIsTranslateVisible}) {
         let apiText = "api/orders/update/status/" + currentOrders[OrderNumber].order_id + "?status=complete"
         // console.log(apiText);
         const handleCompletion = async () => {
+            const token = await getAccessTokenSilently()
             const response = await fetch(apiText, {
                 method: 'PATCH',
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
