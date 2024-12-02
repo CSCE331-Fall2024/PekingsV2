@@ -45,6 +45,7 @@
 .data-table tbody tr:hover {
     background-color: #f9f9f9;
 }
+
 .data-table .invButton_M {
     background: none;
     border: none;
@@ -64,8 +65,6 @@
 .main-content .add-button {
     display: flex;
     justify-content: flex-end;
-    /*background: red;*/
-    color: red;
     font-size: 16px;
     text-align: center;
 }
@@ -76,6 +75,28 @@
     cursor: pointer;
     box-sizing: border-box;
 }
+
 .add-button button:hover {
     background-color: #34495e;
+}
+
+.stats-btn button {
+    all: unset; /* Reset all default styles */
+    background-color: #748D92; /* Desired background */
+    color: white; /* Text color */
+    margin-top: 20px;
+    padding: 15px 32px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    border: none; /* Remove borders */
+    box-shadow: none; /* Remove shadows */
+}
+
+.stats-btn button:hover {
+    background-color: #34495e;
+}
+
+.stats-btn .statsH3{
+    margin-top: 15px;
 }

@@ -1,8 +1,10 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
-import Display from './Display.jsx'
 import App from './App.jsx'
+import Display from './Display.jsx'
+import Cashier from './Cashier.jsx'
+import Kitchen from './Kitchen.jsx'
 import {Auth0Provider} from "@auth0/auth0-react";
 
 /**
@@ -36,7 +38,7 @@ createRoot(document.getElementById('root')).render(
                        audience: "https://auth.pekings.ceedric.dev",
                        scope: "openid profile email",
                    }
-    }>
+                   }>
 
         <App />
         {/*<Kitchen />*/}
@@ -50,7 +52,7 @@ createRoot(document.getElementById('root')).render(
         {/*    "isClockedin": false,*/}
         {/*    "pin": null*/}
         {/*}}/>*/}
-        {/*<Display/>*/}
+        <Display/>
 
     </Auth0Provider>
 )

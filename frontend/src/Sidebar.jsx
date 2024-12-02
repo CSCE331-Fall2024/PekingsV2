@@ -12,7 +12,7 @@ function Sidebar({ logout, onSelect }) {
             <button onClick={() => onSelect('Inventory')}>Inventory</button>
             <button onClick={() => onSelect('Menu Items')}>Menu Items</button>
             <button onClick={() => onSelect('Employees')}>Employees</button>
-            {/*<button onClick={() => onSelect('Statistics')}>Statistics</button>*/}
+            <button onClick={() => onSelect('Statistics')}>Statistics</button>
         </div>
     );
 }

@@ -35,6 +35,12 @@ function Manager({ selectedSection }) {
     const [inputEmployeePin, setInputEmployeePin] = useState('0000');
     const [originalEmployees, setOriginalEmployees] = useState([]);
 
+    // Statistics
+    const [reportList, setReportList] = useState([]);
+    const [incompleteOrdersList, setIncompleteOrdersList] = useState([]);
+    const [selectedButton, setSelectedButton] = useState("");
+    const currentDateTime = new Date().toLocaleString(); // Formats to "MM/DD/YYYY, HH:MM:SS AM/PM"
+
 
 
 
@@ -109,6 +115,57 @@ function Manager({ selectedSection }) {
     useEffect(() => {
         fetchItems3();
     },[]);
+
+
+    // Get number of orders sold per hour, and total revenue for that hour
+    const fetchItems4 = async () => {
+        try {
+            const reportResponse = await fetch("/api/orders/past/day", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (reportResponse.ok) {
+                const items = await reportResponse.json();
+                setReportList(items);
+            } else {
+                console.error("Failed to fetch items:", reportResponse.status);
+            }
+
+        }   catch (error) {
+            console.error("Error fetching items:", error);
+        }
+    };
+    useEffect(() => {
+        fetchItems4();
+    },[]);
+
+    //Get list of orders that have not been completed yet to keep track in case manager
+    //needs to step out of their office and help the kitchen line.
+    const fetchItems5 = async () => {
+        try {
+            const reportResponse = await fetch("/api/orders/past/day", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (reportResponse.ok) {
+                const items = await reportResponse.json();
+                setIncompleteOrdersList(items);
+            } else {
+                console.error("Failed to fetch items:", reportResponse.status);
+            }
+
+        }   catch (error) {
+            console.error("Error fetching items:", error);
+        }
+    };
+    useEffect(() => {
+        fetchItems5();
+    },[]);
+
 
     /*@PostMapping("/add")
     public Inventory addIngredient(@RequestBody Inventory inventory) {
@@ -535,6 +592,18 @@ function Manager({ selectedSection }) {
     };
 
 
+    // Stats Handlers
+    const handleStatsXReport = () => {
+        setSelectedButton("xReport")
+    }
+    const handleStatsZReport = () => {
+        setSelectedButton("zReport")
+    }
+    const handleStatsOrders = () => {
+        setSelectedButton("Current Orders")
+    }
+
+
     return (
 
         <div className="managerRoot">
@@ -671,6 +740,9 @@ function Manager({ selectedSection }) {
                             <th>Username</th>
                             <th>Password</th>
                             <th>Position</th>
+                            <th>Clocked In</th>
+                            <th>pin</th>
+                            <th>Email</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -712,6 +784,9 @@ function Manager({ selectedSection }) {
                                         <td>{employee.username}</td>
                                         <td>{employee.pass}</td>
                                         <td>{employee.position}</td>
+                                        <td>{employee.isClockedin}</td>
+                                        <td>{employee.pin}</td>
+                                        <td>{employee.email}</td>
                                         <td>
                                             <button onClick={() => handleEditClickEmployee(index)}>Edit</button>
                                             <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
@@ -742,11 +817,83 @@ function Manager({ selectedSection }) {
                         <button onClick={addEmployee}>Add Employee</button>
                     </div>
                 )}
-                {/*{selectedSection === "Statistics" && (*/}
-                {/*    <div className="add-button">*/}
+                {selectedSection === "Statistics" && (
+                    <div className="stats-btn">
+                        <button onClick={handleStatsXReport}> xReport </button>
+                        <button onClick={handleStatsZReport}> zReport </button>
+                        <button onClick={handleStatsOrders}> Current Orders </button>
 
-                {/*    </div>*/}
-                {/*)}*/}
+                        {selectedButton === "xReport" && (
+                            <div>
+                                <h3></h3>
+                                <h3 className = "statsH3">xReport: {currentDateTime}</h3>
+                                <table className="data-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Orders</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {reportList.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>item.hour</td>
+                                            <td>item.orders</td>
+                                            <td>item.revenue</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {selectedButton === "zReport" && (
+                            <table className="data-table">
+                                <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Orders</th>
+                                    <th>Revenue</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {reportList.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>item.hour</td>
+                                        <td>item.orders</td>
+                                        <td>item.revenue</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        )}
+                        {selectedButton === "Current Orders" && (
+                            <div>
+                                <h3></h3>
+                                <h3 className = "statsH3">Current Orders: {currentDateTime}</h3>
+                                <table className="data-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Orders</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {incompleteOrdersList.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>item.hour</td>
+                                            <td>item.orders</td>
+                                            <td>item.revenue</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                    </div>
+                )}
 
             </div>
         </div>
