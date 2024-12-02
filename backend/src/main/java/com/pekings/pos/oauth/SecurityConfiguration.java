@@ -38,7 +38,6 @@ public class SecurityConfiguration {
         };
 
         CASHIER_REQUESTS = new String[] {
-                "/api/orders/add",
                 "/api/orders/update/**",
                 "/api/orders/update",
                 "/api/orders/*/menuitems",
