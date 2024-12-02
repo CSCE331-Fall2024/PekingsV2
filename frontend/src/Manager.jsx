@@ -42,7 +42,7 @@ function Manager({ selectedSection }) {
     const [reportList, setReportList] = useState([]);
     const [incompleteOrdersList, setIncompleteOrdersList] = useState([]);
     const [selectedButton, setSelectedButton] = useState("");
-    const currentDateTime = new Date().toLocaleString(); // Formats to "MM/DD/YYYY, HH:MM:SS AM/PM"
+    const currentDateTime = new Date().toLocaleString('en-us', {month: '2-digit', day: '2-digit', year: '2-digit'}); // Formats to "MM/DD/YYYY, HH:MM:SS AM/PM"
     const currentClock = new Date();
     const formattedTime = currentClock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const formatHour =  currentClock.toLocaleTimeString( [],{hour: '2-digit'});
@@ -916,22 +916,36 @@ function Manager({ selectedSection }) {
                         )}
                         {selectedButton === "Current Orders" && (
                             <div>
-                                <></>
-                                <h3 className = "statsH3">Current Orders: {currentDateTime}</h3>
+                                <h3 className="statsH3">Current Orders: {currentDateTime}</h3>
                                 <table className="data-table">
                                     <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Orders</th>
-                                        <th>Revenue</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Employee ID</th>
+                                            <th>Time</th>
+                                            <th>Status</th>
+                                            <th>Menu Item Name</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {incompleteOrdersList.map((item, index) => (
+                                    {incompleteOrdersList.map((order, index) => (
                                         <tr key={index}>
-                                            <td>item.</td>
-                                            <td>item.</td>
-                                            <td>item.</td>
+                                            <td>{order["order_id"]}</td>
+                                            <td>{order["employee_id"]}</td>
+                                            <td>{new Date(order["time"]).toLocaleString()}</td> {/* Format the time */}
+                                            <td>{order["status"]}</td>
+                                            <td>
+                                                {order["items"].map((item2, index2) => {
+                                                    const menuItem = menuItems.find(
+                                                        (menu) => menu.id === item2["menu_item_id"]
+                                                    );
+                                                    return (
+                                                        <div key={index2}>
+                                                            {menuItem ? menuItem.name : "Unknown Item"}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </td>
                                         </tr>
                                     ))}
                                     </tbody>
