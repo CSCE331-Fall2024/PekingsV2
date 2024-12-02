@@ -179,9 +179,9 @@ const Application = () => {
                                 onChange={(e) => setPosition(e.target.value)}
                             >
                                 <option value="">Select a position</option>
-                                <option value="employee">Cashier</option>
-                                <option value="manager">Manager</option>
-                                <option value="kitchen">Kitchen</option>
+                                <option value="CASHIER">Cashier</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="KITCHEN">Kitchen</option>
                             </select>
                         </div>
 
