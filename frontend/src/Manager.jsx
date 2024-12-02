@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './Manager.css';
+import {useAuth0} from "@auth0/auth0-react";
+
 
 function Manager({ selectedSection }) {
+
+    //Authorization
+    const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
     //Inventory
     const [inventory, setInventory] = useState([]);
@@ -11,13 +16,11 @@ function Manager({ selectedSection }) {
     const [inputValueName, setInputValueName] = useState('');
     const [inputValueAmount, setInputValueAmount] = useState('');
     const [inputValuePrice, setInputValuePrice] = useState('');
-    const [invID, setInvID] = useState('');
 
     //Menu
     const [menuItems, setMenuItems] = useState([]);
     const [originalMenuItems, setOriginalMenuItems] = useState([]);
     const [editMenuValueID, setEditMenuValueID] = useState(-1);
-    const [menuItemID, setMenuItemID] = useState('');
     const [inputMenuName, setInputMenuName] = useState('');
     const [inputMenuCategory, setInputMenuCategory] = useState("");
     const [inputMenuIngredients, setInputMenuIngredients] = useState('');
@@ -30,8 +33,8 @@ function Manager({ selectedSection }) {
     const [inputEmployeePass, setInputEmployeePass] = useState('');
     const [inputEmployeeEmail, setInputEmployeeEmail] = useState('');
     const [inputEmployeePosition, setInputEmployeePosition] = useState('');
-    const [inputEmployeeClockin, setInputEmployeeClockin] = useState('00:00:00');
-    const [inputEmployeeClockedIn, setInputEmployeeClockedIn] = useState(false);
+    const [inputEmployeeLastClockin, setInputEmployeeLastClockin] = useState('00:00:00');
+    const [inputEmployeeIsClockedIn, setInputEmployeeIsClockedIn] = useState(false);
     const [inputEmployeePin, setInputEmployeePin] = useState('0000');
     const [originalEmployees, setOriginalEmployees] = useState([]);
 
@@ -40,8 +43,9 @@ function Manager({ selectedSection }) {
     const [incompleteOrdersList, setIncompleteOrdersList] = useState([]);
     const [selectedButton, setSelectedButton] = useState("");
     const currentDateTime = new Date().toLocaleString(); // Formats to "MM/DD/YYYY, HH:MM:SS AM/PM"
-
-
+    const currentClock = new Date();
+    const formattedTime = currentClock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    const formatHour =  currentClock.toLocaleTimeString( [],{hour: '2-digit'});
 
 
     const fetchItems = async () => {
@@ -65,6 +69,8 @@ function Manager({ selectedSection }) {
             } catch (error) {
                 console.error("Error fetching items:", error);
             }
+        const token = await getAccessTokenSilently();
+        console.log("Token:", token);
     };
     useEffect(() => {
         fetchItems();
@@ -93,36 +99,44 @@ function Manager({ selectedSection }) {
         fetchItems2();
     },[]);
 
+
         const fetchItems3 = async () => {
             try {
-                const empResponse = await fetch("/api/employee/all", {
+                const empResponse = await fetch('/api/employee/all', {
                     method: "GET",
                     headers: {
+                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
                         "Content-Type": "application/json",
                     },
                 });
                 if (empResponse.ok) {
                     const items = await empResponse.json();
+                    console.log(items);
                     setEmployees(items);
                 } else {
                     console.error("Failed to fetch items:", empResponse.status);
+                    alert("Failed to load employees empResponse not okay")
                 }
 
-            }   catch (error) {
+            } catch (error) {
                 console.error("Error fetching items:", error);
             }
         };
+
     useEffect(() => {
+        if (!user) return;
         fetchItems3();
-    },[]);
+    },[isAuthenticated, getAccessTokenSilently, user]);
 
 
-    // Get number of orders sold per hour, and total revenue for that hour
+    //Get list of orders that have not been completed yet to keep track in case manager
+    //needs to step out of their office and help the kitchen line.
     const fetchItems4 = async () => {
         try {
             const reportResponse = await fetch("/api/orders/past/day", {
                 method: "GET",
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
             });
@@ -131,6 +145,7 @@ function Manager({ selectedSection }) {
                 setReportList(items);
             } else {
                 console.error("Failed to fetch items:", reportResponse.status);
+                alert("Failed to load past/day orders reportResponse not okay")
             }
 
         }   catch (error) {
@@ -138,16 +153,16 @@ function Manager({ selectedSection }) {
         }
     };
     useEffect(() => {
+        if (!user) return;
         fetchItems4();
-    },[]);
+    },[isAuthenticated, getAccessTokenSilently, user]);
 
-    //Get list of orders that have not been completed yet to keep track in case manager
-    //needs to step out of their office and help the kitchen line.
     const fetchItems5 = async () => {
         try {
-            const reportResponse = await fetch("/api/orders/past/day", {
+            const reportResponse = await fetch("/api/orders/status/incomplete", {
                 method: "GET",
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
             });
@@ -156,6 +171,7 @@ function Manager({ selectedSection }) {
                 setIncompleteOrdersList(items);
             } else {
                 console.error("Failed to fetch items:", reportResponse.status);
+                alert("Failed to load incomplete orders reportResponse not okay")
             }
 
         }   catch (error) {
@@ -163,8 +179,9 @@ function Manager({ selectedSection }) {
         }
     };
     useEffect(() => {
+        if (!user) return;
         fetchItems5();
-    },[]);
+    },[isAuthenticated, getAccessTokenSilently, user]);
 
 
     /*@PostMapping("/add")
@@ -244,8 +261,14 @@ function Manager({ selectedSection }) {
         setInputEmployeePass(employee.pass);
         setInputEmployeeEmail(employee.email || '');
         setInputEmployeePosition(employee.position);
-        setInputEmployeeClockin(employee.lastClockin);
-        setInputEmployeeClockedIn(employee.isClockedin);
+        setInputEmployeeLastClockin(employee.lastClockin);
+        setInputEmployeeIsClockedIn(employee.isClockedin);
+        if(inputEmployeeLastClockin){
+            setInputEmployeeIsClockedInString('true');
+        }
+        else{
+            setInputEmployeeIsClockedInString('else');
+        }
         setInputEmployeePin(employee.pin);
     };
 
@@ -269,8 +292,8 @@ function Manager({ selectedSection }) {
         setInputEmployeePass('');
         setInputEmployeeEmail('');
         setInputEmployeePosition('');
-        setInputEmployeeClockin('00:00:00');
-        setInputEmployeeClockedIn(false);
+        setInputEmployeeLastClockin('00:00:00');
+        setInputEmployeeIsClockedIn(false);
         setInputEmployeePin('0000');
     };
 
@@ -361,9 +384,9 @@ function Manager({ selectedSection }) {
             username: inputEmployeeUsername,
             pass: inputEmployeePass,
             email: inputEmployeeEmail || null, // Email is nullable
-            position: inputEmployeePosition,
-            lastClockin: inputEmployeeClockin, // Default to "00:00:00"
-            isClockedin: inputEmployeeClockedIn,
+            position: inputEmployeePosition.toUpperCase(),
+            lastClockin: inputEmployeeLastClockin, // Default to "00:00:00"
+            isClockedin: inputEmployeeIsClockedIn,
             pin: inputEmployeePin,
         };
 
@@ -371,6 +394,7 @@ function Manager({ selectedSection }) {
             const employeeResponse = await fetch("/api/employee/add", {
                 method: "POST",
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(employee),
@@ -413,14 +437,25 @@ function Manager({ selectedSection }) {
         });
 
     };
-    const deleteInventory = async () => {
+    const deleteInventory = async (id, index) => {
+        try{
         const invResponse = await fetch("/api/inventory/delete", {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(invID)
+            body: JSON.stringify({ id })
         });
+        if (invResponse.ok) {
+            alert(`Successfully deleted inventory item ${inventory.at(index).name}`)
+        } else {
+            console.error("Failed to delete inventory item:", invResponse.status);
+            alert("Failed to delete inventory item")
+        }
+
+    }   catch (error) {
+        console.error("Error fetching items:", error);
+    }
         fetchItems2();
     };
     const updateMenuItem = async () => {
@@ -463,15 +498,27 @@ function Manager({ selectedSection }) {
         }
     };
 
-    const deleteMenuItem = async () => {
-
+    const deleteMenuItem = async (id, index) => {
+        try{
         const menuResponse = await fetch("/api/menuitem/delete", {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(menuItemID)
+            body: JSON.stringify({ id })
+
         });
+        if (menuResponse.ok) {
+            alert(`Successfully deleted menu item ${menuItems.at(index).name}`)
+        } else {
+            console.error("Failed to delete inventory item:", menuResponse.status);
+            alert("Failed to delete inventory item")
+        }
+
+        }   catch (error) {
+        console.error("Error fetching items:", error);
+    }
+
         fetchItems();
     };
 
@@ -483,8 +530,8 @@ function Manager({ selectedSection }) {
             pass: inputEmployeePass,
             email: inputEmployeeEmail || null,
             position: inputEmployeePosition,
-            lastClockin: inputEmployeeClockin,
-            isClockedin: inputEmployeeClockedIn,
+            lastClockin: inputEmployeeLastClockin,
+            isClockedin: inputEmployeeIsClockedIn,
             pin: inputEmployeePin,
         };
 
@@ -492,6 +539,7 @@ function Manager({ selectedSection }) {
             const employeeResponse = await fetch("/api/employee/update", {
                 method: "PATCH",
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(editedEmployee),
@@ -520,15 +568,17 @@ function Manager({ selectedSection }) {
             const employeeResponse = await fetch("/api/employee/delete", {
                 method: "DELETE",
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ id }),
             });
 
             if (!employeeResponse.ok) {
-                console.error("Failed to delete employee");
+                console.error(`Failed to delete employee ${id} `);
+                alert(`Employee ${id} failed to be deleted`);
             } else {
-                alert("Employee deleted successfully!");
+                alert(`Employee ${id} deleted successfully`);
                 fetchItems3(); // Refresh employee list
             }
         } catch (err) {
@@ -536,7 +586,6 @@ function Manager({ selectedSection }) {
             alert("Network error while deleting employee.");
         }
     };
-
 
 
     // Text Boxes
@@ -548,9 +597,6 @@ function Manager({ selectedSection }) {
     };
     const handleChange3 = (event) => {
         setInputValuePrice(event.target.value);
-    };
-    const handleChange4 = (event) => {
-        setInvID(event.target.value);
     };
     const handleChangeMenu = (event) => {
         setInputMenuName(event.target.value);
@@ -564,9 +610,6 @@ function Manager({ selectedSection }) {
     const handleChangeMenu4 = (event) => {
         setInputMenuIngredients(event.target.value);
     };
-    const handleChangeMenu5 = (event) => {
-        setMenuItemID(event.target.value);
-    }
 
     //Add and Delete Buttons
     const handleButton = () => {
@@ -575,14 +618,7 @@ function Manager({ selectedSection }) {
         setInputValueAmount("");
         setInputValuePrice("");
     };
-    const handleInvDelButton = () => {
-        deleteInventory();
-        setInvID('');
-    }
-    const handleMenuDelButton = () => {
-        deleteMenuItem();
-        setMenuItemID('');
-    }
+
     const handleButtonMenu = () => {
         addToMenu();
         setInputMenuName("");
@@ -596,25 +632,30 @@ function Manager({ selectedSection }) {
     const handleStatsXReport = () => {
         setSelectedButton("xReport")
     }
-    const handleStatsZReport = () => {
-        setSelectedButton("zReport")
-    }
     const handleStatsOrders = () => {
         setSelectedButton("Current Orders")
     }
 
-
     return (
-
         <div className="managerRoot">
             <div className="main-content">
-                <h1>{selectedSection}</h1>
-                <p>This is the {selectedSection} section.</p>
+                <div className="Header-Clock">
+                    <div className="header">
+                        <h1>{selectedSection}</h1>
+                        <p>This is the {selectedSection} section.</p>
+                    </div>
+
+                    <div className="clockBox">
+                        <h3>Current Time:</h3>
+                        <p className="Clock">{formattedTime}</p>
+                    </div>
+                </div>
+
 
                 {/* Conditional Rendering for Table Layout */}
                 {selectedSection === "Inventory" && (
                     <table className="data-table">
-                    <thead>
+                        <thead>
                         <tr>
                             <th>ID</th>
                             <th>Ingredient</th>
@@ -648,6 +689,7 @@ function Manager({ selectedSection }) {
                                         <td>${item.priceBatch}</td>
                                         <td>
                                             <button onClick={() => handleEditClick(index)}>Edit</button>
+                                            <button onClick={() => deleteInventory(item.id, index)}>Delete</button>
                                         </td>
                                     </>
                                 )}
@@ -665,13 +707,7 @@ function Manager({ selectedSection }) {
                         </button>
                     </div>
                 )}
-                {selectedSection === "Inventory" && (
-                    <div className="add-button">
-                        <input type="text" placeholder="Enter item ID" value={invID} onChange={handleChange4}/>
-                        <button onClick={handleInvDelButton}> DELETE Item
-                        </button>
-                    </div>
-                )}
+
                 {selectedSection === "Menu Items" && (
                     <table className="data-table">
                         <thead>
@@ -702,7 +738,9 @@ function Manager({ selectedSection }) {
                                     <td>{item.id}</td>
                                         <td>{item.name}</td>
                                         <td>${item.price}</td>
-                                        <td> <button onClick={() => handleEditClickMenu(index)}>Edit</button>
+                                        <td>
+                                            <button onClick={() => handleEditClickMenu(index)}>Edit</button>
+                                            <button onClick={() => deleteMenuItem(item.id, index)}>Delete</button>
                                         </td>
                                     </>
                                 )}
@@ -724,13 +762,13 @@ function Manager({ selectedSection }) {
                         <button onClick={handleButtonMenu}>Add Item</button>
                     </div>
                 )}
-                {selectedSection === "Menu Items" && (
-                    <div className="add-button">
-                        <input type="text" placeholder="Enter item ID" value={menuItemID} onChange={handleChangeMenu5}/>
-                        <button onClick={handleMenuDelButton}> DELETE Item
-                        </button>
-                    </div>
-                )}
+                {/*{selectedSection === "Menu Items" && (*/}
+                {/*    <div className="add-button">*/}
+                {/*        <input type="text" placeholder="Enter item ID" value={menuItemID} onChange={handleChangeMenu5}/>*/}
+                {/*        <button onClick={handleMenuDelButton}> DELETE Item*/}
+                {/*        </button>*/}
+                {/*    </div>*/}
+                {/*)}*/}
 
                 {selectedSection === "Employees" && (
                     <table className="data-table">
@@ -740,7 +778,6 @@ function Manager({ selectedSection }) {
                             <th>Username</th>
                             <th>Password</th>
                             <th>Position</th>
-                            <th>Clocked In</th>
                             <th>pin</th>
                             <th>Email</th>
                             <th>Actions</th>
@@ -774,6 +811,20 @@ function Manager({ selectedSection }) {
                                             />
                                         </td>
                                         <td>
+                                            <input
+                                                type="text"
+                                                value={inputEmployeePin}
+                                                onChange={(e) => setInputEmployeePin(e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                value={inputEmployeeEmail}
+                                                onChange={(e) => setInputEmployeeEmail(e.target.value)}
+                                            />
+                                        </td>
+                                        <td>
                                             <button onClick={handleSaveEmployee}>Save</button>
                                             <button onClick={handleCancelEmployee}>Cancel</button>
                                         </td>
@@ -784,7 +835,6 @@ function Manager({ selectedSection }) {
                                         <td>{employee.username}</td>
                                         <td>{employee.pass}</td>
                                         <td>{employee.position}</td>
-                                        <td>{employee.isClockedin}</td>
                                         <td>{employee.pin}</td>
                                         <td>{employee.email}</td>
                                         <td>
@@ -801,7 +851,8 @@ function Manager({ selectedSection }) {
 
                 {selectedSection === "Employees" && (
                     <div className="add-button">
-                        <input type="text" placeholder="Enter Username" value={inputEmployeeUsername} onChange={(e) => setInputEmployeeUsername(e.target.value)}/>
+                        <input type="text" placeholder="Enter Username" value={inputEmployeeUsername}
+                               onChange={(e) => setInputEmployeeUsername(e.target.value)}/>
                         <input
                             type="text"
                             placeholder="Enter Password"
@@ -814,18 +865,30 @@ function Manager({ selectedSection }) {
                             value={inputEmployeePosition}
                             onChange={(e) => setInputEmployeePosition(e.target.value)}
                         />
+                        <input
+                            type="text"
+                            placeholder="Enter pin (0000)"
+                            value={inputEmployeePin}
+                            onChange={(e) => setInputEmployeePin(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Enter Email"
+                            value={inputEmployeeEmail}
+                            onChange={(e) => setInputEmployeeEmail(e.target.value)}
+                        />
                         <button onClick={addEmployee}>Add Employee</button>
                     </div>
                 )}
+
                 {selectedSection === "Statistics" && (
                     <div className="stats-btn">
-                        <button onClick={handleStatsXReport}> xReport </button>
-                        <button onClick={handleStatsZReport}> zReport </button>
+                        <button onClick={handleStatsXReport}> xReport</button>
                         <button onClick={handleStatsOrders}> Current Orders </button>
 
                         {selectedButton === "xReport" && (
                             <div>
-                                <h3></h3>
+                                <></>
                                 <h3 className = "statsH3">xReport: {currentDateTime}</h3>
                                 <table className="data-table">
                                     <thead>
@@ -837,39 +900,23 @@ function Manager({ selectedSection }) {
                                     </thead>
                                     <tbody>
                                     {reportList.map((item, index) => (
-                                        <tr key={index}>
-                                            <td>item.hour</td>
-                                            <td>item.orders</td>
-                                            <td>item.revenue</td>
-                                        </tr>
+                                        item["hour"] < parseInt(formatHour) && (
+                                            <tr key={index}>
+                                                <>
+                                                    <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
+                                                    <td>{item["orders"]}</td>
+                                                    <td>{"$" + item["revenue"]}</td>
+                                                </>
+                                            </tr>
+                                        )
                                     ))}
                                     </tbody>
                                 </table>
                             </div>
                         )}
-                        {selectedButton === "zReport" && (
-                            <table className="data-table">
-                                <thead>
-                                <tr>
-                                    <th>Time</th>
-                                    <th>Orders</th>
-                                    <th>Revenue</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {reportList.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>item.hour</td>
-                                        <td>item.orders</td>
-                                        <td>item.revenue</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        )}
                         {selectedButton === "Current Orders" && (
                             <div>
-                                <h3></h3>
+                                <></>
                                 <h3 className = "statsH3">Current Orders: {currentDateTime}</h3>
                                 <table className="data-table">
                                     <thead>
@@ -882,9 +929,9 @@ function Manager({ selectedSection }) {
                                     <tbody>
                                     {incompleteOrdersList.map((item, index) => (
                                         <tr key={index}>
-                                            <td>item.hour</td>
-                                            <td>item.orders</td>
-                                            <td>item.revenue</td>
+                                            <td>item.</td>
+                                            <td>item.</td>
+                                            <td>item.</td>
                                         </tr>
                                     ))}
                                     </tbody>

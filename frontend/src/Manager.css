@@ -100,3 +100,18 @@
 .stats-btn .statsH3{
     margin-top: 15px;
 }
+
+
+.main-content .clockBox {
+    margin-top: 10px;
+    display: inline-flex;
+}
+.main-content .Clock {
+    margin-top: 3.5px;
+    margin-left: 10px;
+}
+.main-content .Header-Clock{
+    display: flex;
+    justify-content: space-between;
+
+}
