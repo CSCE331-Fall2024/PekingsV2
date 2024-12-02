@@ -16,6 +16,7 @@ function Manager({ selectedSection }) {
     const [inputValueName, setInputValueName] = useState('');
     const [inputValueAmount, setInputValueAmount] = useState('');
     const [inputValuePrice, setInputValuePrice] = useState('');
+    const [inputValueID, setInputValueID] = useState('');
 
     //Menu
     const [menuItems, setMenuItems] = useState([]);
@@ -25,6 +26,8 @@ function Manager({ selectedSection }) {
     const [inputMenuCategory, setInputMenuCategory] = useState("");
     const [inputMenuIngredients, setInputMenuIngredients] = useState('');
     const [inputMenuPrice, setInputMenuPrice] = useState('');
+    const [inputMenuID, setInputMenuID] = useState('');
+
 
     //Employee
     const [employees, setEmployees]= useState([]);
@@ -37,6 +40,7 @@ function Manager({ selectedSection }) {
     const [inputEmployeeIsClockedIn, setInputEmployeeIsClockedIn] = useState(false);
     const [inputEmployeePin, setInputEmployeePin] = useState('0000');
     const [originalEmployees, setOriginalEmployees] = useState([]);
+    const [inputEmployeeID, setInputEmployeeID] = useState();
 
     // Statistics
     const [reportList, setReportList] = useState([]);
@@ -45,7 +49,7 @@ function Manager({ selectedSection }) {
     const currentDateTime = new Date().toLocaleString('en-us', {month: '2-digit', day: '2-digit', year: '2-digit'}); // Formats to "MM/DD/YYYY, HH:MM:SS AM/PM"
     const currentClock = new Date();
     const formattedTime = currentClock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-    const formatHour =  currentClock.toLocaleTimeString( [],{hour: '2-digit'});
+    const formatHour =  new Date().getHours();
 
 
     const fetchItems = async () => {
@@ -263,12 +267,6 @@ function Manager({ selectedSection }) {
         setInputEmployeePosition(employee.position);
         setInputEmployeeLastClockin(employee.lastClockin);
         setInputEmployeeIsClockedIn(employee.isClockedin);
-        if(inputEmployeeLastClockin){
-            setInputEmployeeIsClockedInString('true');
-        }
-        else{
-            setInputEmployeeIsClockedInString('else');
-        }
         setInputEmployeePin(employee.pin);
     };
 
@@ -318,6 +316,7 @@ function Manager({ selectedSection }) {
             const invResponse = await fetch("/api/inventory/add", {
                 method: 'POST',
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(inv)
@@ -357,6 +356,7 @@ function Manager({ selectedSection }) {
             const menuResponse = await fetch("/api/menuitem/add", {
                 method: 'POST',
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(menu)
@@ -431,23 +431,25 @@ function Manager({ selectedSection }) {
         const invResponse = await fetch("/api/inventory/update", {
             method: 'PATCH',
             headers: {
+                Authorization: `Bearer ${await getAccessTokenSilently()}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(editedInventory)
         });
 
     };
-    const deleteInventory = async (id, index) => {
+    const deleteInventory = async (id) => {
         try{
         const invResponse = await fetch("/api/inventory/delete", {
             method: 'DELETE',
             headers: {
+                Authorization: `Bearer ${await getAccessTokenSilently()}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id })
+            body: JSON.stringify(id)
         });
         if (invResponse.ok) {
-            alert(`Successfully deleted inventory item ${inventory.at(index).name}`)
+            alert(`Successfully deleted inventory item`)
         } else {
             console.error("Failed to delete inventory item:", invResponse.status);
             alert("Failed to delete inventory item")
@@ -477,6 +479,7 @@ function Manager({ selectedSection }) {
             const menuResponse = await fetch("/api/menuitem/update", {
                 method: 'PATCH',
                 headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(editedMenu)
@@ -498,18 +501,20 @@ function Manager({ selectedSection }) {
         }
     };
 
-    const deleteMenuItem = async (id, index) => {
+    const deleteMenuItem = async (id) => {
         try{
+            // let menuID = parseInt(inputMenuID);
         const menuResponse = await fetch("/api/menuitem/delete", {
             method: 'DELETE',
             headers: {
+                Authorization: `Bearer ${await getAccessTokenSilently()}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id })
+            body: JSON.stringify(id)
 
         });
         if (menuResponse.ok) {
-            alert(`Successfully deleted menu item ${menuItems.at(index).name}`)
+            alert(`Successfully deleted menu item`)
         } else {
             console.error("Failed to delete inventory item:", menuResponse.status);
             alert("Failed to delete inventory item")
@@ -598,6 +603,9 @@ function Manager({ selectedSection }) {
     const handleChange3 = (event) => {
         setInputValuePrice(event.target.value);
     };
+    const handleChange4 = (event) => {
+      setInputValueID(event.target.value);
+    };
     const handleChangeMenu = (event) => {
         setInputMenuName(event.target.value);
     };
@@ -609,6 +617,12 @@ function Manager({ selectedSection }) {
     };
     const handleChangeMenu4 = (event) => {
         setInputMenuIngredients(event.target.value);
+    };
+    const handleChangeMenu5 = (event) => {
+        setInputMenuID(event.target.value);
+    };
+    const handleChangeEmp = (event) => {
+      setInputEmployeeID(event.target.value);
     };
 
     //Add and Delete Buttons
@@ -626,6 +640,10 @@ function Manager({ selectedSection }) {
         setInputMenuPrice("");
         setInputMenuIngredients("");
     };
+    const handleMenuDelButton = () => {
+        deleteMenuItem();
+        setInputValueID('');
+    }
 
 
     // Stats Handlers
@@ -689,7 +707,7 @@ function Manager({ selectedSection }) {
                                         <td>${item.priceBatch}</td>
                                         <td>
                                             <button onClick={() => handleEditClick(index)}>Edit</button>
-                                            <button onClick={() => deleteInventory(item.id, index)}>Delete</button>
+                                            <button onClick={() => deleteInventory(item.id)}>Delete</button>
                                         </td>
                                     </>
                                 )}
@@ -740,7 +758,7 @@ function Manager({ selectedSection }) {
                                         <td>${item.price}</td>
                                         <td>
                                             <button onClick={() => handleEditClickMenu(index)}>Edit</button>
-                                            <button onClick={() => deleteMenuItem(item.id, index)}>Delete</button>
+                                            <button onClick={() => deleteMenuItem(item.id)}>Delete</button>
                                         </td>
                                     </>
                                 )}
@@ -764,7 +782,7 @@ function Manager({ selectedSection }) {
                 )}
                 {/*{selectedSection === "Menu Items" && (*/}
                 {/*    <div className="add-button">*/}
-                {/*        <input type="text" placeholder="Enter item ID" value={menuItemID} onChange={handleChangeMenu5}/>*/}
+                {/*        <input type="text" placeholder="Enter item ID" value={inputMenuID} onChange={handleChangeMenu5}/>*/}
                 {/*        <button onClick={handleMenuDelButton}> DELETE Item*/}
                 {/*        </button>*/}
                 {/*    </div>*/}
@@ -900,7 +918,7 @@ function Manager({ selectedSection }) {
                                     </thead>
                                     <tbody>
                                     {reportList.map((item, index) => (
-                                        item["hour"] < parseInt(formatHour) && (
+                                        parseInt(item["hour"]) < formatHour && (
                                             <tr key={index}>
                                                 <>
                                                     <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
