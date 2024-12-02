@@ -179,7 +179,6 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
             const response = await fetch('/api/orders/add', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(order)
