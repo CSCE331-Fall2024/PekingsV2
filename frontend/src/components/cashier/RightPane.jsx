@@ -172,10 +172,7 @@ function RightPane({ order, centerChange, setProcessFunction, processFunctions, 
                 payment_method: paymentType,
                 status: "incomplete"
             };
-            // console.log(order);
 
-            const token = await getAccessTokenSilently();
-            console.log('Token:', token, typeof token);
             const response = await fetch('/api/orders/add', {
                 method: 'POST',
                 headers: {

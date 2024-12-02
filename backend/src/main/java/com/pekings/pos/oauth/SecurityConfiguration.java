@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -77,6 +78,7 @@ public class SecurityConfiguration {
                         .requestMatchers(KITCHEN_REQUESTS).hasAuthority("ROLE_KITCHEN")
                         .anyRequest().permitAll() // All other requests are allowed without authentication
                 )
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()) // Enable cross-origin resource sharing (CORS)
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt(jwtConfigurer -> jwtConfigurer.authenticationManager(customJwtProvider))) // Use JWT for authentication
