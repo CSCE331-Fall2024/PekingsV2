@@ -5,6 +5,9 @@ import {useAuth0} from "@auth0/auth0-react";
 
 function Manager({ selectedSection }) {
 
+    //WeatherAPI
+    const url = 'https://api.openweathermap.org/data/2.5/weather?q=galveston&appid=96263f8d04e9d9b5ce1c27930643efa7'
+
     //Authorization
     const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 

@@ -52,7 +52,7 @@ createRoot(document.getElementById('root')).render(
         {/*    "isClockedin": false,*/}
         {/*    "pin": null*/}
         {/*}}/>*/}
-        {/*<Display/>*/}
+        <Display/>
 
     </Auth0Provider>
 )
