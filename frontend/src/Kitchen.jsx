@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import "./Kitchen.css";
 import AccessibilityPanel from './components/AccessibilityPanel';
+import {useAuth0} from "@auth0/auth0-react";
 
 function Kitchen({logout, setIsTranslateVisible}) {
     const [currentOrders, setCurrentOrders] = useState([]);
@@ -9,14 +10,17 @@ function Kitchen({logout, setIsTranslateVisible}) {
     const [orderIndex, setOrderIndex] = useState(0);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+    const { getAccessTokenSilently } = useAuth0();
 
     // Gets all the current active orders
     // Fetch incomplete orders
     const fetchIncompleteOrders = async () => {
         try {
+            const token = getAccessTokenSilently()
             const response = await fetch('/api/orders/status/incomplete', {
                 method: 'GET',
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });

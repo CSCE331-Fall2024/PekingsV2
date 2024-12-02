@@ -7,6 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {useAuth0} from "@auth0/auth0-react";
 import Cashier from "../Cashier.jsx";
 import Manager from "../Manager.jsx";
+import Kitchen from "../Kitchen.jsx";
 
 export default function BasicMenu(roles) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -18,6 +19,7 @@ export default function BasicMenu(roles) {
     // Role-based menu items mapping
     const menuItemsByRole = {
         CASHIER: [{ label: "Cashier", path: <Cashier /> }],
+        KITCHEN: [{ label: "Kitchen", path: <Kitchen /> }],
         MANAGER: [
             { label: "Manager", path: <Manager /> },
         ]
