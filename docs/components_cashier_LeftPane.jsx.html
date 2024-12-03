@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/cashier/LeftPane.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/cashier/LeftPane.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import './LeftPane.css';
+
+/**
+ * LeftRect Component
+ *
+ * The LeftRect component represents a left-hand side navigation pane with several buttons for user interactions, such as logging out,
+ * viewing previous orders, creating a new order, navigating to the menu, and canceling an order.
+ *
+ * @component
+ * @example
+ * return (
+ *   &lt;LeftRect
+ *     logout={handleLogout}
+ *     centerChange={handleCenterChange}
+ *     addScreen={handleAddScreen}
+ *     handleCancel={handleCancelOrder}
+ *     handleAccessibility={handleAccessibility}
+ *   />
+ * )
+ *
+ * @param {Function} logout - Function to trigger user logout or exit action
+ * @param {Function} centerChange - Function to switch the main screen of the app (e.g. 'previous' for previous orders, 'menu' for menu screen)
+ * @param {Function} addScreen - Function to initiate a new order when the "New Order" button is clicked
+ * @param {Function} handleCancel - Function to cancel the current order when the "Cancel Order" button is clicked
+ * @param {Function} handleAccessibility - Function to handle accessibility-related actions when the logo is clicked
+ */
+function LeftRect({ logout, centerChange, addScreen , handleCancel, handleAccessibility}) {
+    return (
+        &lt;div className="leftRectangle">
+            {/* Logo Button */}
+            {/* Clicking the logo triggers the accessibility function */}
+            &lt;button className="logo-cash" onClick={() => handleAccessibility(true)}>
+                &lt;img className="logoButton" src="/images/pekingslogo.png" alt="Logo" />
+            &lt;/button>
+
+            {/* Exit Button */}
+            {/* Clicking this button triggers the logout function */}
+            &lt;button className="exit" onClick={() => logout()}>Exit&lt;/button>
+
+            &lt;div className="leftRect3Btns-cash">
+                {/* New Order Button */}
+                {/* Clicking this button triggers the addScreen function to start a new order */}
+                &lt;button className="newOrder" onClick={addScreen}>
+                    New&lt;br/>Order
+                &lt;/button>
+
+                {/* View Previous Orders Button */}
+                {/* Clicking this button triggers centerChange to show the previous orders screen */}
+                &lt;button className="viewPrevious" onClick={() => centerChange('previous')}>View&lt;br/>Previous&lt;/button>
+
+                {/* Menu Button */}
+                {/* Clicking this button triggers centerChange to show the menu screen */}
+                &lt;button className="menuBtn" onClick={() => centerChange('menu')}>Menu&lt;/button>
+            &lt;/div>
+
+            {/* Cancel Order Button */}
+            {/* Clicking this button triggers the handleCancel function to cancel the current order */}
+            &lt;button className="cancelOrder" onClick={() => handleCancel()}>Cancel Order&lt;/button>
+        &lt;/div>
+    );
+}
+
+export default LeftRect;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Main.html">Main</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Career">Career</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#LeftRect">LeftRect</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuBoard">MenuBoard</a></li><li><a href="global.html#MenuGrid">MenuGrid</a></li><li><a href="global.html#MenuSect">MenuSect</a></li><li><a href="global.html#RightPane">RightPane</a></li><li><a href="global.html#SIZES">SIZES</a></li><li><a href="global.html#TopPane">TopPane</a></li><li><a href="global.html#addItemAddsanewitemtotheorder,withdefaultconfigurations.">addItemAdds a new item to the order, with default configurations.</a></li><li><a href="global.html#areArraysEqual">areArraysEqual</a></li><li><a href="global.html#googleTranslateElementInit-InitializesGoogleTranslatefunctionality">googleTranslateElementInit - Initializes Google Translate functionality</a></li><li><a href="global.html#handleAddToOrder-AddsselectedmenuitemstotheDuckMascot'sorder">handleAddToOrder - Adds selected menu items to the DuckMascot's order</a></li><li><a href="global.html#handleCloseDialog-Resetstheformfieldsandclosesanyopendialogs.">handleCloseDialog - Resets the form fields and closes any open dialogs.</a></li><li><a href="global.html#handleKeyPress-Listensforthe%2522Enter%2522keypressandtriggerstheloginprocess.">handleKeyPress - Listens for the "Enter" key press and triggers the login process.</a></li><li><a href="global.html#handleManagerOptionsClick-Displaysmanageroptionsorasksformanagerauthenticationbasedonemployeeposition.">handleManagerOptionsClick - Displays manager options or asks for manager authentication based on employee position.</a></li><li><a href="global.html#showButton-Adaptsbuttondisplaybasedonscreenwidth">showButton - Adapts button display based on screen width</a></li><li><a href="global.html#toggleHighContrastMode-Switcheshighcontrastmodeon/off-Applies'high-contrast'classtoappcontent-Updatesstatetoreflectcurrentmode">toggleHighContrastMode - Switches high contrast mode on/off- Applies 'high-contrast' class to app content- Updates state to reflect current mode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Dec 02 2024 17:55:46 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

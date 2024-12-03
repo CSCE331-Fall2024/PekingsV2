@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/cashier/Menu.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/cashier/Menu.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react';
+import './Menu.css'
+
+/**
+ * `Menu` component displays a dynamic list of menu items based on the selected category (main, seasonal, drinks).
+ * Each item in the menu can be added to a list by clicking its corresponding button.
+ * The `itemID` is incremented with each click to ensure unique IDs for each menu item added.
+ *
+ * @param {Object[]} seasonalItems - List of seasonal menu items with properties like `name`, `ingredients`, etc.
+ * @param {Object[]} mainMenuItems - List of main menu items with properties like `name`, `ingredients`, etc.
+ * @param {Object[]} drinks - List of drink items with properties like `name`, `ingredients`, etc.
+ * @param {string} currentMenu - A string indicating the currently active menu. Can be 'main', 'seasonal', or 'drinks'.
+ * @param {Array} menuItemList - A list where selected menu items are added, with each item having a unique `menuItemID`.
+ *
+ * @returns {JSX.Element} A JSX element that renders the menu with buttons for each menu item based on the `currentMenu`.
+ *
+ * @example
+ * const seasonalItems = [
+ *   { name: 'Pumpkin Spice Latte', ingredients: ['pumpkin', 'spice', 'milk'] },
+ *   { name: 'Fall Salad', ingredients: ['lettuce', 'croutons', 'pumpkin'] }
+ * ];
+ * const mainMenuItems = [
+ *   { name: 'Cheeseburger', ingredients: ['beef', 'cheese', 'lettuce'] },
+ *   { name: 'Chicken Wrap', ingredients: ['chicken', 'wrap', 'lettuce'] }
+ * ];
+ * const drinks = [
+ *   { name: 'Coke', ingredients: ['soda'] },
+ *   { name: 'Water', ingredients: [] }
+ * ];
+ *
+ * &lt;Menu
+ *   seasonalItems={seasonalItems}
+ *   mainMenuItems={mainMenuItems}
+ *   drinks={drinks}
+ *   currentMenu='main'
+ *   menuItemList={menuItemList}
+ * />
+ */
+function Menu({ seasonalItems, mainMenuItems, drinks, currentMenu, menuItemList }) {
+    const [itemID, setItemID] = useState(1);
+
+    /**
+     * Handles adding a menu item to the `menuItemList` with a unique `menuItemID`.
+     * The `menuItem` object is deep cloned to prevent direct mutation.
+     *
+     * @param {Object} menuItem - The menu item object that was clicked.
+     */
+    const handleButtonClick = (menuItem) => () => {
+        setItemID(itemID + 1);
+
+        const menuItemCopy = JSON.parse(JSON.stringify(menuItem));
+        menuItemList.push(
+            {
+                menuItemID: itemID,
+                menuItem: menuItemCopy,
+                editStatus: false
+            }
+        );
+    };
+
+    /**
+     * Renders a button component for a menu item.
+     *
+     * @param {Object} menuItem - The menu item object to display on the button.
+     * @returns {JSX.Element} The button element for the menu item.
+     */
+    const ButtonComponent = (menuItem) => {
+        return (
+            &lt;button onClick={handleButtonClick(menuItem)} className="action-button">
+                {menuItem.name}
+            &lt;/button>
+        );
+    };
+
+    const menuItemBtns1 = [];
+    const menuItemBtns2 = [];
+    const menuItemBtns3 = [];
+
+    // Generate buttons for main menu items
+    for (let i = 0; i &lt; mainMenuItems.length; i++) {
+        if (mainMenuItems[i].ingredients.length > 0) {
+            menuItemBtns1.push(ButtonComponent(mainMenuItems[i]));
+        }
+    }
+
+    // Generate buttons for seasonal items
+    for (let i = 0; i &lt; seasonalItems.length; i++) {
+        if (seasonalItems[i].ingredients.length > 0) {
+            menuItemBtns2.push(ButtonComponent(seasonalItems[i]));
+        }
+    }
+
+    // Generate buttons for drinks
+    for (let i = 0; i &lt; drinks.length; i++) {
+        if (drinks[i].ingredients.length > 0) {
+            menuItemBtns3.push(ButtonComponent(drinks[i]));
+        }
+    }
+
+    return (
+        &lt;div className="menuSquare">
+            &lt;div className="menuBox" style={{ display: currentMenu === 'main' ? 'flex' : 'none' }}>
+                {menuItemBtns1}
+            &lt;/div>
+            &lt;div className="seasonal" style={{ display: currentMenu === 'seasonal' ? 'flex' : 'none' }}>
+                {menuItemBtns2}
+            &lt;/div>
+            &lt;div className="drinks" style={{ display: currentMenu === 'drinks' ? 'flex' : 'none' }}>
+                {menuItemBtns3}
+            &lt;/div>
+            &lt;div>&lt;/div>
+        &lt;/div>
+    );
+}
+
+export default Menu;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Main.html">Main</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Career">Career</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#LeftRect">LeftRect</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuBoard">MenuBoard</a></li><li><a href="global.html#MenuGrid">MenuGrid</a></li><li><a href="global.html#MenuSect">MenuSect</a></li><li><a href="global.html#RightPane">RightPane</a></li><li><a href="global.html#SIZES">SIZES</a></li><li><a href="global.html#TopPane">TopPane</a></li><li><a href="global.html#addItemAddsanewitemtotheorder,withdefaultconfigurations.">addItemAdds a new item to the order, with default configurations.</a></li><li><a href="global.html#areArraysEqual">areArraysEqual</a></li><li><a href="global.html#googleTranslateElementInit-InitializesGoogleTranslatefunctionality">googleTranslateElementInit - Initializes Google Translate functionality</a></li><li><a href="global.html#handleAddToOrder-AddsselectedmenuitemstotheDuckMascot'sorder">handleAddToOrder - Adds selected menu items to the DuckMascot's order</a></li><li><a href="global.html#handleCloseDialog-Resetstheformfieldsandclosesanyopendialogs.">handleCloseDialog - Resets the form fields and closes any open dialogs.</a></li><li><a href="global.html#handleKeyPress-Listensforthe%2522Enter%2522keypressandtriggerstheloginprocess.">handleKeyPress - Listens for the "Enter" key press and triggers the login process.</a></li><li><a href="global.html#handleManagerOptionsClick-Displaysmanageroptionsorasksformanagerauthenticationbasedonemployeeposition.">handleManagerOptionsClick - Displays manager options or asks for manager authentication based on employee position.</a></li><li><a href="global.html#showButton-Adaptsbuttondisplaybasedonscreenwidth">showButton - Adapts button display based on screen width</a></li><li><a href="global.html#toggleHighContrastMode-Switcheshighcontrastmodeon/off-Applies'high-contrast'classtoappcontent-Updatesstatetoreflectcurrentmode">toggleHighContrastMode - Switches high contrast mode on/off- Applies 'high-contrast' class to app content- Updates state to reflect current mode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Dec 02 2024 17:55:46 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

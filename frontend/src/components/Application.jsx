@@ -96,10 +96,12 @@ const Application = () => {
                 pass: password,
                 email: email,
                 position: position, // from the position select dropdown
-                last_clockin: new Date().toISOString(), // current time
-                is_clockedin: false, // default set as not clocked in
+                lastClockin: new Date().toISOString(), // current time
+                isClockedin: false, // default set as not clocked in
                 pin: '1234' // Default PIN we use
             };
+
+            console.log(employee);
 
             const response = await fetch('/api/employee/add', {
                 method: 'POST',
