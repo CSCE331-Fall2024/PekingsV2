@@ -115,3 +115,7 @@
     justify-content: space-between;
 
 }
+.Weather-Btn-Box{
+    display: flex;
+    justify-content: space-between;
+}
