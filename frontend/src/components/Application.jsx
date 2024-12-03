@@ -96,7 +96,7 @@ const Application = () => {
                 pass: password,
                 email: email,
                 position: position, // from the position select dropdown
-                lastClockin: new Date().toISOString(), // current time
+                lastClockin: "00:00:00", // current time
                 isClockedin: false, // default set as not clocked in
                 pin: '1234' // Default PIN we use
             };
