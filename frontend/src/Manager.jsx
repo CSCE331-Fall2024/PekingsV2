@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Manager.css';
 import {useAuth0} from "@auth0/auth0-react";
 
 
 function Manager({ selectedSection }) {
+
+    //WeatherAPI
+    const url = 'https://api.openweathermap.org/data/2.5/weather?q=galveston&appid=96263f8d04e9d9b5ce1c27930643efa7'
+    const[data,setData] = useState({});
+    const [showTemp, setShowTemp] = useState(false);
 
     //Authorization
     const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -50,6 +56,19 @@ function Manager({ selectedSection }) {
     const currentClock = new Date();
     const formattedTime = currentClock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const formatHour =  new Date().getHours();
+
+    //For Weather
+    const getLocation = () => {
+            axios.get(url).then((response) => {
+                setData(response.data)
+                console.log(response.data)
+            })
+    };
+    const handleClick = () => {
+        getLocation();
+        setShowTemp(!showTemp);
+
+    };
 
 
     const fetchItems = async () => {
@@ -645,7 +664,6 @@ function Manager({ selectedSection }) {
         setInputValueID('');
     }
 
-
     // Stats Handlers
     const handleStatsXReport = () => {
         setSelectedButton("xReport")
@@ -667,6 +685,7 @@ function Manager({ selectedSection }) {
                         <h3>Current Time:</h3>
                         <p className="Clock">{formattedTime}</p>
                     </div>
+
                 </div>
 
 
@@ -689,9 +708,12 @@ function Manager({ selectedSection }) {
                                 {editIdx === index ? (
                                     <>
                                         <td>{item.id}</td>
-                                        <td><input type="text" value={item.name} onChange={(e) => handleInputChange(e, 'name', index)} /></td>
-                                        <td><input type="text" value={item.amount} onChange={(e) => handleInputChange(e, 'amount', index)} /></td>
-                                        <td><input type="text" value={item.servingPrice} onChange={(e) => handleInputChange(e, 'servingPrice', index)} /></td>
+                                        <td><input type="text" value={item.name}
+                                                   onChange={(e) => handleInputChange(e, 'name', index)}/></td>
+                                        <td><input type="text" value={item.amount}
+                                                   onChange={(e) => handleInputChange(e, 'amount', index)}/></td>
+                                        <td><input type="text" value={item.servingPrice}
+                                                   onChange={(e) => handleInputChange(e, 'servingPrice', index)}/></td>
                                         <td>{item.priceBatch}</td>
                                         <td>
                                             <button onClick={handleSave}>Save</button>
@@ -718,9 +740,12 @@ function Manager({ selectedSection }) {
                 )}
                 {selectedSection === "Inventory" && (
                     <div className="add-button">
-                        <input type="text" placeholder="Enter item Name" value={inputValueName} onChange={handleChange}/>
-                        <input type="text" placeholder="Enter Stock Amount" value={inputValueAmount} onChange={handleChange2}/>
-                        <input type="text" placeholder="Enter item servingPrice" value={inputValuePrice} onChange={handleChange3}/>
+                        <input type="text" placeholder="Enter item Name" value={inputValueName}
+                               onChange={handleChange}/>
+                        <input type="text" placeholder="Enter Stock Amount" value={inputValueAmount}
+                               onChange={handleChange2}/>
+                        <input type="text" placeholder="Enter item servingPrice" value={inputValuePrice}
+                               onChange={handleChange3}/>
                         <button onClick={handleButton}> Add Item
                         </button>
                     </div>
@@ -753,7 +778,7 @@ function Manager({ selectedSection }) {
                                     </>
                                 ) : (
                                     <>
-                                    <td>{item.id}</td>
+                                        <td>{item.id}</td>
                                         <td>{item.name}</td>
                                         <td>${item.price}</td>
                                         <td>
@@ -900,43 +925,55 @@ function Manager({ selectedSection }) {
                 )}
 
                 {selectedSection === "Statistics" && (
-                    <div className="stats-btn">
-                        <button onClick={handleStatsXReport}> xReport</button>
-                        <button onClick={handleStatsOrders}> Current Orders </button>
+                    <div className="container">
+                        <div className="stats-btn">
+                            <div className="Weather-Btn-Box">
+                                <div className="stats-btns">
+                                    <button onClick={handleStatsXReport}> xReport</button>
+                                    <button onClick={handleStatsOrders}> Current Orders</button>
+                                </div>
+                                <div className="weatherData">
+                                    <button onClick={handleClick}>Weather</button>
+                                    {showTemp && <h2>Temp: {data.main ? <h3>{Math.floor((data.main.temp - 273.15) * 1.8 + 32) + "°F"}</h3> : null}</h2>}
+                                    {showTemp && <h2>Weather: {data.weather ? <h3>{data.weather[0].description}</h3> : null}</h2>}
 
-                        {selectedButton === "xReport" && (
-                            <div>
-                                <></>
-                                <h3 className = "statsH3">xReport: {currentDateTime}</h3>
-                                <table className="data-table">
-                                    <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Orders</th>
-                                        <th>Revenue</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {reportList.map((item, index) => (
-                                        parseInt(item["hour"]) < formatHour && (
-                                            <tr key={index}>
-                                                <>
-                                                    <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
-                                                    <td>{item["orders"]}</td>
-                                                    <td>{"$" + item["revenue"]}</td>
-                                                </>
-                                            </tr>
-                                        )
-                                    ))}
-                                    </tbody>
-                                </table>
+
+                                </div>
                             </div>
-                        )}
-                        {selectedButton === "Current Orders" && (
-                            <div>
-                                <h3 className="statsH3">Current Orders: {currentDateTime}</h3>
-                                <table className="data-table">
-                                    <thead>
+
+                            {selectedButton === "xReport" && (
+                                <div>
+                                    <></>
+                                    <h3 className="statsH3">xReport: {currentDateTime}</h3>
+                                    <table className="data-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Orders</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {reportList.map((item, index) => (
+                                            parseInt(item["hour"]) < formatHour && (
+                                                <tr key={index}>
+                                                    <>
+                                                        <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
+                                                        <td>{item["orders"]}</td>
+                                                        <td>{"$" + item["revenue"]}</td>
+                                                    </>
+                                                </tr>
+                                            )
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                            {selectedButton === "Current Orders" && (
+                                <div>
+                                    <h3 className="statsH3">Current Orders: {currentDateTime}</h3>
+                                    <table className="data-table">
+                                        <thead>
                                         <tr>
                                             <th>Order ID</th>
                                             <th>Employee ID</th>
@@ -944,33 +981,35 @@ function Manager({ selectedSection }) {
                                             <th>Status</th>
                                             <th>Menu Item Name</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                    {incompleteOrdersList.map((order, index) => (
-                                        <tr key={index}>
-                                            <td>{order["order_id"]}</td>
-                                            <td>{order["employee_id"]}</td>
-                                            <td>{new Date(order["time"]).toLocaleString()}</td> {/* Format the time */}
-                                            <td>{order["status"]}</td>
-                                            <td>
-                                                {order["items"].map((item2, index2) => {
-                                                    const menuItem = menuItems.find(
-                                                        (menu) => menu.id === item2["menu_item_id"]
-                                                    );
-                                                    return (
-                                                        <div key={index2}>
-                                                            {menuItem ? menuItem.name : "Unknown Item"}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
+                                        </thead>
+                                        <tbody>
+                                        {incompleteOrdersList.map((order, index) => (
+                                            <tr key={index}>
+                                                <td>{order["order_id"]}</td>
+                                                <td>{order["employee_id"]}</td>
+                                                <td>{new Date(order["time"]).toLocaleString()}</td>
+                                                {/* Format the time */}
+                                                <td>{order["status"]}</td>
+                                                <td>
+                                                    {order["items"].map((item2, index2) => {
+                                                        const menuItem = menuItems.find(
+                                                            (menu) => menu.id === item2["menu_item_id"]
+                                                        );
+                                                        return (
+                                                            <div key={index2}>
+                                                                {menuItem ? menuItem.name : "Unknown Item"}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
 
+                        </div>
                     </div>
                 )}
 
