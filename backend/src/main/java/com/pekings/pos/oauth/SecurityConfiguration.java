@@ -24,7 +24,6 @@ public class SecurityConfiguration {
         // Define API endpoint patterns that require specific roles
         MANAGER_REQUESTS = new String[] {
                 "/api/employee/all",
-                "/api/employee/add",
                 "/api/employee/update",
                 "/api/employee/delete",
 
