@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Manager.css';
 import {useAuth0} from "@auth0/auth0-react";
 
+
 /**
  * The `Manager` component provides a comprehensive dashboard for managing restaurant operations.
  * It includes functionality for managing inventory, menu items, employees, and viewing statistics.
