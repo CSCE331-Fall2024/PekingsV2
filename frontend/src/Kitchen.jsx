@@ -131,7 +131,7 @@ function Kitchen({logout, setIsTranslateVisible}) {
         handleCompletion();
 
 
-        setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
+        // setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
 
         // Adjusts the screen to show at minimum 8 orders
         if( (currentOrders.length > 8) && (orderIndex + 8 >= currentOrders.length) ){
