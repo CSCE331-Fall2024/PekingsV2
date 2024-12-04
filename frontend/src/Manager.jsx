@@ -659,7 +659,7 @@ function Manager({ selectedSection }) {
                     Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id }),
+                body: JSON.stringify(id),
             });
 
             if (!employeeResponse.ok) {
@@ -1017,7 +1017,7 @@ function Manager({ selectedSection }) {
                                         </thead>
                                         <tbody>
                                         {reportList.map((item, index) => (
-                                            parseInt(item["hour"]) < formatHour && (
+                                            item["hour"] < formatHour && (
                                                 <tr key={index}>
                                                     <>
                                                         <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
