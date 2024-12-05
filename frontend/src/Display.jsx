@@ -7,11 +7,8 @@ import './Display.css';
 function Display({logout}) {
     const [selectedSection, setSelectedSection] = useState('Inventory');
     return (
-
-
         <div className="display-container_M">
             <Sidebar onSelect={setSelectedSection}/>
-
             <Manager selectedSection={selectedSection}/>
         </div>
 

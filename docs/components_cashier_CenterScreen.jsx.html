@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/cashier/CenterScreen.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/cashier/CenterScreen.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
+import './CenterScreen.css'
+import TopPane from './TopPane.jsx';
+import Menu from './Menu.jsx';
+import {useAuth0} from "@auth0/auth0-react";
+
+/**
+ * The `CenterScreen` component manages the central user interface in a POS system,
+ * including displaying menus, handling order and payment processes, and providing manager options.
+ *
+ * It also supports alternate orders, PIN-based authentication for managers, and discount/refund functionalities.
+ *
+ * @component
+ * @param {object} props - Component properties.
+ * @param {string} props.center - Current screen being displayed (e.g., 'menu', 'previous', 'payment').
+ * @param {object} props.order - The current order object, which contains details of the order.
+ * @param {function} props.centerChange - A function to change the screen displayed in the center.
+ * @param {Array} props.menuItemList - A list of menu items that are part of the current order.
+ * @param {Array} props.alternateOrders - List of previous orders that can be viewed or edited.
+ * @param {function} props.handlePreviousBtnClick - Function to handle the selection of a previous order.
+ * @param {function} props.processOrder - Function to process the current order.
+ * @param {function} props.setDiscount - Function to apply a discount to the current order.
+ * @param {function} props.addScreen - Function to add a new screen or order.
+ * @param {object} props.employee - The current logged-in employee, including details like position and PIN.
+ *
+ * @state
+ * @state {Array} menuItems - List of menu items categorized as 'food', fetched from the server.
+ * @state {Array} seasonalItems - List of seasonal menu items, fetched from the server.
+ * @state {Array} drinks - List of drink menu items, fetched from the server.
+ * @state {Array} employees - List of employees, fetched from the server for authentication purposes.
+ * @state {string} currentMenu - Tracks the active menu or screen ('main', 'previous', 'payment', 'manager').
+ * @state {string} inputValue - Tracks the current value entered in the PIN input field.
+ * @state {string} placeHolderText - Text displayed in the PIN input field, used for feedback.
+ * @state {Array} alternateOrderButtons - Dynamically generated list of buttons for previous orders.
+ *
+ * @methods
+ * @method handleButtonClick - Handles the PIN input for employee authentication, checking if the PIN matches an employee.
+ * @method handleClear - Clears the PIN input field and resets the placeholder text.
+ * @method handlePaymentProcess - Processes the current order based on the selected payment type (cash or card).
+ * @method handleMenuChange - Changes the current menu (e.g., 'main', 'previous', 'payment', 'manager').
+ * @method setDiscountAmount - Sets the discount amount for the current order.
+ * @method handleRefund - Handles the refund process for an order if it has been paid.
+ * @method handleManagerOptionsClick - Displays manager options or asks for manager authentication based on employee position.
+ *
+ * @example
+ * &lt;CenterScreen
+ *   center="menu"
+ *   order={currentOrder}
+ *   centerChange={changeScreen}
+ *   menuItemList={menuList}
+ *   alternateOrders={previousOrders}
+ *   handlePreviousBtnClick={viewPreviousOrder}
+ *   processOrder={processPayment}
+ *   setDiscount={applyDiscount}
+ *   addScreen={addNewOrder}
+ *   employee={currentEmployee}
+ * />
+ *
+ * @remarks
+ * - Fetches menu data and employee information from the backend server on mount and refreshes every 10 seconds.
+ * - Supports order processing with payment options (credit card, cash) and discounts.
+ * - Allows managers to apply discounts and refunds, and view previous orders.
+ */
+// Memoize the CenterScreen component to avoid unnecessary re-renders
+// eslint-disable-next-line react/display-name,react/prop-types
+const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
+                                     // eslint-disable-next-line react/prop-types
+                                     alternateOrders, handlePreviousBtnClick, processOrder, setDiscount, addScreen, employee
+}) => {
+
+    const [menuItems, setMenuItems] = useState([]);
+    const [seasonalItems, setSeasonalItems] = useState([]);
+    const [drinks, setDrinks] = useState([]);
+
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await fetch("/api/menuitem/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.ok) {
+                    const items = await response.json();
+
+
+                    const list1 = items.filter(item => ( (item.category === "food") || (item.category === "dessert") ) &amp;&amp; (item.active));
+                    const list2 = items.filter(item => (item.category === "seasonal") &amp;&amp; (item.active));
+                    const list3 = items.filter(item => (item.category === "drink") &amp;&amp; (item.active));
+
+                    setMenuItems(list1);
+                    setSeasonalItems(list2);
+                    setDrinks(list3);
+                } else {
+                    console.error("Failed to fetch items:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching items:", error);
+            }
+        };
+
+        fetchItems();
+        const interval = setInterval(fetchItems, 10000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
+    }, []);  // Add an empty dependency array to fetch items once on mount
+
+    const [employees, setEmployees] = useState([]);
+    const { getAccessTokenSilently } = useAuth0();
+
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const token = await getAccessTokenSilently()
+                const response = await fetch("/api/employee/all", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.ok) {
+                    const employeeList = await response.json();
+
+                    setEmployees(employeeList)
+                } else {
+                    console.error("Failed to fetch employees:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching employess:", error);
+            }
+        };
+
+        fetchItems();
+
+        const interval = setInterval(fetchItems, 10000); // Fetch every second
+
+        return () => {
+            clearInterval(interval); // Cleanup interval on unmount
+        };
+    }, []);
+
+
+    const [currentMenu, setCurrentMenu] = useState('main');
+    const [inputValue, setInputValue] = useState('');
+    const [placeHolderText, setPlaceHolderText] = useState('PIN');
+    let alternateOrderButtons = [];
+
+    const handleButtonClick = (number) => {
+        let newPin = inputValue + number;
+
+        for(let i = 0; i &lt; employees.length; i++){
+            if(newPin === employees[i].pin){
+                centerChange("manager");
+                setPlaceHolderText('PIN');
+                setInputValue('');
+                return;
+            }
+        }
+        if (newPin.length === 4) {
+
+            setPlaceHolderText('PIN not recognized');
+            setInputValue('');
+        } else {
+            setInputValue(newPin);
+        }
+    };
+
+    const handleClear = () => {
+        setInputValue('');
+        setPlaceHolderText('PIN');
+    };
+
+    for (let i = 0; i &lt; alternateOrders.length; i++) {
+        if (alternateOrders[i].status) {
+            alternateOrderButtons.push(
+                &lt;button className="alternateOrderBtn-cash" onClick={() => { handlePreviousBtnClick(alternateOrders[i]) }} key={alternateOrders[i].id}>{alternateOrders[i].id}&lt;/button>
+            );
+        }
+    }
+
+    const handlePaymentProcess = (paymentType) => {
+        setDiscount(0);
+        processOrder(paymentType);
+    };
+
+    const handleMenuChange = (menu) => {
+        setCurrentMenu(menu);
+    };
+
+    const setDiscountAmount = (num) => {
+        setDiscount(num);
+        centerChange('menu');
+    }
+
+    const handleRefund = () => {
+        if (order.amountPaid === 0) {
+            alert("Nothing to refund");
+        } else {
+            order.status = false;
+
+            let refundText = "Refunded: $" + order.amountPaid.toFixed(2);
+            alert(refundText);
+
+            addScreen();
+        }
+    };
+
+
+    const handleManagerOptionsClick = () => {
+        if(employee.position === 'manager'){
+            centerChange('manager');
+        }else{
+            centerChange('manager-confirm')
+        }
+    }
+
+
+    return (
+        &lt;div className="centerScreen-cash">
+            &lt;div className="centerScreenContainers-cash" style={{ display: center === 'menu' ? 'block' : 'none' }}>
+                &lt;TopPane screenChange={handleMenuChange} />
+                &lt;Menu seasonalItems={seasonalItems} mainMenuItems={menuItems} drinks={drinks} currentMenu={currentMenu} menuItemList={menuItemList} />
+            &lt;/div>
+
+            &lt;div className="centerScreenContainers-cash" style={{ display: center === 'previous' ? 'block' : 'none' }}>
+                &lt;div className="previousOrdersTitle-cash">Previous Orders&lt;/div>
+                &lt;div className="previousOrdersDisplayBox-cash">{alternateOrderButtons}&lt;/div>
+            &lt;/div>
+
+            &lt;div className="centerScreenContainers-cash" style={{ display: center === 'payment' ? 'block' : 'none' }}>
+                &lt;div className="paymentButtons-cash">
+
+                    &lt;button className="card" onClick={() => handlePaymentProcess('credit_card')}>Card&lt;/button>
+                    &lt;button className="cash" onClick={() => handlePaymentProcess('cash')}>Cash&lt;/button>
+                &lt;/div>
+                &lt;div className="managerOptionsContainer-cash">
+                    &lt;button className="managerOptions-cash" onClick={() => handleManagerOptionsClick()}>Manager Options&lt;/button>
+
+                &lt;/div>
+            &lt;/div>
+
+            &lt;div className="centerScreenContainers-cash" style={{ display: center === 'manager-confirm' ? 'flex' : 'none' }}>
+                &lt;div className="number-input-container">
+                    &lt;div className="input-field">
+                        &lt;input
+                            type="text"
+                            value={inputValue}
+                            readOnly
+                            className="number-input"
+                            placeholder={placeHolderText}
+                        />
+                    &lt;/div>
+
+                    &lt;div className="button-grid">
+                        &lt;button className="number-button" onClick={() => handleButtonClick('1')}>1&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('2')}>2&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('3')}>3&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('4')}>4&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('5')}>5&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('6')}>6&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('7')}>7&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('8')}>8&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('9')}>9&lt;/button>
+                        &lt;button className="number-button" onClick={() => handleButtonClick('0')}>0&lt;/button>
+                    &lt;/div>
+
+                    &lt;button onClick={handleClear} className="clear-button">Clear&lt;/button>
+                &lt;/div>
+            &lt;/div>
+
+            &lt;div className="centerScreenContainers-cash" style={{ display: center === 'manager' ? 'block' : 'none' }}>
+                &lt;div className="normalDiscount">
+                    &lt;button className="discountBtn" onClick={() => setDiscountAmount(0.1)}>10%&lt;/button>
+                    &lt;button className="discountBtn" onClick={() => setDiscountAmount(0.15)}>15%&lt;/button>
+                    &lt;button className="discountBtn" onClick={() => setDiscountAmount(0.2)}>20%&lt;/button>
+                &lt;/div>
+                &lt;div className="specialDiscount">
+                    &lt;button className="employeeDiscountBtn" onClick={() => setDiscountAmount(0.5)}>Employee Discount&lt;/button>
+                &lt;/div>
+
+                &lt;div className="refunds">
+                    &lt;button className="refundBtn" onClick={() => handleRefund()}>Refund&lt;/button>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+});
+
+export default CenterScreen;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Main.html">Main</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Career">Career</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#LeftRect">LeftRect</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuBoard">MenuBoard</a></li><li><a href="global.html#MenuGrid">MenuGrid</a></li><li><a href="global.html#MenuSect">MenuSect</a></li><li><a href="global.html#RightPane">RightPane</a></li><li><a href="global.html#SIZES">SIZES</a></li><li><a href="global.html#TopPane">TopPane</a></li><li><a href="global.html#addItemAddsanewitemtotheorder,withdefaultconfigurations.">addItemAdds a new item to the order, with default configurations.</a></li><li><a href="global.html#areArraysEqual">areArraysEqual</a></li><li><a href="global.html#googleTranslateElementInit-InitializesGoogleTranslatefunctionality">googleTranslateElementInit - Initializes Google Translate functionality</a></li><li><a href="global.html#handleAddToOrder-AddsselectedmenuitemstotheDuckMascot'sorder">handleAddToOrder - Adds selected menu items to the DuckMascot's order</a></li><li><a href="global.html#handleCloseDialog-Resetstheformfieldsandclosesanyopendialogs.">handleCloseDialog - Resets the form fields and closes any open dialogs.</a></li><li><a href="global.html#handleKeyPress-Listensforthe%2522Enter%2522keypressandtriggerstheloginprocess.">handleKeyPress - Listens for the "Enter" key press and triggers the login process.</a></li><li><a href="global.html#handleManagerOptionsClick-Displaysmanageroptionsorasksformanagerauthenticationbasedonemployeeposition.">handleManagerOptionsClick - Displays manager options or asks for manager authentication based on employee position.</a></li><li><a href="global.html#showButton-Adaptsbuttondisplaybasedonscreenwidth">showButton - Adapts button display based on screen width</a></li><li><a href="global.html#toggleHighContrastMode-Switcheshighcontrastmodeon/off-Applies'high-contrast'classtoappcontent-Updatesstatetoreflectcurrentmode">toggleHighContrastMode - Switches high contrast mode on/off- Applies 'high-contrast' class to app content- Updates state to reflect current mode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Dec 02 2024 17:55:46 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

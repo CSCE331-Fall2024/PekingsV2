@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './CenterScreen.css'
 import TopPane from './TopPane.jsx';
 import Menu from './Menu.jsx';
+import {useAuth0} from "@auth0/auth0-react";
 
 /**
  * The `CenterScreen` component manages the central user interface in a POS system,
@@ -109,13 +110,16 @@ const CenterScreen = React.memo(({ center, order, centerChange, menuItemList,
     }, []);  // Add an empty dependency array to fetch items once on mount
 
     const [employees, setEmployees] = useState([]);
+    const { getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         const fetchItems = async () => {
             try {
+                const token = await getAccessTokenSilently()
                 const response = await fetch("/api/employee/all", {
                     method: "GET",
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 });

@@ -12,19 +12,24 @@
 
 .navbar-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   height: 80px;
   max-width: 1500px;
 }
-    
+
 .navbar-logo {
   margin-left: 0px;
   cursor: pointer;
   width: 80px;
   height: 80px;
   display: flex;
-  align-items: left;
+}
+
+.navbar-left {
+  position: absolute;
+  left: 35px;
+  color: white;
 }
 
 .fa-typo3 {
@@ -110,7 +115,7 @@
     background-color: #D3D9D4;
     color: #212A31;
     border-radius: 100;
-    width: 100%; 
+    width: 100%;
   }
 
   .navbar-logo {
@@ -121,12 +126,12 @@
     width: 80px; /* Adjust width as needed */
     height: 80px; /* Adjust height as needed */
     margin-left: 20px; /* Center within the navbar */
-    margin-top: -20px; 
+    margin-top: -20px;
     display: flex;
-    
+
     align-items: left;
   }
-  
+
 
   .menu-icon {
     display: block;
@@ -150,7 +155,7 @@
     border-radius: 4px;
     width: 80%;
     text-decoration: none;
-    
+
     font-size: 1.5rem;
     background-color: transparent;
     color: #D3D9D4;
@@ -163,6 +168,6 @@
     background: #D3D9D4;
     color: #212A31;
     transition: 250ms;
-    
+
   }
 }
