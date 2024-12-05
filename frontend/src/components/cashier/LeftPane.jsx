@@ -30,13 +30,14 @@ function LeftRect({ logout, centerChange, addScreen , handleCancel, handleAccess
         <div className="leftRectangle">
             {/* Logo Button */}
             {/* Clicking the logo triggers the accessibility function */}
-            <button className="logo-cash" onClick={() => handleAccessibility(true)}>
+            <button className="logo-cash">
                 <img className="logoButton" src="/images/pekingslogo.png" alt="Logo" />
             </button>
 
             {/* Exit Button */}
             {/* Clicking this button triggers the logout function */}
-            <button className="exit" onClick={() => logout()}>Exit</button>
+            {/*<button className="exit" onClick={() => logout()}>Exit</button>*/}
+            {/*<div className="exit"></div>*/}
 
             <div className="leftRect3Btns-cash">
                 {/* New Order Button */}
