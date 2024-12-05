@@ -4,6 +4,71 @@ import './Manager.css';
 import {useAuth0} from "@auth0/auth0-react";
 
 
+/**
+ * The `Manager` component provides a comprehensive dashboard for managing restaurant operations.
+ * It includes functionality for managing inventory, menu items, employees, and viewing statistics.
+ * This component integrates authorization using Auth0 and external APIs for added functionalities like weather updates.
+ *
+ * @component
+ * @param {Object} props - The props passed to the `Manager` component.
+ * @param {string} props.selectedSection - The currently selected section of the dashboard to display.
+ * @returns {JSX.Element} A dynamic management interface for controlling inventory, menu items, employees, and statistics.
+ *
+ * @state
+ * @state {Object} data - Weather data fetched from the OpenWeatherMap API.
+ * @state {boolean} showTemp - Flag to toggle display of temperature and weather details.
+ * @state {Array<Object>} inventory - A list of inventory items.
+ * @state {number} editIdx - Index of the currently edited inventory item.
+ * @state {Array<Object>} originalFormData - Backup of the original inventory data before edits.
+ * @state {Array<Object>} menuItems - A list of menu items.
+ * @state {Array<Object>} employees - A list of employees with their details.
+ * @state {Array<Object>} reportList - A list of statistics reports, such as hourly revenue.
+ * @state {Array<Object>} incompleteOrdersList - A list of incomplete orders with details.
+ * @state {string} selectedButton - The selected statistics or report view.
+ * @state {string} formattedTime - Current time in "HH:MM AM/PM" format.
+ * @state {string} currentDateTime - Current date and time in "MM/DD/YYYY" format.
+ * @state {Object} inputFields - Object containing values for various input fields across sections.
+ *
+ * @methods
+ * @method fetchItems - Fetches all menu items from the API.
+ * @method fetchItems2 - Fetches all inventory items from the API.
+ * @method fetchItems3 - Fetches all employees from the API.
+ * @method fetchItems4 - Fetches daily order reports for generating statistics.
+ * @method fetchItems5 - Fetches all incomplete orders from the API.
+ * @method handleEditClick - Enables editing mode for an inventory item.
+ * @method handleSave - Saves the edits made to the inventory item.
+ * @method handleCancel - Cancels the inventory edit operation and restores the original data.
+ * @method handleButton - Adds a new item to the inventory.
+ * @method handleButtonMenu - Adds a new menu item.
+ * @method handleStatsXReport - Displays the X Report for the current day.
+ * @method handleStatsOrders - Displays current orders in the statistics section.
+ * @method addToInventory - Adds a new inventory item through the API.
+ * @method updateInventory - Updates an existing inventory item through the API.
+ * @method deleteInventory - Deletes an inventory item using its ID.
+ * @method addToMenu - Adds a new menu item through the API.
+ * @method updateMenuItem - Updates an existing menu item through the API.
+ * @method deleteMenuItem - Deletes a menu item using its ID.
+ * @method addEmployee - Adds a new employee through the API.
+ * @method updateEmployee - Updates an existing employee through the API.
+ * @method deleteEmployee - Deletes an employee using their ID.
+ *
+ * @effects
+ * @effect Dynamically renders the management interface based on the selected section.
+ * - Updates inventory, menu items, employees, and statistics dynamically based on user interactions.
+ * - Fetches and displays weather data upon request.
+ * - Provides accessibility to all operational data with real-time updates.
+ *
+ * @example
+ * // Rendered in a parent component
+ * <Manager selectedSection="Inventory" />
+ *
+ * @remarks
+ * - Integrates Auth0 for secure access and management of sensitive operations.
+ * - Includes a weather API integration for real-time data updates.
+ * - Covers all critical management operations like adding, editing, and deleting resources.
+ */
+
+
 function Manager({ selectedSection }) {
 
     //WeatherAPI
@@ -595,7 +660,7 @@ function Manager({ selectedSection }) {
                     Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id }),
+                body: JSON.stringify(id),
             });
 
             if (!employeeResponse.ok) {
@@ -936,8 +1001,6 @@ function Manager({ selectedSection }) {
                                     <button onClick={handleClick}>Weather</button>
                                     {showTemp && <h2>Temp: {data.main ? <h3>{Math.floor((data.main.temp - 273.15) * 1.8 + 32) + "°F"}</h3> : null}</h2>}
                                     {showTemp && <h2>Weather: {data.weather ? <h3>{data.weather[0].description}</h3> : null}</h2>}
-
-
                                 </div>
                             </div>
 
@@ -955,7 +1018,7 @@ function Manager({ selectedSection }) {
                                         </thead>
                                         <tbody>
                                         {reportList.map((item, index) => (
-                                            parseInt(item["hour"]) < formatHour && (
+                                            item["hour"] < formatHour && (
                                                 <tr key={index}>
                                                     <>
                                                         <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
