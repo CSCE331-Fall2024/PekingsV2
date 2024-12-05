@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import "./Kitchen.css";
 import AccessibilityPanel from './components/AccessibilityPanel';
+import {useAuth0} from "@auth0/auth0-react";
 
 function Kitchen({logout, setIsTranslateVisible}) {
     const [currentOrders, setCurrentOrders] = useState([]);
@@ -9,14 +10,17 @@ function Kitchen({logout, setIsTranslateVisible}) {
     const [orderIndex, setOrderIndex] = useState(0);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+    const { getAccessTokenSilently } = useAuth0();
 
     // Gets all the current active orders
     // Fetch incomplete orders
     const fetchIncompleteOrders = async () => {
         try {
+            const token = await getAccessTokenSilently()
             const response = await fetch('/api/orders/status/incomplete', {
                 method: 'GET',
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
@@ -111,9 +115,11 @@ function Kitchen({logout, setIsTranslateVisible}) {
         let apiText = "api/orders/update/status/" + currentOrders[OrderNumber].order_id + "?status=complete"
         // console.log(apiText);
         const handleCompletion = async () => {
+            const token = await getAccessTokenSilently()
             const response = await fetch(apiText, {
                 method: 'PATCH',
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
@@ -125,7 +131,7 @@ function Kitchen({logout, setIsTranslateVisible}) {
         handleCompletion();
 
 
-        setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
+        // setCurrentOrders((prevOrders) => prevOrders.filter((item, index) => index !== OrderNumber));
 
         // Adjusts the screen to show at minimum 8 orders
         if( (currentOrders.length > 8) && (orderIndex + 8 >= currentOrders.length) ){

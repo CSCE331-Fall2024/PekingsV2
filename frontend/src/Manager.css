@@ -1,8 +1,8 @@
 .managerRoot {
     display: flex;
     flex-direction: column;
-    width: 100%;         /* Takes remaining width after sidebar */
-    height: 100%;        /* Full height of fixed container */
+    width: 100vw;         /* Takes remaining width after sidebar */
+    height: 100vh;        /* Full height of fixed container */
     background: #124e66;
     color: black;
 }
@@ -45,6 +45,7 @@
 .data-table tbody tr:hover {
     background-color: #f9f9f9;
 }
+
 .data-table .invButton_M {
     background: none;
     border: none;
@@ -59,4 +60,62 @@
 }
 .data-table .invButton_M:hover {
     background-color: #34495e;
+}
+
+.main-content .add-button {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 16px;
+    text-align: center;
+}
+.add-button button {
+    padding: 10px 20px;
+    width: 20%;
+    height: 20%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.add-button button:hover {
+    background-color: #34495e;
+}
+
+.stats-btn button {
+    all: unset; /* Reset all default styles */
+    background-color: #748D92; /* Desired background */
+    color: white; /* Text color */
+    margin-top: 20px;
+    padding: 15px 32px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    border: none; /* Remove borders */
+    box-shadow: none; /* Remove shadows */
+}
+
+.stats-btn button:hover {
+    background-color: #34495e;
+}
+
+.stats-btn .statsH3{
+    margin-top: 15px;
+}
+
+
+.main-content .clockBox {
+    margin-top: 10px;
+    display: inline-flex;
+}
+.main-content .Clock {
+    margin-top: 3.5px;
+    margin-left: 10px;
+}
+.main-content .Header-Clock{
+    display: flex;
+    justify-content: space-between;
+
+}
+.Weather-Btn-Box{
+    display: flex;
+    justify-content: space-between;
 }

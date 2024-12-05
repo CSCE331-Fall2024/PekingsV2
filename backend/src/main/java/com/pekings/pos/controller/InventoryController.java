@@ -19,32 +19,48 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * REST Controller for managing Inventory-related operations.
+ * Provides endpoints for CRUD operations and analytics on inventory data.
+ */
 @RestController
-@RequestMapping(("/api/inventory"))
+@RequestMapping("/api/inventory")
 public class InventoryController {
 
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    /**
+     * Retrieves all ingredients in the inventory.
+     *
+     * @return A list of all inventory items.
+     */
     @GetMapping("/all")
     public List<Inventory> getAllIngredients() {
         return inventoryRepository.findAll();
     }
 
+    /**
+     * Retrieves a specific ingredient by its ID.
+     *
+     * @param id The ID of the desired ingredient.
+     * @return The inventory item with the given ID, or {@code null} if not found.
+     */
     @GetMapping("/{id}")
     public Inventory getIngredient(@PathVariable("id") int id) {
         return inventoryRepository.findById(id).orElse(null);
     }
 
     /**
-     * Gets the most popular ingredients within a time period
-     * Sample request: /api/inventory/top?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z
-     * Format: startDate=2024-01-01T00:00:00Z
+     * Retrieves the most popular ingredients used within a specified time period.
      *
-     * @param startDate the date to start from
-     * @param endDate the date to stop fetching
-     * @return the most used ingredients within the given timeframe
-    */
+     * Example usage:
+     * {@code /api/inventory/top?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z}
+     *
+     * @param startDate The start date of the period (optional).
+     * @param endDate   The end date of the period (optional).
+     * @return A list of the most used ingredients within the given timeframe.
+     */
     @GetMapping("/top")
     public List<InventoryItem> getTopIngredientsPeriodic(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -56,15 +72,27 @@ public class InventoryController {
         return inventoryRepository.findTopIngredientsPeriodic(startDate, endDate);
     }
 
+    /**
+     * Updates the details of an existing ingredient.
+     *
+     * @param inventory The inventory item with updated details, including a valid ID.
+     * @return The updated inventory item, or {@code null} if the ID is not provided.
+     */
     @PatchMapping("/update")
     public Inventory updateIngredient(@RequestBody Inventory inventory) {
-
         if (inventory.getId() == null)
             return null;
 
         return inventoryRepository.save(inventory);
     }
 
+    /**
+     * Updates the stock amount of a specific inventory item.
+     *
+     * @param id     The ID of the inventory item to update.
+     * @param amount The amount to add to the current stock. Use a negative value to reduce stock.
+     * @return The updated inventory item, or {@code null} if the item is not found.
+     */
     @PatchMapping("/update/stock/{id}")
     public Inventory updateStock(@PathVariable("id") int id, @RequestParam("amount") int amount) {
         Inventory inventory = inventoryRepository.findById(id).orElse(null);
@@ -76,11 +104,22 @@ public class InventoryController {
         return inventoryRepository.save(inventory);
     }
 
+    /**
+     * Adds a new ingredient to the inventory.
+     *
+     * @param inventory The inventory item to add.
+     * @return The newly added inventory item after saving to the database.
+     */
     @PostMapping("/add")
     public Inventory addIngredient(@RequestBody Inventory inventory) {
         return inventoryRepository.save(inventory);
     }
 
+    /**
+     * Deletes an inventory item by its ID.
+     *
+     * @param id The ID of the inventory item to delete.
+     */
     @DeleteMapping("/delete")
     public void deleteIngredient(@RequestBody int id) {
         inventoryRepository.deleteById(id);

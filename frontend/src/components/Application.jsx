@@ -55,6 +55,9 @@ const Application = () => {
     const [rejectFeedback, setRejectFeedback] = useState('');
     const [showHireDialog, setShowHireDialog] = useState(false);
 
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+
     const handleSubmit = () => {
         // Close any open dialogs first
         setShowHireDialog(false);
@@ -71,10 +74,20 @@ const Application = () => {
         }
     };
 
+    const validateEmail = (emailToValidate) => {
+        // Regex to validate Gmail addresses
+        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        return gmailRegex.test(emailToValidate);
+    };
+
     const handleEmployeeAdd = async () => {
+
+        if (!validateEmail(email)) {
+            setEmailError('Please enter a valid Gmail address');
+            return;
+        }
+
         try {
-            // email uses username
-            const email = `${username}@gmail.com`;
 
             // employee obj
             const employee = {
@@ -83,10 +96,12 @@ const Application = () => {
                 pass: password,
                 email: email,
                 position: position, // from the position select dropdown
-                last_clockin: new Date().toISOString(), // current time
-                is_clockedin: false, // default set as not clocked in
+                lastClockin: "00:00:00", // current time
+                isClockedin: false, // default set as not clocked in
                 pin: '1234' // Default PIN we use
             };
+
+            console.log(employee);
 
             const response = await fetch('/api/employee/add', {
                 method: 'POST',
@@ -126,7 +141,9 @@ const Application = () => {
         setReason('');
         setUsername('');
         setPassword('');
+        setEmail('');
         setRejectFeedback('');
+        setEmailError('');
     };
 
     return (
@@ -164,9 +181,9 @@ const Application = () => {
                                 onChange={(e) => setPosition(e.target.value)}
                             >
                                 <option value="">Select a position</option>
-                                <option value="employee">Cashier</option>
-                                <option value="manager">Manager</option>
-                                <option value="kitchen">Kitchen</option>
+                                <option value="CASHIER">Cashier</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="KITCHEN">Kitchen</option>
                             </select>
                         </div>
 
@@ -244,6 +261,27 @@ const Application = () => {
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
+                            </div>
+
+                            {/* Email Input */}
+                            <div>
+                                <label htmlFor="email" className="form-label">Email (Gmail only)</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    className="input-field-cc"
+                                    placeholder="Enter your Gmail address"
+                                    value={email}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        setEmailError(''); // Clear any previous error
+                                    }}
+                                />
+                                {emailError && (
+                                    <p className="error-message" style={{color: 'red', fontSize: '0.8em'}}>
+                                        {emailError}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Password submission */}
