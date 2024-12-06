@@ -124,6 +124,7 @@ const Cashier = ({logout, setIsTranslateVisible, switchToManager}) => {
             }
         }else{
             screens[activeScreenIndex].orderItems = [];
+            handleCenterChange('menu');
             alert("Current order items cancelled");
         }
     }
