@@ -333,7 +333,13 @@ function Kitchen({logout, setIsTranslateVisible}) {
                         )}
                     </div>
                     <div className="Control-Buttons">
-                        <button className="Exit-Button" onClick={() => logout()}>Log Out</button>
+                        {/*<button className="Exit-Button" onClick={() => logout()}>Log Out</button>*/}
+                        <button className="Navigation-Button" onClick={() => {
+                            if (orderIndex > 0) {
+                                setOrderIndex(orderIndex - 1);
+                            }
+                        }}
+                        >&lt;</button>
 
                         <div className="Complete-Container">
                             <button className="Complete-Button" onClick={() => completeOrder(orderIndex)}>1</button>
@@ -346,22 +352,17 @@ function Kitchen({logout, setIsTranslateVisible}) {
                             <button className="Complete-Button" onClick={() => completeOrder(orderIndex + 1)}>8</button>
                         </div>
 
-                        <div className="Navigation-Container">
+                        {/*<div className="Navigation-Container">*/}
+
                             <button className="Navigation-Button" onClick={() => {
                                 if (orderIndex + 8 < currentOrders.length) {
                                     setOrderIndex(orderIndex + 1);
                                 }
                             }}
                             >&gt;</button>
-                            <button className="Navigation-Button" onClick={() => {
-                                if (orderIndex > 0) {
-                                    setOrderIndex(orderIndex - 1);
-                                }
-                            }}
-                            >&lt;</button>
-                        </div>
+                        {/*</div>*/}
 
-                        <button className="Accessibility-Button" onClick={() => handlePopupOpen()}>Settings</button>
+                        {/*<button className="Accessibility-Button" onClick={() => handlePopupOpen()}>Settings</button>*/}
                     </div>
                 </div>
             )

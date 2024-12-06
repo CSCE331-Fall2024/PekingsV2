@@ -111,25 +111,20 @@ const Cashier = ({logout, setIsTranslateVisible, switchToManager}) => {
     };
 
     const handleCancel = () => {
-        const orderNum = screens[activeScreenIndex].id;
+        if(!(screens[activeScreenIndex].paidItems.length)){
+            screens[activeScreenIndex].status = false;
 
-        for(let i = 0; i < screens.length; i++) {
-            if(screens[i].id === orderNum) {
-                if(!(screens[i].paidItems.length)){
-                    screens[i].status = false;
-                }else{
-                    screens[i].orderItems = [];
-                    alert("Current order items cancelled");
-                }
+            let lastActive = getLastActive();
+            if(lastActive === -1){ //If no other orders we create a new one
+                addScreen();
+            }else{ // If active orders exist, cancelling will send the screen to the last active order completed
+                screens[lastActive - 1].currentCenter = 'menu';
+                setActiveScreenIndex(lastActive - 1);
+                console.log(lastActive - 1);
             }
-        }
-
-        let lastActive = getLastActive();
-        if(lastActive === -1){ //If no other orders we create a new one
-            addScreen();
-        }else{ // If active orders exist, cancelling will send the screen to the last active order completed
-            screens[lastActive - 1].currentCenter = 'menu';
-            setActiveScreenIndex(lastActive - 1);
+        }else{
+            screens[activeScreenIndex].orderItems = [];
+            alert("Current order items cancelled");
         }
     }
 
