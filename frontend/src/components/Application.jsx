@@ -74,18 +74,18 @@ const Application = () => {
         }
     };
 
-    const validateEmail = (emailToValidate) => {
-        // Regex to validate Gmail addresses
-        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-        return gmailRegex.test(emailToValidate);
-    };
+    // const validateEmail = (emailToValidate) => {
+    //     // Regex to validate Gmail addresses
+    //     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    //     return gmailRegex.test(emailToValidate);
+    // };
 
     const handleEmployeeAdd = async () => {
 
-        if (!validateEmail(email)) {
-            setEmailError('Please enter a valid Gmail address');
-            return;
-        }
+        // if (!validateEmail(email)) {
+        //     setEmailError('Please enter a valid Gmail address');
+        //     return;
+        // }
 
         try {
 
@@ -265,12 +265,12 @@ const Application = () => {
 
                             {/* Email Input */}
                             <div>
-                                <label htmlFor="email" className="form-label">Email (Gmail only)</label>
+                                <label htmlFor="email" className="form-label">Email</label>
                                 <input
                                     id="email"
                                     type="email"
                                     className="input-field-cc"
-                                    placeholder="Enter your Gmail address"
+                                    placeholder="Enter your email address"
                                     value={email}
                                     onChange={(e) => {
                                         setEmail(e.target.value);
