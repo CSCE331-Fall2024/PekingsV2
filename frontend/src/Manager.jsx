@@ -127,7 +127,7 @@ function Manager({ selectedSection }) {
     const currentDateTime = new Date().toLocaleString('en-us', {timeZone: 'UTC', month: '2-digit', day: '2-digit', year: '2-digit'}); // Formats to "MM/DD/YYYY, HH:MM:SS AM/PM"
     const currentClock = new Date();
     const formattedTime = currentClock.toLocaleTimeString([], { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: true });
-    const formatHour =  new Date().toLocaleString('en-us', {timeZone: 'UTC'});
+    const formatHour =  new Date().getHours();
     const [totalRevenue, setTotalRevenue] = useState(0);
     let revCounter = 0;
 
