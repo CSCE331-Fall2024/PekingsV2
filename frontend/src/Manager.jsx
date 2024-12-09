@@ -85,8 +85,11 @@ function Manager({ selectedSection }) {
     const [originalFormData, setOriginalFormData] = useState([]);
     const [editInvValueID, setEditInvValueID] = useState(-1);
     const [inputValueName, setInputValueName] = useState('');
-    const [inputValueAmount, setInputValueAmount] = useState('');
-    const [inputValuePrice, setInputValuePrice] = useState('');
+    const [inputEditValueName, setInputEditValueName] = useState('');
+    const [inputValueAmount, setInputValueAmount] = useState("");
+    const [inputEditValueAmount, setInputEditValueAmount] = useState("");
+    const [inputValuePrice, setInputValuePrice] = useState("");
+    const [inputEditValuePrice, setInputEditValuePrice] = useState("");
     const [inputValueID, setInputValueID] = useState('');
 
     //Menu
@@ -94,9 +97,13 @@ function Manager({ selectedSection }) {
     const [originalMenuItems, setOriginalMenuItems] = useState([]);
     const [editMenuValueID, setEditMenuValueID] = useState(-1);
     const [inputMenuName, setInputMenuName] = useState('');
+    const [inputEditMenuName, setInputEditMenuName] = useState('');
     const [inputMenuCategory, setInputMenuCategory] = useState("");
+    const [inputEditMenuCategory, setInputEditMenuCategory] = useState("");
     const [inputMenuIngredients, setInputMenuIngredients] = useState('');
+    const [inputEditMenuIngredients, setInputEditMenuIngredients] = useState('');
     const [inputMenuPrice, setInputMenuPrice] = useState('');
+    const [inputEditMenuPrice, setInputEditMenuPrice] = useState('');
     const [inputMenuID, setInputMenuID] = useState('');
 
 
@@ -121,6 +128,8 @@ function Manager({ selectedSection }) {
     const currentClock = new Date();
     const formattedTime = currentClock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const formatHour =  new Date().getHours();
+    const [totalRevenue, setTotalRevenue] = useState(0);
+    let revCounter = 0;
 
     //For Weather
     const getLocation = () => {
@@ -281,39 +290,53 @@ function Manager({ selectedSection }) {
     // Edit for Inventory
     const handleEditClick = (index) => {
         setEditIdx(index);
-        setOriginalFormData(inventory);
         setEditInvValueID(inventory.at(index).id);
+        setInputEditValuePrice(inventory.at(index).servingPrice);
+        setInputEditValueAmount(inventory.at(index).amount);
+        setInputEditValueName(inventory.at(index).name);
+        setOriginalFormData([...inventory]); // Deep copy to avoid mutation issues
     };
 
+
     const handleInputChange = (e, field, index) => {
+        console.log("Current Inventory:", inventory);
+        console.log(`Editing field '${field}' at index ${index}`);
+
         const updatedInventory = inventory.map((item, idx) => {
             if (idx === index) {
+                console.log(`Before Update (${field}):`, item[field]); // Log current value
                 return {...item, [field]: e.target.value};
             }
             return item;
         });
-        setInventory(updatedInventory);
+
+        console.log("Updated Inventory Before Setting State:", updatedInventory); // Log updated array
+        setInventory(updatedInventory); // Update state
     };
-    const handleSave = () => {
-        setEditIdx(-1);
-        updateInventory();
-    };
+
+
+
     const handleCancel = () => {
         setEditIdx(-1);
+        setEditInvValueID(-1);
+        setInputValueName("");
+        setInputEditValueAmount("");
+        setInputEditValuePrice("");
         setInventory(originalFormData);
     };
 
-    // Edit for Menu
     const handleEditClickMenu = (index) => {
         setEditIdx(index);
         setOriginalMenuItems(menuItems);
-        setInputMenuName(menuItems.at(index).name);
-        setInputMenuPrice(menuItems.at(index).price);
+        setInputEditMenuName(menuItems.at(index).name);
+        setInputEditMenuPrice(menuItems.at(index).price);
         setEditMenuValueID(menuItems.at(index).id);
-        setInputMenuCategory(menuItems.at(index).category);
-        setInputMenuIngredients(menuItems.at(index).ingredients.at(0).ingredient);
+        setInputEditMenuCategory(menuItems.at(index).category);
+        setInputEditMenuIngredients(menuItems.at(index).ingredients.at(0).ingredient);
+
 
     };
+
     // Function to handle input change for Menu Items
     const handleInputChangeMenu = (e, field, index) => {
         const updatedMenuItems = menuItems.map((item, idx) => {
@@ -333,6 +356,7 @@ function Manager({ selectedSection }) {
         setInputMenuPrice("");
         setInputMenuCategory("");
         setInputMenuIngredients("");
+        setOriginalMenuItems([]);
     };
     // Function to handle canceling the edit for Menu Items
     const handleCancelMenu = () => {
@@ -391,8 +415,8 @@ function Manager({ selectedSection }) {
 
         const inv = {
             name: inputValueName,
-            servingPrice: inputValuePrice,
-            amount: inputValueAmount,
+            servingPrice: parseInt(inputValuePrice),
+            amount: parseInt(inputValueAmount),
             priceBatch: batch,
         };
 
@@ -501,27 +525,61 @@ function Manager({ selectedSection }) {
     };
 
 
+    const handleSave = async () => {
+        try {
+            await updateInventory(); // Call the API to save changes
+            await fetchItems2(); // Refresh inventory list
+            // Reset editing state
+            setEditIdx(-1);
+            setEditInvValueID(-1);
+            setInputValueName("");
+            setInputEditValueAmount("");
+            setInputEditValuePrice("");
+        } catch (error) {
+            console.error("Error during save:", error);
+            alert("Failed to save inventory changes. Check console for details.");
+        }
+    };
+
     const updateInventory = async () => {
-        let amountt = parseInt(inputValueAmount);
-        let pricee = parseInt(inputValuePrice);
+        let amountt = parseInt(inputEditValueAmount);
+        let pricee = parseInt(inputEditValuePrice);
         let batch = amountt * pricee;
         const editedInventory = {
             id: editInvValueID,
-            name: inputValueName,
-            amount: inputValueAmount,
-            servingPrice: inputValuePrice,
+            name: inputEditValueName,
+            amount: inputEditValueAmount,
+            servingPrice: inputEditValuePrice,
             priceBatch: batch
         }
-        const invResponse = await fetch("/api/inventory/update", {
-            method: 'PATCH',
-            headers: {
-                Authorization: `Bearer ${await getAccessTokenSilently()}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(editedInventory)
-        });
 
+        try {
+            const invResponse = await fetch("/api/inventory/update", {
+                method: 'PATCH',
+                headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editedInventory),
+            });
+
+            if (!invResponse.ok) {
+                const error = await invResponse.json();
+                console.error("Error updating inventory item:", error);
+                alert("Failed to update inventory item. See console for details.");
+            } else {
+                const data = await invResponse.json();
+                console.log("Inventory item updated successfully.", data);
+                fetchItems2(); // Refresh inventory after update
+            }
+        } catch (err) {
+            console.error("Network error during inventory update:", err);
+            alert("Network error while updating inventory item.");
+        }
     };
+
+
+
     const deleteInventory = async (id) => {
         try{
         const invResponse = await fetch("/api/inventory/delete", {
@@ -545,71 +603,71 @@ function Manager({ selectedSection }) {
         fetchItems2();
     };
     const updateMenuItem = async () => {
-        const editedMenu = {
-            id: editMenuValueID,
-            name: inputMenuName,           // Menu item name from input
-            price: inputMenuPrice,         // Menu item price from input
-            active: false,                 // Default active state
-            category: inputMenuCategory,   // Corrected "category" to "category"
-            image: null,                   // Optional field for image
-            ingredients: [
-                {
-                    ingredient: {id: inputMenuIngredients},
-                    amount: 1
-                }
-            ]
-        }
+        const menuItemToUpdate = {
+            id: editMenuValueID, // Required field
+            name: inputEditMenuName, // Ensure no null/undefined values
+            price: parseFloat(inputEditMenuPrice), // Ensure numeric type
+            active: true, // Default value
+            category: inputEditMenuCategory, // Provide fallback for category
+            ingredients: inputEditMenuIngredients
+                ? [
+                    {
+                        ingredient: { id: parseInt(inputEditMenuIngredients) }, // Ensure numeric ID
+                        amount: 1, // Default amount
+                    },
+                ]
+                : [],
+        };
+
+        console.log("Updating Menu Item:", menuItemToUpdate);
+
         try {
-            const menuResponse = await fetch("/api/menuitem/update", {
-                method: 'PATCH',
+            const response = await fetch("/api/menuitem/update", {
+                method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(editedMenu)
+                body: JSON.stringify(menuItemToUpdate),
             });
 
-            if (!menuResponse.ok) {
-                const error = await menuResponse.json();
-                console.error("Error updating menu item:", error);
-                alert("Failed to update menu item. See console for details.");
-            } else {
-                const data = await menuResponse.json();
+            if (response.ok) {
+                const data = await response.json();
                 console.log("Menu item updated successfully:", data);
-                alert("Menu item updated successfully!");
-                fetchItems();
+                fetchItems(); // Refresh the menu items list
+            } else {
+                console.error("Failed to update menu item:", response.status);
+                alert("Update failed. Check console for details.");
             }
         } catch (err) {
-            console.error("Network error:", err);
-            alert("Network error while updating menu item.");
+            console.error("Error updating menu item:", err);
         }
     };
+
+
 
     const deleteMenuItem = async (id) => {
-        try{
-            // let menuID = parseInt(inputMenuID);
-        const menuResponse = await fetch("/api/menuitem/delete", {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${await getAccessTokenSilently()}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(id)
+        try {
+            const response = await fetch("/api/menuitem/delete", {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(id),
+            });
 
-        });
-        if (menuResponse.ok) {
-            alert(`Successfully deleted menu item`)
-        } else {
-            console.error("Failed to delete inventory item:", menuResponse.status);
-            alert("Failed to delete inventory item")
+            if (response.ok) {
+                console.log("Menu item deleted successfully.");
+                fetchItems(); // Refresh menu items list
+            } else {
+                console.error("Failed to delete menu item:", response.status);
+            }
+        } catch (err) {
+            console.error("Error deleting menu item:", err);
         }
-
-        }   catch (error) {
-        console.error("Error fetching items:", error);
-    }
-
-        fetchItems();
     };
+
 
 // Update Employee
     const updateEmployee = async () => {
@@ -733,6 +791,9 @@ function Manager({ selectedSection }) {
     const handleStatsXReport = () => {
         setSelectedButton("xReport")
     }
+    const handleStatsZReport = () => {
+        setSelectedButton("zReport")
+    }
     const handleStatsOrders = () => {
         setSelectedButton("Current Orders")
     }
@@ -774,11 +835,20 @@ function Manager({ selectedSection }) {
                                     <>
                                         <td>{item.id}</td>
                                         <td><input type="text" value={item.name}
-                                                   onChange={(e) => handleInputChange(e, 'name', index)}/></td>
+                                                   onChange={(e) => {
+                                                       handleInputChange(e, 'name', index)
+                                                       setInputEditValueName(e.target.value)
+                                                   }}/></td>
                                         <td><input type="text" value={item.amount}
-                                                   onChange={(e) => handleInputChange(e, 'amount', index)}/></td>
+                                                   onChange={(e) => {
+                                                       handleInputChange(e, 'amount', index)
+                                                       setInputEditValueAmount(e.target.value)
+                                                   }}/></td>
                                         <td><input type="text" value={item.servingPrice}
-                                                   onChange={(e) => handleInputChange(e, 'servingPrice', index)}/></td>
+                                                   onChange={(e) => {
+                                                       handleInputChange(e, 'servingPrice', index)
+                                                       setInputEditValuePrice(e.target.value)
+                                                   }}/></td>
                                         <td>{item.priceBatch}</td>
                                         <td>
                                             <button onClick={handleSave}>Save</button>
@@ -833,9 +903,15 @@ function Manager({ selectedSection }) {
                                     <>
                                         <td>{item.id}</td>
                                         <td><input type="text" value={item.name}
-                                                   onChange={(e) => handleInputChangeMenu(e, 'name', index)}/></td>
+                                                   onChange={(e) => {
+                                                       handleInputChangeMenu(e, 'name', index)
+                                                       setInputEditMenuName(e.target.value)
+                                                   }}/></td>
                                         <td><input type="text" value={item.price}
-                                                   onChange={(e) => handleInputChangeMenu(e, 'price', index)}/></td>
+                                                   onChange={(e) => {
+                                                       handleInputChangeMenu(e, 'price', index)
+                                                       setInputEditMenuPrice(e.target.value)
+                                                   }}/></td>
                                         <td>
                                             <button onClick={handleSaveMenu}>Save</button>
                                             <button onClick={handleCancelMenu}>Cancel</button>
@@ -995,6 +1071,7 @@ function Manager({ selectedSection }) {
                             <div className="Weather-Btn-Box">
                                 <div className="stats-btns">
                                     <button onClick={handleStatsXReport}> xReport</button>
+                                    <button onClick={handleStatsZReport}> zReport</button>
                                     <button onClick={handleStatsOrders}> Current Orders</button>
                                 </div>
                                 <div className="weatherData">
@@ -1018,7 +1095,35 @@ function Manager({ selectedSection }) {
                                         </thead>
                                         <tbody>
                                         {reportList.map((item, index) => (
-                                            item["hour"] < formatHour && (
+                                                item["hour"] < formatHour && (
+                                                    <tr key={index}>
+                                                        <>
+                                                            <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
+                                                            <td>{item["orders"]}</td>
+                                                            <td>{"$" + item["revenue"]}</td>
+                                                        </>
+                                                    </tr>
+                                                )
+
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                            {selectedButton === "zReport" && (
+                                <div>
+                                    <></>
+                                    <h3 className="statsH3">zReport: {currentDateTime}</h3>
+                                    <table className="data-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Orders</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {reportList.map((item, index) => (
                                                 <tr key={index}>
                                                     <>
                                                         <td>{item["hour"] + ":00 - " + item["hour"] + ":59"}</td>
@@ -1026,8 +1131,12 @@ function Manager({ selectedSection }) {
                                                         <td>{"$" + item["revenue"]}</td>
                                                     </>
                                                 </tr>
-                                            )
+
+
                                         ))}
+                                        <tr>
+                                            <td></td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
