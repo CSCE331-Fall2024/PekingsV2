@@ -73,7 +73,7 @@ public class OrderController {
      */
     @GetMapping("/past/day")
     public List<SaleHistoryItem> getDailyRevenue() {
-        return orderRepository.getRevenueAndOrdersPeriodic(DateUtil.startOfDay(Instant.now()), Instant.now());
+        return orderRepository.getRevenueAndOrdersPeriodic(DateUtil.startOfDay(Instant.now()), DateUtil.endOfDay(Instant.now()));
     }
 
     /**

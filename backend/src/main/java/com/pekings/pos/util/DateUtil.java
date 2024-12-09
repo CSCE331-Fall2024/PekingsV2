@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -81,4 +82,12 @@ public class DateUtil {
         ZonedDateTime midnight = localDate.atStartOfDay(ZoneId.systemDefault());
         return midnight.toInstant();
     }
+
+    public static Instant endOfDay(Instant instant) {
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        LocalDate localDate = zonedDateTime.toLocalDate();
+        ZonedDateTime endOfDay = localDate.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault());
+        return endOfDay.toInstant();
+    }
+
 }
